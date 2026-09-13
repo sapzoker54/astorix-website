@@ -3,49 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASTORIX™ — Enterprise AI Platform</title>
-<meta name="description" content="ASTORIX™ is an AI-powered enterprise intelligence platform for civic operations, emergency response, and data analytics. Built by Gensis.AI Inc.">
+<title>ASTORIX™ — Enterprise AI Platform | Gensis.AI Inc.</title>
+<meta name="description" content="ASTORIX™ is an enterprise AI platform delivering B2B lead intelligence, civic operations AI, and infrastructure analytics. Signal · HOPE-LA · CityInfra. Built by Gensis.AI Inc.">
 <meta name="theme-color" content="#3B82F6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ASTORIX">
 <meta property="og:title" content="ASTORIX™ — Enterprise AI Platform">
-<meta property="og:description" content="AI-powered civic intelligence and enterprise analytics. Signal · HOPE-LA · CityInfra AI.">
-<meta property="og:url" content="https://astorix.ai">
+<meta property="og:description" content="AI-powered B2B lead intelligence, civic operations, and infrastructure analytics. Signal · HOPE-LA · CityInfra. By Gensis.AI Inc.">
+<meta property="og:url" content="https://www.astorix.ai">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://www.astorix.ai/icons/icon-512.png">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   ASTORIX™ — astorix.ai
-   Gensis.AI Inc. | USPTO SN 99639401
+   ASTORIX™ — www.astorix.ai
+   Gensis.AI Inc. | USPTO SN 99639401 | IC 009, 042
+   © 2026 Gensis.AI Inc. All Rights Reserved.
    ============================================================ */
 
 :root {
   --bg:    #07090F;
   --bg2:   #0C1020;
   --bg3:   #111827;
-  --card:  rgba(15,20,40,0.96);
-  --border: rgba(59,130,246,0.14);
-  --border2: rgba(59,130,246,0.28);
+  --card:  rgba(13,18,38,0.97);
+  --card2: rgba(15,20,45,0.8);
+  --border: rgba(59,130,246,0.12);
+  --border2: rgba(59,130,246,0.26);
+  --border3: rgba(59,130,246,0.45);
   --blue:  #3B82F6;
   --blue2: #1D4ED8;
+  --blue3: #60A5FA;
   --teal:  #2DD4BF;
   --teal2: #0D9488;
   --red:   #EF4444;
+  --orange:#F97316;
   --green: #22C55E;
+  --green2:#16A34A;
+  --amber: #F59E0B;
+  --purple:#8B5CF6;
   --txt:   #F0F4FF;
-  --txt2:  #9BAAC8;
-  --txt3:  #4A5A78;
+  --txt2:  #94A3B8;
+  --txt3:  #475569;
   --r: 12px;
+  --r2: 8px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -58,15 +67,15 @@ body {
   overflow-x: hidden;
 }
 
-/* ---- GRID NOISE BACKGROUND ---- */
+/* ── AMBIENT BACKGROUND ── */
 body::before {
   content: '';
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background-image:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(59,130,246,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 85% 5%,  rgba(45,212,191,0.07) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 60% at 50% 80%, rgba(29,78,216,0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 90% 55% at 15% -5%,  rgba(59,130,246,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 45% at 88% 8%,   rgba(45,212,191,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 65% at 50% 85%,  rgba(29,78,216,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 20% 60%,  rgba(139,92,246,0.04) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -75,406 +84,238 @@ body::before {
    NAV
    ============================================================ */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
+  position: fixed; top: 0; left: 0; right: 0;
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  height: 64px;
-  background: rgba(7,9,15,0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 64px;
+  background: rgba(7,9,15,0.92);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border);
 }
 
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 
 .nav-logo {
-  height: 36px;
-  width: 36px;
+  width: 36px; height: 36px;
   background: linear-gradient(135deg, var(--blue2), var(--blue));
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -0.5px;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 900; color: #fff; letter-spacing: -0.5px;
 }
 
 .nav-mark {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--txt);
-  letter-spacing: 0.5px;
+  font-size: 18px; font-weight: 700; color: var(--txt); letter-spacing: 0.5px;
 }
+.nav-mark sup { font-size: 9px; vertical-align: super; color: var(--txt3); font-weight: 400; letter-spacing: 1px; }
 
-.nav-mark sup {
-  font-size: 9px;
-  vertical-align: super;
-  color: var(--txt2);
-  font-weight: 400;
-  letter-spacing: 1px;
-}
-
-.nav-by {
-  font-size: 10px;
-  color: var(--txt3);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  display: none;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.nav-links { display: flex; align-items: center; gap: 4px; }
 
 .nav-link {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--txt2);
-  text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 6px;
+  font-size: 13px; font-weight: 500; color: var(--txt2);
+  text-decoration: none; padding: 6px 12px; border-radius: 6px;
   transition: color 0.15s;
 }
 .nav-link:hover { color: var(--txt); }
 
-.nav-install-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  background: var(--blue);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, transform 0.1s;
-  text-decoration: none;
+.nav-btn {
+  padding: 7px 16px; border-radius: 7px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; text-decoration: none;
+  transition: all 0.15s; border: none;
 }
-.nav-install-btn:hover { background: var(--blue2); transform: translateY(-1px); }
+.nav-btn-outline {
+  background: transparent; color: var(--teal);
+  border: 1px solid rgba(45,212,191,0.28);
+}
+.nav-btn-outline:hover { border-color: var(--teal); background: rgba(45,212,191,0.06); }
 
-.nav-demo-btn {
-  padding: 8px 18px;
-  background: transparent;
-  color: var(--teal);
-  border: 1px solid rgba(45,212,191,0.3);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  text-decoration: none;
-  transition: border-color 0.15s, background 0.15s;
+.nav-btn-solid { background: var(--blue); color: #fff; display: none; align-items: center; gap: 6px; }
+.nav-btn-solid:hover { background: var(--blue2); transform: translateY(-1px); }
+
+/* ============================================================
+   INSTALL BANNER (PWA)
+   ============================================================ */
+#install-banner {
+  position: relative; z-index: 1;
+  display: none;
+  background: linear-gradient(90deg, rgba(59,130,246,0.1) 0%, rgba(45,212,191,0.07) 100%);
+  border-top: 1px solid rgba(59,130,246,0.18);
+  border-bottom: 1px solid rgba(59,130,246,0.18);
+  padding: 14px 40px;
+  flex-direction: row; align-items: center; justify-content: space-between; gap: 16px;
 }
-.nav-demo-btn:hover { border-color: var(--teal); background: rgba(45,212,191,0.06); }
+#install-banner.show { display: flex; }
+
+.install-banner-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size: 13px; color: #fff; flex-shrink: 0;
+}
+
+.btn-install-now {
+  padding: 8px 20px; background: var(--blue); color: #fff; border: none;
+  border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.btn-install-now:hover { background: var(--blue2); }
+.btn-install-dismiss {
+  padding: 8px 12px; background: transparent; color: var(--txt3); border: none;
+  border-radius: 7px; font-size: 13px; cursor: pointer; font-family: inherit;
+}
+.btn-install-dismiss:hover { color: var(--txt2); }
 
 /* ============================================================
    HERO
    ============================================================ */
 .hero {
-  position: relative;
-  z-index: 1;
+  position: relative; z-index: 1;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 24px 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 80px;
 }
 
 .hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 16px;
-  background: rgba(59,130,246,0.08);
-  border: 1px solid rgba(59,130,246,0.25);
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #93C5FD;
-  margin-bottom: 32px;
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.22);
+  border-radius: 100px; font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: #93C5FD;
+  margin-bottom: 28px;
 }
 
 .pulse-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
   animation: pulse 2s infinite;
 }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
 
 .hero-title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(48px, 8vw, 88px);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -2px;
-  color: #fff;
-  margin-bottom: 8px;
+  font-size: clamp(52px, 9vw, 96px);
+  font-weight: 800; line-height: 0.95; letter-spacing: -3px; color: #fff;
+  margin-bottom: 10px;
 }
-
 .hero-title-tm {
-  font-size: 0.35em;
-  vertical-align: super;
-  font-weight: 400;
-  color: var(--txt3);
-  letter-spacing: 1px;
+  font-size: 0.32em; vertical-align: super; font-weight: 400;
+  color: var(--txt3); letter-spacing: 1px;
 }
 
 .hero-sub {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(18px, 3vw, 26px);
-  font-weight: 500;
-  color: var(--teal);
-  letter-spacing: -0.3px;
-  margin-bottom: 20px;
+  font-size: clamp(16px, 2.5vw, 22px); font-weight: 600;
+  color: var(--teal); letter-spacing: -0.2px; margin-bottom: 20px;
 }
 
 .hero-desc {
-  max-width: 600px;
-  font-size: 16px;
-  color: var(--txt2);
-  line-height: 1.7;
-  margin-bottom: 48px;
+  max-width: 580px; font-size: 16px; color: var(--txt2);
+  line-height: 1.75; margin-bottom: 44px;
 }
 
-.hero-ctas {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
 .cta-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
-  background: var(--blue);
-  color: #fff;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-  box-shadow: 0 4px 24px rgba(59,130,246,0.3);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 30px; background: var(--blue); color: #fff;
+  border-radius: 10px; font-size: 15px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer; font-family: inherit;
+  transition: all 0.15s; box-shadow: 0 4px 24px rgba(59,130,246,0.28);
 }
-.cta-primary:hover { background: var(--blue2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,0.4); }
+.cta-primary:hover { background: var(--blue2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,0.38); }
 
 .cta-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
-  background: transparent;
-  color: var(--txt);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: inherit;
-  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 30px; background: transparent; color: var(--txt);
+  border: 1px solid var(--border2); border-radius: 10px;
+  font-size: 15px; font-weight: 600; text-decoration: none;
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
-.cta-secondary:hover { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.05); transform: translateY(-2px); }
+.cta-secondary:hover { border-color: rgba(59,130,246,0.45); background: rgba(59,130,246,0.05); transform: translateY(-2px); }
 
 /* Hero stats */
 .hero-stats {
-  margin-top: 72px;
-  display: flex;
-  gap: 48px;
-  justify-content: center;
-  flex-wrap: wrap;
+  margin-top: 68px; display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
 }
-
 .hstat { text-align: center; }
 .hstat-val {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 32px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  margin-bottom: 4px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 30px; font-weight: 800;
+  color: #fff; line-height: 1; margin-bottom: 4px;
 }
-.hstat-label { font-size: 12px; color: var(--txt3); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-
-.hero-divider {
-  width: 1px;
-  height: 40px;
-  background: var(--border);
-  align-self: center;
-}
+.hstat-label { font-size: 11px; color: var(--txt3); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.hero-divider { width: 1px; height: 36px; background: var(--border); align-self: center; }
 
 /* ============================================================
-   INSTALL BANNER
+   TRUST STRIP
    ============================================================ */
-#install-banner {
-  position: relative;
-  z-index: 1;
-  display: none;
-  background: linear-gradient(90deg, rgba(59,130,246,0.12) 0%, rgba(45,212,191,0.08) 100%);
-  border-top: 1px solid rgba(59,130,246,0.2);
-  border-bottom: 1px solid rgba(59,130,246,0.2);
-  padding: 16px 40px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+.trust-strip {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: wrap;
+  padding: 20px 40px;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: rgba(12,16,32,0.6);
 }
-#install-banner.show { display: flex; }
-
-.install-banner-text {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--txt);
+.trust-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--txt3);
 }
-
-.install-banner-icon {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 13px;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.install-banner-btns { display: flex; gap: 8px; align-items: center; }
-
-.btn-install-now {
-  padding: 8px 20px;
-  background: var(--blue);
-  color: #fff;
-  border: none;
-  border-radius: 7px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s;
-}
-.btn-install-now:hover { background: var(--blue2); }
-
-.btn-install-dismiss {
-  padding: 8px 14px;
-  background: transparent;
-  color: var(--txt3);
-  border: none;
-  border-radius: 7px;
-  font-size: 13px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.btn-install-dismiss:hover { color: var(--txt2); }
+.trust-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.trust-dot-blue { background: var(--blue); }
+.trust-dot-teal { background: var(--teal); }
+.trust-dot-green { background: var(--green); }
+.trust-dot-purple { background: var(--purple); }
 
 /* ============================================================
    SECTIONS SHARED
    ============================================================ */
 section {
-  position: relative;
-  z-index: 1;
-  padding: 80px 24px;
-  max-width: 1120px;
-  margin: 0 auto;
+  position: relative; z-index: 1;
+  padding: 88px 24px; max-width: 1160px; margin: 0 auto;
 }
 
 .section-eyebrow {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--blue);
-  margin-bottom: 12px;
+  font-size: 10px; font-weight: 800; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--blue); margin-bottom: 12px;
 }
 
 .section-title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(28px, 4vw, 42px);
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  margin-bottom: 16px;
+  font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: #fff;
+  line-height: 1.12; letter-spacing: -0.5px; margin-bottom: 16px;
 }
 
 .section-desc {
-  font-size: 16px;
-  color: var(--txt2);
-  max-width: 540px;
-  line-height: 1.7;
-  margin-bottom: 48px;
+  font-size: 16px; color: var(--txt2); max-width: 560px; line-height: 1.75; margin-bottom: 52px;
 }
 
 .divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--border2) 30%, var(--border2) 70%, transparent);
-  max-width: 1120px;
-  margin: 0 auto;
+  max-width: 1160px; margin: 0 auto;
 }
 
 /* ============================================================
    PRODUCTS
    ============================================================ */
 .products-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
 }
 
 .product-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 32px 28px;
-  text-decoration: none;
-  color: inherit;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 28px 24px; text-decoration: none; color: inherit;
   transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-  overflow: hidden;
+  display: flex; flex-direction: column; gap: 14px;
+  position: relative; overflow: hidden;
 }
 .product-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: var(--r) var(--r) 0 0;
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: var(--r) var(--r) 0 0;
 }
-.product-card.signal::before  { background: linear-gradient(90deg, #EF4444, #F97316); }
-.product-card.hopela::before  { background: linear-gradient(90deg, var(--teal2), var(--teal)); }
-.product-card.cityinfra::before { background: linear-gradient(90deg, var(--blue2), var(--blue)); }
+.product-card.signal::before   { background: linear-gradient(90deg, var(--blue2), var(--blue)); }
+.product-card.hopela::before   { background: linear-gradient(90deg, var(--teal2), var(--teal)); }
+.product-card.cityinfra::before { background: linear-gradient(90deg, var(--purple), #A78BFA); }
 
 .product-card:hover {
   border-color: var(--border2);
@@ -483,341 +324,332 @@ section {
 }
 
 .product-icon {
-  width: 48px; height: 48px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 46px; height: 46px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
 }
-.product-card.signal .product-icon   { background: rgba(239,68,68,0.12); }
-.product-card.hopela .product-icon   { background: rgba(45,212,191,0.10); }
-.product-card.cityinfra .product-icon { background: rgba(59,130,246,0.10); }
+.product-card.signal .product-icon    { background: rgba(59,130,246,0.12); }
+.product-card.hopela .product-icon    { background: rgba(45,212,191,0.10); }
+.product-card.cityinfra .product-icon { background: rgba(139,92,246,0.10); }
 
 .product-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 3px;
 }
-.product-tagline {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.product-card.signal .product-tagline    { color: #F97316; }
+.product-tagline { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.product-card.signal .product-tagline    { color: var(--blue3); }
 .product-card.hopela .product-tagline    { color: var(--teal); }
-.product-card.cityinfra .product-tagline { color: #93C5FD; }
+.product-card.cityinfra .product-tagline { color: #C4B5FD; }
 
-.product-desc {
-  font-size: 13px;
-  color: var(--txt2);
-  line-height: 1.65;
-  flex: 1;
-}
+.product-desc { font-size: 13px; color: var(--txt2); line-height: 1.65; flex: 1; }
 
-.product-features {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.product-features { display: flex; flex-direction: column; gap: 6px; }
 .product-feature {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--txt3);
+  display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--txt3);
 }
 .product-feature::before {
-  content: '';
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  flex-shrink: 0;
+  content: ''; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0;
 }
-.product-card.signal .product-feature::before    { background: #EF4444; }
+.product-card.signal .product-feature::before    { background: var(--blue); }
 .product-card.hopela .product-feature::before    { background: var(--teal); }
-.product-card.cityinfra .product-feature::before { background: var(--blue); }
+.product-card.cityinfra .product-feature::before { background: var(--purple); }
 
 .product-cta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  margin-top: 4px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 700; margin-top: 4px;
 }
-.product-card.signal .product-cta    { color: #F97316; }
+.product-card.signal .product-cta    { color: var(--blue3); }
 .product-card.hopela .product-cta    { color: var(--teal); }
-.product-card.cityinfra .product-cta { color: var(--blue); }
+.product-card.cityinfra .product-cta { color: #C4B5FD; }
 
 .live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  background: rgba(34,197,94,0.1);
-  border: 1px solid rgba(34,197,94,0.25);
-  border-radius: 100px;
-  font-size: 10px;
-  font-weight: 700;
-  color: #4ADE80;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.22); border-radius: 100px;
+  font-size: 10px; font-weight: 700; color: #4ADE80;
+  letter-spacing: 0.5px; text-transform: uppercase;
 }
-.live-dot-sm {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: #22C55E;
-  animation: pulse 2s infinite;
+.live-dot-sm { width: 5px; height: 5px; border-radius: 50%; background: #22C55E; animation: pulse 2s infinite; }
+
+/* Coming soon row */
+.coming-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+}
+.coming-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r2);
+  padding: 20px 22px; display: flex; align-items: center; gap: 16px;
+  opacity: 0.7;
+}
+.coming-icon {
+  width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+}
+.coming-badge {
+  display: inline-flex; align-items: center; padding: 2px 7px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 100px; font-size: 10px; font-weight: 700; color: var(--amber);
+  letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 3px;
 }
 
 /* ============================================================
-   INSTALL SECTION
+   HOW IT WORKS
    ============================================================ */
-.install-section {
-  background: linear-gradient(135deg, rgba(29,78,216,0.15) 0%, rgba(12,16,32,0.8) 50%, rgba(13,148,136,0.08) 100%);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  padding: 64px 48px;
-  text-align: center;
-  margin: 0 24px;
-  max-width: 1072px;
+.how-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  position: relative;
+}
+.how-grid::before {
+  content: '';
+  position: absolute; top: 28px; left: calc(16.67% + 16px); right: calc(16.67% + 16px);
+  height: 1px; background: linear-gradient(90deg, var(--border2), var(--border2));
+  pointer-events: none;
+}
+
+.how-step {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 28px 24px; display: flex; flex-direction: column; gap: 12px;
+  position: relative; text-align: center;
+}
+.how-step:not(:last-child) { margin-right: -1px; }
+
+.how-num {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: #fff;
   margin: 0 auto;
+  box-shadow: 0 0 0 6px rgba(59,130,246,0.1);
+  position: relative; z-index: 1;
 }
 
-.install-app-mockup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-
-.app-icon-large {
-  width: 80px; height: 80px;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: #fff;
-  box-shadow: 0 8px 32px rgba(59,130,246,0.35);
-}
-
-.install-arrow {
-  font-size: 24px;
-  color: var(--txt3);
-}
-
-.desktop-mockup {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  font-size: 12px;
-  color: var(--txt2);
-}
-.desktop-icon {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 900;
-  color: #fff;
-}
-
-.install-platforms {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-top: 32px;
-  flex-wrap: wrap;
-}
-
-.install-platform {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  color: var(--txt2);
-  font-weight: 500;
-}
+.how-title { font-size: 15px; font-weight: 700; color: var(--txt); }
+.how-desc { font-size: 13px; color: var(--txt2); line-height: 1.65; }
 
 /* ============================================================
    CAPABILITIES
    ============================================================ */
-.caps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
+.caps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
 .cap-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 28px 24px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 26px 22px; transition: border-color 0.2s;
 }
+.cap-card:hover { border-color: var(--border2); }
 
 .cap-icon {
-  width: 42px; height: 42px;
-  border-radius: 10px;
-  background: rgba(59,130,246,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 42px; height: 42px; border-radius: 10px;
+  background: rgba(59,130,246,0.09); display: flex; align-items: center; justify-content: center;
   margin-bottom: 14px;
 }
+.cap-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 7px; }
+.cap-desc { font-size: 13px; color: var(--txt2); line-height: 1.62; }
 
-.cap-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 8px;
-}
-.cap-desc { font-size: 13px; color: var(--txt2); line-height: 1.6; }
-
-/* ============================================================
-   TECH STACK
-   ============================================================ */
-.tech-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 32px;
-}
-
+.tech-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px; }
 .tech-chip {
-  padding: 6px 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 12px;
-  color: var(--txt2);
-  font-weight: 600;
+  padding: 6px 13px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 6px;
+  font-size: 12px; color: var(--txt2); font-weight: 600;
   font-family: 'Space Grotesk', monospace;
 }
 
 /* ============================================================
-   CLIENTS / TARGETS
+   INSTALL / PWA SECTION (IC 009 SPECIMEN KEY ELEMENT)
    ============================================================ */
-.clients-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 40px;
+.install-section {
+  background: linear-gradient(135deg, rgba(29,78,216,0.14) 0%, rgba(12,16,32,0.9) 50%, rgba(13,148,136,0.07) 100%);
+  border: 1px solid var(--border2); border-radius: 20px;
+  padding: 64px 48px; text-align: center;
 }
 
-.client-chip {
-  padding: 10px 20px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  color: var(--txt2);
-  font-weight: 600;
+.app-icon-large {
+  width: 84px; height: 84px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  border-radius: 19px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 30px; font-weight: 900; color: #fff;
+  box-shadow: 0 8px 32px rgba(59,130,246,0.32);
+}
+
+.install-arrow { font-size: 22px; color: var(--txt3); }
+
+.desktop-mockup {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 18px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09); border-radius: 10px;
+  font-size: 12px; color: var(--txt2);
+}
+.desktop-icon {
+  width: 32px; height: 32px; background: linear-gradient(135deg, var(--blue2), var(--blue));
+  border-radius: 7px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 900; color: #fff;
+}
+
+.install-platforms {
+  display: flex; justify-content: center; gap: 16px; margin-top: 36px; flex-wrap: wrap;
+}
+.install-platform {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; color: var(--txt2); font-weight: 500;
 }
 
 /* ============================================================
-   CONTACT / DEMO
+   PRICING
    ============================================================ */
-.demo-section {
-  background: var(--card);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  padding: 64px 48px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.price-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 32px 28px; display: flex; flex-direction: column; gap: 20px;
+  position: relative; transition: border-color 0.2s, transform 0.2s;
+}
+.price-card:hover { transform: translateY(-3px); border-color: var(--border2); }
+.price-card.featured {
+  border-color: var(--border3);
+  background: linear-gradient(180deg, rgba(59,130,246,0.06) 0%, var(--card) 100%);
 }
 
-.contact-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--txt2);
+.price-featured-badge {
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  padding: 4px 16px; background: var(--blue); border-radius: 0 0 8px 8px;
+  font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff;
 }
+
+.price-name { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--txt2); }
+.price-amount {
+  font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 800;
+  color: #fff; line-height: 1; letter-spacing: -1px;
+}
+.price-amount span { font-size: 18px; font-weight: 600; color: var(--txt2); }
+.price-period { font-size: 13px; color: var(--txt3); margin-top: 4px; }
+.price-desc { font-size: 13px; color: var(--txt2); line-height: 1.6; }
+
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.price-feature {
+  display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--txt2);
+}
+.check-icon { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+.check-blue { color: var(--blue); }
+.check-teal { color: var(--teal); }
+.check-green { color: var(--green); }
+
+.price-cta {
+  display: block; width: 100%; padding: 12px; border-radius: 8px;
+  font-size: 14px; font-weight: 700; text-align: center; cursor: pointer;
+  font-family: inherit; text-decoration: none; transition: all 0.15s;
+}
+.price-cta-outline {
+  background: transparent; color: var(--txt); border: 1px solid var(--border2);
+}
+.price-cta-outline:hover { border-color: var(--border3); background: rgba(59,130,246,0.05); }
+.price-cta-solid { background: var(--blue); color: #fff; border: none; }
+.price-cta-solid:hover { background: var(--blue2); }
+.price-cta-teal { background: rgba(45,212,191,0.1); color: var(--teal); border: 1px solid rgba(45,212,191,0.25); }
+.price-cta-teal:hover { background: rgba(45,212,191,0.16); }
+
+/* ============================================================
+   COMPANY / ABOUT
+   ============================================================ */
+.company-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+}
+
+.company-fact {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border); border-radius: var(--r2);
+  margin-bottom: 10px;
+}
+.company-fact-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: rgba(59,130,246,0.1);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.company-fact-label { font-size: 10px; color: var(--txt3); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+.company-fact-value { font-size: 14px; color: var(--txt); font-weight: 600; }
+
+.trademark-box {
+  background: rgba(59,130,246,0.05); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 24px 22px; margin-top: 4px;
+}
+.trademark-box .section-eyebrow { margin-bottom: 10px; }
+
+/* ============================================================
+   CLIENTS
+   ============================================================ */
+.clients-row {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 40px;
+}
+.client-chip {
+  padding: 9px 18px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 13px; color: var(--txt2); font-weight: 600;
+  transition: border-color 0.15s;
+}
+.client-chip:hover { border-color: var(--border2); color: var(--txt); }
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.demo-section {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 20px;
+  padding: 60px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+
+.contact-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.contact-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--txt2); }
 .contact-icon {
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  background: rgba(59,130,246,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  width: 36px; height: 36px; border-radius: 8px; background: rgba(59,130,246,0.1);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .contact-item a { color: var(--blue); text-decoration: none; }
 .contact-item a:hover { text-decoration: underline; }
+
+.demo-link {
+  display: block; padding: 13px 24px; border-radius: 10px;
+  text-decoration: none; font-weight: 700; font-size: 14px; text-align: center;
+  transition: all 0.15s;
+}
 
 /* ============================================================
    FOOTER
    ============================================================ */
 footer {
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 32px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  font-size: 12px;
-  color: var(--txt3);
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border); padding: 32px 40px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 24px; font-size: 12px; color: var(--txt3);
 }
-
 .footer-brand {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--txt2);
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: var(--txt2);
+  margin-bottom: 6px;
 }
-
-.footer-links { display: flex; gap: 20px; }
+.footer-links { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
 .footer-links a { color: var(--txt3); text-decoration: none; }
 .footer-links a:hover { color: var(--txt2); }
-
-.tm-notice {
-  font-size: 10px;
-  color: var(--txt3);
-  letter-spacing: 0.3px;
-}
+.tm-notice { font-size: 10px; color: var(--txt3); letter-spacing: 0.3px; line-height: 1.7; max-width: 520px; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 900px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+  .company-grid { grid-template-columns: 1fr; }
+  .demo-section { grid-template-columns: 1fr; padding: 40px 28px; }
+  .how-grid { grid-template-columns: 1fr; }
+  .how-grid::before { display: none; }
+  .caps-grid { grid-template-columns: 1fr 1fr; }
+  .coming-row { grid-template-columns: 1fr; }
+}
 @media (max-width: 768px) {
   nav { padding: 0 20px; }
   .nav-links .nav-link { display: none; }
-  .products-grid { grid-template-columns: 1fr; }
-  .caps-grid { grid-template-columns: 1fr 1fr; }
-  .demo-section { grid-template-columns: 1fr; }
   .install-section { padding: 40px 24px; }
   section { padding: 60px 20px; }
   #install-banner { padding: 14px 20px; flex-direction: column; align-items: flex-start; }
+  .trust-strip { padding: 16px 20px; gap: 20px; }
+  footer { padding: 28px 20px; }
 }
 @media (max-width: 480px) {
   .caps-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 28px; }
+  .hero-stats { gap: 24px; }
   .hero-divider { display: none; }
 }
 </style>
@@ -832,33 +664,34 @@ footer {
     <div class="nav-logo">A</div>
     <div>
       <div class="nav-mark">ASTORIX<sup>™</sup></div>
-      <div class="nav-by">by Gensis.AI Inc.</div>
     </div>
   </a>
   <div class="nav-links">
     <a class="nav-link" href="#products">Products</a>
-    <a class="nav-link" href="#capabilities">Platform</a>
+    <a class="nav-link" href="#platform">Platform</a>
+    <a class="nav-link" href="#pricing">Pricing</a>
+    <a class="nav-link" href="#company">Company</a>
     <a class="nav-link" href="#contact">Contact</a>
-    <a class="nav-demo-btn" href="https://demo.astorix.ai" target="_blank">Live Demo</a>
-    <button class="nav-install-btn" id="nav-install-btn" style="display:none" onclick="triggerInstall()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Install App
+    <a class="nav-btn nav-btn-outline" href="https://signal.demo.astorix.ai" target="_blank">Live Demo</a>
+    <button class="nav-btn nav-btn-solid" id="nav-install-btn" onclick="triggerInstall()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Install
     </button>
   </div>
 </nav>
 
 <!-- ============================================================
-     INSTALL BANNER (shown when PWA installable)
+     INSTALL BANNER (PWA — shown when installable)
      ============================================================ -->
 <div id="install-banner">
-  <div class="install-banner-text">
+  <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--txt)">
     <div class="install-banner-icon">A</div>
     <div>
-      <strong>Install ASTORIX™</strong> — Add to your desktop for instant access to AI civic intelligence.<br>
-      <span style="font-size:12px;color:var(--txt3)">Works offline · No app store required · Enterprise-ready</span>
+      <strong>Install ASTORIX™</strong> — Add to your desktop for instant access to AI enterprise intelligence.<br>
+      <span style="font-size:12px;color:var(--txt3)">Works offline · No app store required · Enterprise-ready PWA</span>
     </div>
   </div>
-  <div class="install-banner-btns">
+  <div style="display:flex;gap:8px;align-items:center">
     <button class="btn-install-now" onclick="triggerInstall()">Install Now</button>
     <button class="btn-install-dismiss" onclick="dismissInstall()">Not now</button>
   </div>
@@ -870,16 +703,15 @@ footer {
 <div class="hero">
   <div class="hero-eyebrow">
     <div class="pulse-dot"></div>
-    Platform Live · demo.astorix.ai
+    Platform Live · www.astorix.ai
   </div>
 
-  <h1 class="hero-title">
-    ASTORIX<span class="hero-title-tm">™</span>
-  </h1>
-  <div class="hero-sub">Enterprise AI Platform</div>
+  <h1 class="hero-title">ASTORIX<span class="hero-title-tm">™</span></h1>
+  <div class="hero-sub">AI Agent Orchestration Platform</div>
 
   <p class="hero-desc">
-    AI-powered civic intelligence for emergency response, homelessness intervention, and infrastructure analytics. Built for government agencies, enterprise clients, and the cities that never stop.
+    Enterprise-grade AI for B2B lead intelligence, civic operations, and infrastructure analytics.
+    Three production modules. One unified platform. Built by Gensis.AI Inc. and Engineersoft Inc.
   </p>
 
   <div class="hero-ctas">
@@ -887,7 +719,7 @@ footer {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Install ASTORIX™
     </button>
-    <a class="cta-primary" id="hero-demo-btn" href="https://demo.astorix.ai" target="_blank">
+    <a class="cta-primary" id="hero-demo-btn" href="https://signal.demo.astorix.ai" target="_blank">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
       View Live Demo
     </a>
@@ -900,7 +732,12 @@ footer {
   <div class="hero-stats">
     <div class="hstat">
       <div class="hstat-val">3</div>
-      <div class="hstat-label">AI Modules Live</div>
+      <div class="hstat-label">Modules Live</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hstat">
+      <div class="hstat-val">GPT-4o</div>
+      <div class="hstat-label">AI Engine</div>
     </div>
     <div class="hero-divider"></div>
     <div class="hstat">
@@ -920,36 +757,48 @@ footer {
   </div>
 </div>
 
+<!-- ============================================================
+     TRUST STRIP
+     ============================================================ -->
+<div class="trust-strip">
+  <div class="trust-item"><div class="trust-dot trust-dot-blue"></div>Microsoft Azure Infrastructure</div>
+  <div class="trust-item"><div class="trust-dot trust-dot-teal"></div>Azure OpenAI GPT-4o</div>
+  <div class="trust-item"><div class="trust-dot trust-dot-green"></div>Microsoft Entra ID SSO</div>
+  <div class="trust-item"><div class="trust-dot trust-dot-blue"></div>Azure Cosmos DB</div>
+  <div class="trust-item"><div class="trust-dot trust-dot-purple"></div>PWA · Offline-Capable</div>
+  <div class="trust-item"><div class="trust-dot trust-dot-teal"></div>USPTO Trademark Pending</div>
+</div>
+
 <div class="divider"></div>
 
 <!-- ============================================================
      PRODUCTS
      ============================================================ -->
 <section id="products">
-  <div class="section-eyebrow">ASTORIX™ Products</div>
+  <div class="section-eyebrow">ASTORIX™ Product Suite</div>
   <h2 class="section-title">Three AI Modules.<br>One Unified Platform.</h2>
-  <p class="section-desc">Each module is a downloadable, installable AI application for enterprise and civic use. All powered by ASTORIX™ AI.</p>
+  <p class="section-desc">Each module is a production-ready, PWA-installable AI application purpose-built for enterprise and civic use cases.</p>
 
   <div class="products-grid">
 
-    <!-- Signal -->
+    <!-- Signal: B2B Lead Intelligence -->
     <a class="product-card signal" href="https://signal.demo.astorix.ai" target="_blank">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="product-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
         <span class="live-badge"><span class="live-dot-sm"></span>LIVE</span>
       </div>
       <div>
         <div class="product-name">ASTORIX™ Signal</div>
-        <div class="product-tagline">Real-Time Emergency Intelligence</div>
+        <div class="product-tagline">B2B Lead Intelligence</div>
       </div>
-      <p class="product-desc">AI-driven incident detection, dispatch optimization, and real-time emergency analytics for LAPD, LAFD, and field agencies. Live situational awareness at command-level.</p>
+      <p class="product-desc">AI-powered prospect discovery, intelligent lead scoring, and automated outreach for California businesses targeting government contracts. SAM.gov scanning, GPT-4o analysis, pipeline management — fully automated.</p>
       <div class="product-features">
-        <div class="product-feature">Live incident feed &amp; AI severity scoring</div>
-        <div class="product-feature">Dispatch optimization engine</div>
-        <div class="product-feature">LAPD / LAFD / DPW integration</div>
-        <div class="product-feature">Downloadable &amp; PWA-installable</div>
+        <div class="product-feature">SAM.gov contract opportunity scanning</div>
+        <div class="product-feature">AI lead scoring (0–100 fit analysis)</div>
+        <div class="product-feature">Automated email, capability statement &amp; cover letter generation</div>
+        <div class="product-feature">Pipeline kanban · Analytics dashboard</div>
       </div>
       <div class="product-cta">
         Launch Signal
@@ -961,7 +810,7 @@ footer {
     <a class="product-card hopela" href="https://hopela.demo.astorix.ai" target="_blank">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="product-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
         <span class="live-badge"><span class="live-dot-sm"></span>LIVE</span>
       </div>
@@ -969,9 +818,9 @@ footer {
         <div class="product-name">ASTORIX™ HOPE-LA</div>
         <div class="product-tagline">Homelessness Response Hub</div>
       </div>
-      <p class="product-desc">AI-powered homelessness intelligence platform for the City of Los Angeles. Tracks units, services, outreach, and predictive shelter demand in real time.</p>
+      <p class="product-desc">AI-powered homelessness intelligence platform for the City of Los Angeles. Tracks shelter availability, services, outreach programs, and predictive demand modeling in real time.</p>
       <div class="product-features">
-        <div class="product-feature">Real-time housing unit availability</div>
+        <div class="product-feature">Real-time shelter unit availability</div>
         <div class="product-feature">AI predictive demand modeling</div>
         <div class="product-feature">LA County open data integration</div>
         <div class="product-feature">Downloadable &amp; PWA-installable</div>
@@ -986,15 +835,15 @@ footer {
     <a class="product-card cityinfra" href="https://cityinfra.demo.astorix.ai" target="_blank">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="product-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
         </div>
         <span class="live-badge"><span class="live-dot-sm"></span>LIVE</span>
       </div>
       <div>
         <div class="product-name">ASTORIX™ CityInfra AI</div>
-        <div class="product-tagline">Infrastructure Intelligence Platform</div>
+        <div class="product-tagline">Infrastructure Intelligence</div>
       </div>
-      <p class="product-desc">MyLA311-integrated AI platform for city infrastructure analytics. District-level 311 data, permit tracking, infrastructure health scoring, and executive briefings.</p>
+      <p class="product-desc">MyLA311-integrated AI platform for city infrastructure analytics. District-level 311 data, permit tracking, infrastructure health scoring, and executive AI briefings for public works leadership.</p>
       <div class="product-features">
         <div class="product-feature">MyLA311 &amp; permit data analytics</div>
         <div class="product-feature">District-by-district AI briefings</div>
@@ -1008,22 +857,148 @@ footer {
     </a>
 
   </div>
+
+  <!-- Coming Soon -->
+  <div style="margin-top:24px;">
+    <div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">In Development</div>
+    <div class="coming-row">
+      <div class="coming-card">
+        <div class="coming-icon">💍</div>
+        <div>
+          <div class="coming-badge">Coming Soon</div>
+          <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:2px;">ASTORIX™ Matrimony</div>
+          <div style="font-size:12px;color:var(--txt3);">AI-powered matrimonial platform. iOS &amp; Android. Better than Shaadi.com.</div>
+        </div>
+      </div>
+      <div class="coming-card">
+        <div class="coming-icon">🎨</div>
+        <div>
+          <div class="coming-badge">Conceptual</div>
+          <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:2px;">ASTORIX™ Muse</div>
+          <div style="font-size:12px;color:var(--txt3);">AI creative intelligence platform. Full product definition in progress.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <div class="divider"></div>
 
 <!-- ============================================================
-     INSTALL SECTION (IC 009 SPECIMEN KEY ELEMENT)
+     HOW IT WORKS
+     ============================================================ -->
+<section>
+  <div class="section-eyebrow">Platform Architecture</div>
+  <h2 class="section-title">How ASTORIX™ Works</h2>
+  <p class="section-desc">Three layers of AI intelligence — data ingestion, agent processing, and enterprise delivery — running on Microsoft Azure.</p>
+
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div class="how-title">Data Ingestion</div>
+      <p class="how-desc">ASTORIX™ agents continuously pull from SAM.gov, LA Socrata open data, LA County datasets, and enterprise APIs. Every 60 seconds. Structured, normalized, and staged for AI analysis.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div class="how-title">AI Agent Processing</div>
+      <p class="how-desc">Azure OpenAI GPT-4o scores, classifies, and generates intelligence for each data point — lead fit analysis, risk scores, natural language summaries, and actionable outreach content.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div class="how-title">Enterprise Delivery</div>
+      <p class="how-desc">Results delivered to authenticated users via Next.js 14 dashboards secured by Microsoft Entra ID SSO. Installable as PWA on Windows, Mac, iOS, and Android. Offline-capable.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     CAPABILITIES
+     ============================================================ -->
+<section id="platform">
+  <div class="section-eyebrow">Technical Infrastructure</div>
+  <h2 class="section-title">Enterprise-Grade<br>AI Infrastructure</h2>
+  <p class="section-desc">Built on Microsoft Azure with enterprise security, real-time data pipelines, and scalable AI services.</p>
+
+  <div class="caps-grid">
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="cap-title">Real-Time AI Analytics</div>
+      <p class="cap-desc">Azure Functions timer triggers + Cosmos DB + Socrata open data APIs delivering live civic and business intelligence, refreshed every 60 seconds.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="cap-title">SAM.gov Lead Intelligence</div>
+      <p class="cap-desc">Signal connects directly to the SAM.gov Opportunities API v2, pulling federal and state contract solicitations and scoring each one for business fit using GPT-4o.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="cap-title">Enterprise SSO</div>
+      <p class="cap-desc">Microsoft Entra ID multi-tenant single sign-on. MSAL Browser v3. Bearer token authentication with JWKS verification — enterprise identity, zero password storage.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      </div>
+      <div class="cap-title">Azure Cosmos DB</div>
+      <p class="cap-desc">Serverless NoSQL on Azure Cosmos DB (East US). Multi-tenant data isolation. Auto-scaling for enterprise data volumes. RBAC enforced, encrypted at rest.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+      </div>
+      <div class="cap-title">Geospatial Intelligence</div>
+      <p class="cap-desc">Mapbox GL interactive maps. City district boundaries, incident overlays, infrastructure heat maps, and satellite layers for spatial situational awareness.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+      </div>
+      <div class="cap-title">PWA — Downloadable Software</div>
+      <p class="cap-desc">Each ASTORIX module is installable as a Progressive Web App — add to home screen, run offline, receive push notifications. No app store required.</p>
+    </div>
+  </div>
+
+  <div class="tech-row">
+    <span class="tech-chip">Microsoft Azure</span>
+    <span class="tech-chip">Azure OpenAI GPT-4o</span>
+    <span class="tech-chip">Azure Cosmos DB</span>
+    <span class="tech-chip">Azure Static Web Apps</span>
+    <span class="tech-chip">Azure Functions</span>
+    <span class="tech-chip">Microsoft Entra ID</span>
+    <span class="tech-chip">Next.js 14</span>
+    <span class="tech-chip">Express.js</span>
+    <span class="tech-chip">SAM.gov API v2</span>
+    <span class="tech-chip">Mapbox GL</span>
+    <span class="tech-chip">Socrata API</span>
+    <span class="tech-chip">GitHub Actions CI/CD</span>
+    <span class="tech-chip">PWA · Service Worker</span>
+    <span class="tech-chip">MSAL Browser v3</span>
+    <span class="tech-chip">Node.js · JWKS-RSA</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     INSTALL / PWA (IC 009 SPECIMEN KEY ELEMENT)
      ============================================================ -->
 <section id="install" style="padding:80px 24px;">
   <div class="install-section">
-    <div class="section-eyebrow" style="margin-bottom:12px;">Downloadable Software</div>
-    <h2 class="section-title" style="margin-bottom:12px;">Install ASTORIX™ on Your Device</h2>
-    <p style="font-size:15px;color:var(--txt2);max-width:520px;margin:0 auto 36px;line-height:1.7;">
-      ASTORIX™ is downloadable AI software. Install directly from your browser — no app store, no installer file. Works on Windows, Mac, and mobile. Full offline capability.
+    <div class="section-eyebrow" style="margin-bottom:10px;text-align:center;">Downloadable Software · USPTO IC 009</div>
+    <h2 class="section-title" style="text-align:center;margin-bottom:12px;">Install ASTORIX™ on Any Device</h2>
+    <p style="font-size:15px;color:var(--txt2);max-width:520px;margin:0 auto 36px;line-height:1.75;text-align:center;">
+      ASTORIX™ is downloadable AI software. Install directly from your browser — no app store, no installer file. Runs on Windows, Mac, iOS, and Android. Full offline mode.
     </p>
 
-    <div class="install-app-mockup">
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:32px;flex-wrap:wrap;">
       <div class="app-icon-large">A</div>
       <div class="install-arrow">→</div>
       <div class="desktop-mockup">
@@ -1039,27 +1014,29 @@ footer {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download &amp; Install ASTORIX™
     </button>
-    <a class="cta-primary" id="install-section-demo" href="https://demo.astorix.ai" target="_blank" style="margin:0 auto 8px;display:inline-flex;">
+    <a class="cta-primary" id="install-section-demo" href="https://signal.demo.astorix.ai" target="_blank" style="margin:0 auto 8px;display:inline-flex;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
       Access ASTORIX Platform
     </a>
-    <p style="font-size:11px;color:var(--txt3);margin-top:8px;">Available when you visit from Chrome, Edge, or Safari on a supported device.</p>
+    <p style="font-size:11px;color:var(--txt3);margin-top:10px;text-align:center;">
+      Available when visiting from Chrome, Edge, or Safari on a supported device.
+    </p>
 
     <div class="install-platforms">
       <div class="install-platform">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.551H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.551H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
         Windows
       </div>
       <div class="install-platform">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
         macOS
       </div>
       <div class="install-platform">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
         iOS / Android
       </div>
       <div class="install-platform">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
         Any Browser
       </div>
     </div>
@@ -1069,72 +1046,132 @@ footer {
 <div class="divider"></div>
 
 <!-- ============================================================
-     CAPABILITIES
+     PRICING
      ============================================================ -->
-<section id="capabilities">
-  <div class="section-eyebrow">Platform Architecture</div>
-  <h2 class="section-title">Enterprise-Grade AI Infrastructure</h2>
-  <p class="section-desc">Built on Microsoft Azure with enterprise security, real-time data pipelines, and scalable AI services.</p>
+<section id="pricing">
+  <div class="section-eyebrow">Subscription Plans</div>
+  <h2 class="section-title">Simple, Transparent Pricing</h2>
+  <p class="section-desc">ASTORIX™ Signal subscription plans for California businesses targeting government contracts. All plans include full AI generation and SAM.gov scanning.</p>
 
-  <div class="caps-grid">
-    <div class="cap-card">
-      <div class="cap-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  <div class="pricing-grid">
+
+    <!-- Starter -->
+    <div class="price-card">
+      <div>
+        <div class="price-name">Signal Starter</div>
+        <div class="price-amount">$2,500<span>/mo</span></div>
+        <div class="price-period">Billed monthly · Cancel anytime</div>
       </div>
-      <div class="cap-title">Real-Time AI Analytics</div>
-      <p class="cap-desc">Socrata open data pipelines, Azure Functions timer triggers, and Cosmos DB delivering live city intelligence every 60 seconds.</p>
+      <p class="price-desc">For small businesses entering the government contracting space. Automated lead discovery and AI outreach generation.</p>
+      <ul class="price-features">
+        <li class="price-feature">
+          <svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          SAM.gov scanning — up to 50 leads/month
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          AI scoring &amp; fit analysis (GPT-4o)
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          100 AI outreach messages/month
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Email + capability statement generation
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Pipeline kanban &amp; analytics dashboard
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Monthly performance report
+        </li>
+      </ul>
+      <a href="mailto:ashreekar@engineersoft.org?subject=Signal Starter Plan" class="price-cta price-cta-outline">Get Started →</a>
     </div>
-    <div class="cap-card">
-      <div class="cap-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+
+    <!-- Growth (Featured) -->
+    <div class="price-card featured">
+      <div class="price-featured-badge">MOST POPULAR</div>
+      <div>
+        <div class="price-name">Signal Growth</div>
+        <div class="price-amount">$4,500<span>/mo</span></div>
+        <div class="price-period">Billed monthly · Cancel anytime</div>
       </div>
-      <div class="cap-title">Enterprise SSO</div>
-      <p class="cap-desc">Microsoft Entra ID multi-tenant single sign-on. Bearer token authentication. MSAL Browser v3 integration for enterprise identity.</p>
+      <p class="price-desc">For growing firms aggressively pursuing government contracts. Higher volume, weekly reporting, and dedicated support.</p>
+      <ul class="price-features">
+        <li class="price-feature">
+          <svg class="check-icon check-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          SAM.gov scanning — up to 200 leads/month
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Priority AI scoring with detailed fit reports
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          500 AI outreach messages/month
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Email + capability statement + cover letters
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Weekly performance reporting
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Priority email support
+        </li>
+      </ul>
+      <a href="mailto:ashreekar@engineersoft.org?subject=Signal Growth Plan" class="price-cta price-cta-solid">Get Started →</a>
     </div>
-    <div class="cap-card">
-      <div class="cap-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20"/></svg>
+
+    <!-- Pro -->
+    <div class="price-card">
+      <div>
+        <div class="price-name">Signal Pro</div>
+        <div class="price-amount" style="font-size:28px;letter-spacing:-0.5px;">Custom</div>
+        <div class="price-period">Enterprise licensing · Annual contracts</div>
       </div>
-      <div class="cap-title">Geospatial Intelligence</div>
-      <p class="cap-desc">Mapbox GL interactive maps. District boundaries, incident overlays, heat maps, and satellite layers for spatial situational awareness.</p>
+      <p class="price-desc">For enterprise firms and government agencies. Custom integrations, dedicated infrastructure, white-label options.</p>
+      <ul class="price-features">
+        <li class="price-feature">
+          <svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Unlimited lead scanning &amp; outreach
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Custom AI model fine-tuning
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Dedicated Azure infrastructure
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          CRM &amp; ERP integrations
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          White-label options
+        </li>
+        <li class="price-feature">
+          <svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Dedicated account manager + SLA
+        </li>
+      </ul>
+      <a href="mailto:ashreekar@engineersoft.org?subject=Signal Pro Enterprise" class="price-cta price-cta-teal">Contact Sales →</a>
     </div>
-    <div class="cap-card">
-      <div class="cap-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-      </div>
-      <div class="cap-title">NoSQL Data Platform</div>
-      <p class="cap-desc">Azure Cosmos DB serverless — East US. Multi-collection: cityinfra, housing, incidents. Auto-scaling for enterprise data volumes.</p>
-    </div>
-    <div class="cap-card">
-      <div class="cap-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
-      </div>
-      <div class="cap-title">PWA — Downloadable Software</div>
-      <p class="cap-desc">Each ASTORIX module is installable as a Progressive Web App. Download and run as a desktop or mobile application — fully offline-capable.</p>
-    </div>
-    <div class="cap-card">
-      <div class="cap-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      </div>
-      <div class="cap-title">CI/CD Auto-Deploy</div>
-      <p class="cap-desc">GitHub Actions pipeline. Auto-deploy on push to main. Azure Monitor + Log Analytics. Zero-downtime deployments across all modules.</p>
-    </div>
+
   </div>
 
-  <div class="tech-row">
-    <span class="tech-chip">Microsoft Azure</span>
-    <span class="tech-chip">Azure Cosmos DB</span>
-    <span class="tech-chip">Azure Static Web Apps</span>
-    <span class="tech-chip">Azure Functions</span>
-    <span class="tech-chip">Microsoft Entra ID</span>
-    <span class="tech-chip">Next.js 14</span>
-    <span class="tech-chip">Mapbox GL</span>
-    <span class="tech-chip">Socrata API</span>
-    <span class="tech-chip">GitHub Actions</span>
-    <span class="tech-chip">PWA / Service Worker</span>
-    <span class="tech-chip">Recharts</span>
-    <span class="tech-chip">Node.js</span>
-  </div>
+  <p style="text-align:center;font-size:12px;color:var(--txt3);margin-top:24px;">
+    All plans include Microsoft Entra ID SSO · Azure OpenAI GPT-4o · SAM.gov API · Pipeline management · PWA app · Monthly SOW performance reports
+  </p>
 </section>
 
 <div class="divider"></div>
@@ -1142,11 +1179,11 @@ footer {
 <!-- ============================================================
      CLIENTS
      ============================================================ -->
-<section style="text-align:center;padding:60px 24px;">
+<section style="text-align:center;padding:64px 24px;">
   <div class="section-eyebrow">Target Clients</div>
   <h2 class="section-title">Built for the Institutions That Matter</h2>
-  <p style="font-size:15px;color:var(--txt2);max-width:500px;margin:0 auto;">
-    ASTORIX™ is designed for government agencies, enterprise corporations, and civic organizations operating at scale.
+  <p style="font-size:15px;color:var(--txt2);max-width:500px;margin:0 auto 16px;">
+    ASTORIX™ is designed for government agencies, enterprise corporations, and California businesses pursuing growth.
   </p>
   <div class="clients-row">
     <div class="client-chip">City of Los Angeles</div>
@@ -1154,9 +1191,109 @@ footer {
     <div class="client-chip">LAFD</div>
     <div class="client-chip">Mayor's Office of Innovation</div>
     <div class="client-chip">LA Public Works</div>
-    <div class="client-chip">Enterprise Corporations</div>
+    <div class="client-chip">California Small Businesses</div>
     <div class="client-chip">State Government Agencies</div>
+    <div class="client-chip">Engineering &amp; Consulting Firms</div>
+    <div class="client-chip">Enterprise Corporations</div>
     <div class="client-chip">Healthcare Systems</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     COMPANY / ABOUT
+     ============================================================ -->
+<section id="company">
+  <div class="section-eyebrow">About</div>
+  <h2 class="section-title">Built by Gensis.AI Inc.<br>&amp; Engineersoft Inc.</h2>
+
+  <div class="company-grid">
+    <div>
+      <p style="font-size:15px;color:var(--txt2);line-height:1.8;margin-bottom:24px;">
+        ASTORIX™ is an AI agent orchestration platform developed by Gensis.AI Inc. — a California corporation — in partnership with Engineersoft Inc. Zero outside funding. Zero employees. Speed and precision as the competitive moat.
+      </p>
+
+      <div class="company-fact">
+        <div class="company-fact-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        </div>
+        <div>
+          <div class="company-fact-label">Company</div>
+          <div class="company-fact-value">Gensis.AI Inc.</div>
+        </div>
+      </div>
+
+      <div class="company-fact">
+        <div class="company-fact-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="company-fact-label">Jurisdiction</div>
+          <div class="company-fact-value">California Corporation · EIN 33-1622189</div>
+        </div>
+      </div>
+
+      <div class="company-fact">
+        <div class="company-fact-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="company-fact-label">Developer Partner</div>
+          <div class="company-fact-value">Engineersoft Inc. · Panorama City, CA</div>
+        </div>
+      </div>
+
+      <div class="company-fact">
+        <div class="company-fact-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="company-fact-label">Founded</div>
+          <div class="company-fact-value">2026 · Los Angeles, California · USA</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="trademark-box">
+        <div class="section-eyebrow">USPTO Trademark</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-0.5px;">
+          ASTORIX™
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--txt2);">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--txt3);font-weight:600;">Serial Number</span>
+            <span style="font-weight:700;color:var(--txt);">SN 99639401</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--txt3);font-weight:600;">International Class 009</span>
+            <span style="font-weight:700;color:var(--blue3);">Software / Downloadable App</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--txt3);font-weight:600;">International Class 042</span>
+            <span style="font-weight:700;color:var(--blue3);">AI / SaaS Services</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--txt3);font-weight:600;">Registrant</span>
+            <span style="font-weight:700;color:var(--txt);">Gensis.AI Inc.</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;">
+            <span style="color:var(--txt3);font-weight:600;">Status</span>
+            <span style="font-weight:700;color:var(--amber);">Pending · USPTO</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;padding:16px;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);border-radius:var(--r2);">
+        <div style="font-size:11px;font-weight:700;color:var(--green2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Platform Status</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+          <div style="display:flex;align-items:center;gap:8px;"><div class="live-dot-sm"></div><span style="color:var(--txt2);">astorix.ai — Live &amp; Deployed</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div class="live-dot-sm"></div><span style="color:var(--txt2);">signal.demo.astorix.ai — Signal Live</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div class="live-dot-sm"></div><span style="color:var(--txt2);">GitHub CI/CD — Auto-Deploy Active</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1169,50 +1306,56 @@ footer {
   <div class="demo-section">
     <div>
       <div class="section-eyebrow">Get Access</div>
-      <h2 class="section-title" style="margin-bottom:16px;">Request a Demo or Enterprise License</h2>
-      <p style="font-size:15px;color:var(--txt2);line-height:1.7;margin-bottom:32px;">
-        ASTORIX™ is available for enterprise deployment and government licensing. Contact us to schedule a live demo or discuss a deployment for your organization.
+      <h2 class="section-title" style="margin-bottom:16px;">Request a Demo or<br>Enterprise License</h2>
+      <p style="font-size:15px;color:var(--txt2);line-height:1.75;margin-bottom:28px;">
+        ASTORIX™ is available for enterprise deployment and government licensing. Contact us to schedule a live demo, request a Signal subscription, or discuss a custom deployment for your organization.
       </p>
       <ul class="contact-list">
         <li class="contact-item">
           <div class="contact-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
           <a href="mailto:ashreekar@engineersoft.org">ashreekar@engineersoft.org</a>
         </li>
         <li class="contact-item">
           <div class="contact-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-          Response within 24 hours
+          Response within 24 hours · Enterprise inquiries prioritized
         </li>
         <li class="contact-item">
           <div class="contact-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
           Los Angeles, California · USA
         </li>
         <li class="contact-item">
           <div class="contact-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
           </div>
           Gensis.AI Inc. · Engineersoft Inc.
         </li>
       </ul>
     </div>
-    <div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start;">
-      <div style="font-size:13px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Live Platform Access</div>
-      <a href="https://demo.astorix.ai" target="_blank" style="width:100%;text-align:center;padding:14px 24px;background:var(--blue);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:background 0.15s;" onmouseover="this.style.background='#1D4ED8'" onmouseout="this.style.background='#3B82F6'">
-        ASTORIX™ Platform →
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Live Platform Access</div>
+      <a href="https://signal.demo.astorix.ai" target="_blank" class="demo-link"
+         style="background:var(--blue);color:#fff;"
+         onmouseover="this.style.background='#1D4ED8'" onmouseout="this.style.background='#3B82F6'">
+        ASTORIX™ Signal — B2B Lead Intel →
       </a>
-      <a href="https://signal.demo.astorix.ai" target="_blank" style="width:100%;text-align:center;padding:12px 24px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:#F97316;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">
-        ASTORIX™ Signal →
-      </a>
-      <a href="https://hopela.demo.astorix.ai" target="_blank" style="width:100%;text-align:center;padding:12px 24px;background:rgba(45,212,191,0.06);border:1px solid rgba(45,212,191,0.2);color:var(--teal);border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">
+      <a href="https://hopela.demo.astorix.ai" target="_blank" class="demo-link"
+         style="background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.22);color:var(--teal);">
         ASTORIX™ HOPE-LA →
       </a>
-      <a href="https://cityinfra.demo.astorix.ai" target="_blank" style="width:100%;text-align:center;padding:12px 24px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);color:#93C5FD;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">
+      <a href="https://cityinfra.demo.astorix.ai" target="_blank" class="demo-link"
+         style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.22);color:#C4B5FD;">
         ASTORIX™ CityInfra AI →
+      </a>
+      <a href="mailto:ashreekar@engineersoft.org?subject=ASTORIX%20Signal%20Demo%20Request" class="demo-link"
+         style="background:rgba(255,255,255,0.03);border:1px solid var(--border2);color:var(--txt);">
+        ✉ Request Enterprise Demo
       </a>
     </div>
   </div>
@@ -1225,22 +1368,34 @@ footer {
   <div>
     <div class="footer-brand">ASTORIX™</div>
     <div class="tm-notice">
-      ASTORIX™ is a trademark of Gensis.AI Inc. · USPTO Application SN 99639401 (Pending) · Classes IC 009, IC 042<br>
-      © 2026 Gensis.AI Inc. · Developed by Engineersoft Inc. · ashreekar@engineersoft.org
+      ASTORIX™ is a trademark of Gensis.AI Inc. · USPTO Application SN 99639401 (Pending) · Int'l Classes IC 009, IC 042<br>
+      © 2026 Gensis.AI Inc. All Rights Reserved. · Developed by Engineersoft Inc. · California, USA<br>
+      ashreekar@engineersoft.org · EIN 33-1622189
     </div>
   </div>
-  <div class="footer-links">
-    <a href="https://demo.astorix.ai" target="_blank">Platform</a>
-    <a href="mailto:ashreekar@engineersoft.org">Contact</a>
-    <a href="#install">Install App</a>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;">
+    <div class="footer-links">
+      <a href="#products">Products</a>
+      <a href="#platform">Platform</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#company">Company</a>
+      <a href="#contact">Contact</a>
+      <a href="#install">Install App</a>
+    </div>
+    <div class="footer-links">
+      <a href="https://signal.demo.astorix.ai" target="_blank">Signal</a>
+      <a href="https://hopela.demo.astorix.ai" target="_blank">HOPE-LA</a>
+      <a href="https://cityinfra.demo.astorix.ai" target="_blank">CityInfra</a>
+      <a href="mailto:ashreekar@engineersoft.org">Demo Request</a>
+    </div>
   </div>
 </footer>
 
 <!-- ============================================================
-     PWA + SERVICE WORKER JAVASCRIPT
+     PWA + SERVICE WORKER
      ============================================================ -->
 <script>
-// ---- PWA Install Logic ----
+// ── PWA Install Logic ──────────────────────────────────────────
 let deferredPrompt = null;
 
 window.addEventListener('beforeinstallprompt', e => {
@@ -1250,21 +1405,17 @@ window.addEventListener('beforeinstallprompt', e => {
 });
 
 function showInstallUI() {
-  // Show install banner
   const banner = document.getElementById('install-banner');
   if (banner) banner.classList.add('show');
 
-  // Show nav install button
   const navBtn = document.getElementById('nav-install-btn');
   if (navBtn) navBtn.style.display = 'flex';
 
-  // Show hero install button, hide demo button
   const heroInstall = document.getElementById('hero-install-btn');
-  const heroDemo   = document.getElementById('hero-demo-btn');
+  const heroDemo    = document.getElementById('hero-demo-btn');
   if (heroInstall) heroInstall.style.display = 'inline-flex';
   if (heroDemo)    heroDemo.style.display    = 'none';
 
-  // Show section install button
   const sectionBtn  = document.getElementById('install-section-btn');
   const sectionDemo = document.getElementById('install-section-demo');
   if (sectionBtn)  sectionBtn.style.display  = 'inline-flex';
@@ -1273,40 +1424,56 @@ function showInstallUI() {
 
 function triggerInstall() {
   if (!deferredPrompt) {
-    // Already installed or not supported — go to demo
-    window.open('https://demo.astorix.ai', '_blank');
+    window.open('https://signal.demo.astorix.ai', '_blank');
     return;
   }
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(result => {
     if (result.outcome === 'accepted') {
-      console.log('ASTORIX installed');
-      document.getElementById('install-banner').classList.remove('show');
+      const banner = document.getElementById('install-banner');
+      if (banner) banner.classList.remove('show');
     }
     deferredPrompt = null;
   });
 }
 
 function dismissInstall() {
-  document.getElementById('install-banner').classList.remove('show');
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.classList.remove('show');
   try { sessionStorage.setItem('astorix-install-dismissed', '1'); } catch(e) {}
 }
 
-// Already installed check
 window.addEventListener('appinstalled', () => {
   const banner = document.getElementById('install-banner');
   if (banner) banner.classList.remove('show');
   deferredPrompt = null;
 });
 
-// ---- Service Worker Registration ----
+// ── Service Worker ─────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
-      .then(reg => console.log('ASTORIX SW registered:', reg.scope))
-      .catch(err => console.warn('ASTORIX SW registration failed:', err));
+      .then(reg => console.log('[ASTORIX] SW registered:', reg.scope))
+      .catch(err => console.warn('[ASTORIX] SW failed:', err));
   });
 }
+
+// ── Smooth active nav ──────────────────────────────────────────
+const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+const sections = document.querySelectorAll('section[id]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => {
+        l.style.color = l.getAttribute('href') === '#' + entry.target.id
+          ? 'var(--txt)' : '';
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+sections.forEach(s => observer.observe(s));
 </script>
 
 </body>
