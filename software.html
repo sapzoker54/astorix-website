@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTORIX™ Software Access Center — Gensis.AI Inc.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800;900&display=swap">
+<style>
+:root {
+  --bg: #0D1117;
+  --bg2: #111823;
+  --card: #161D27;
+  --card2: #1B2332;
+  --border: rgba(249,115,22,0.15);
+  --border2: rgba(255,255,255,0.06);
+  --txt: #E6ECF5;
+  --txt2: #8A99B5;
+  --txt3: #4A5A78;
+  --orange: #F97316;
+  --orange2: #FB923C;
+  --blue: #3B82F6;
+  --teal: #2DD4BF;
+  --purple: #A78BFA;
+  --green: #34D399;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background:
+    radial-gradient(900px 400px at 0% -10%, rgba(249,115,22,0.07), transparent 65%),
+    radial-gradient(700px 350px at 100% 5%, rgba(59,130,246,0.06), transparent 60%),
+    var(--bg);
+  color: var(--txt);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── NAV ─────────────────────────────── */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(13,17,23,0.95);
+  border-bottom: 1px solid var(--border2);
+  backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-pill {
+  background: var(--orange);
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 900;
+  letter-spacing: 1px;
+  padding: 5px 16px; border-radius: 7px;
+}
+.brand-sub { font-size: 12px; color: var(--txt2); line-height: 1.3; }
+.brand-sub strong { color: var(--txt); }
+
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 6px;
+  background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25);
+  color: var(--orange2);
+}
+.nav-link {
+  font-size: 12px; color: var(--blue); text-decoration: none;
+  padding: 6px 14px; border-radius: 7px;
+  border: 1px solid rgba(59,130,246,0.25);
+  transition: all 0.15s;
+}
+.nav-link:hover { background: rgba(59,130,246,0.1); }
+
+/* ── HERO ─────────────────────────────── */
+.hero {
+  max-width: 760px; margin: 72px auto 56px; padding: 0 24px; text-align: center;
+}
+.hero-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--orange); margin-bottom: 20px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px; width: 40px;
+  background: linear-gradient(90deg, transparent, var(--orange));
+}
+.hero-eyebrow::after { background: linear-gradient(90deg, var(--orange), transparent); }
+
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(36px, 6vw, 60px);
+  font-weight: 900; letter-spacing: -0.5px;
+  line-height: 1.05; margin-bottom: 20px;
+}
+.hero h1 .mark {
+  background: linear-gradient(120deg, var(--orange), #F59E0B, var(--orange2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+.hero-desc {
+  font-size: 15px; color: var(--txt2); line-height: 1.7; margin-bottom: 32px;
+}
+
+.hero-meta {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+}
+.hero-meta-item {
+  font-size: 11px; color: var(--txt3);
+  padding: 6px 14px; border-radius: 20px;
+  background: var(--card); border: 1px solid var(--border2);
+  display: flex; align-items: center; gap: 6px;
+}
+.hero-meta-item .dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── MODULE GRID ─────────────────────── */
+.modules-section { max-width: 1100px; margin: 0 auto 80px; padding: 0 24px; }
+
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--txt3); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border2);
+}
+
+.modules-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+@media (max-width: 900px) { .modules-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 580px) { .modules-grid { grid-template-columns: 1fr; } }
+
+/* ── MODULE CARD ─────────────────────── */
+.module-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.module-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+}
+.module-card.signal:hover  { border-color: rgba(59,130,246,0.4); }
+.module-card.hopela:hover  { border-color: rgba(167,139,250,0.4); }
+.module-card.cityinfra:hover { border-color: rgba(45,212,191,0.4); }
+
+/* Accent top bar */
+.card-accent {
+  height: 3px;
+}
+.signal  .card-accent { background: linear-gradient(90deg, var(--blue), var(--teal)); }
+.hopela  .card-accent { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+.cityinfra .card-accent { background: linear-gradient(90deg, var(--teal), var(--green)); }
+
+.card-head {
+  padding: 22px 22px 18px;
+  border-bottom: 1px solid var(--border2);
+}
+.card-module-tag {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--txt3); margin-bottom: 10px;
+}
+.card-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 900; letter-spacing: 0.3px;
+  margin-bottom: 8px; line-height: 1;
+}
+.signal   .card-title { color: #60A5FA; }
+.hopela   .card-title { color: #C4B5FD; }
+.cityinfra .card-title { color: #5EEAD4; }
+
+.card-desc {
+  font-size: 12px; color: var(--txt2); line-height: 1.55;
+}
+
+.card-body { padding: 20px 22px; flex: 1; display: flex; flex-direction: column; gap: 18px; }
+
+/* Build / version row */
+.build-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border-radius: 8px;
+  background: rgba(0,0,0,0.3); border: 1px solid var(--border2);
+  font-size: 11px; color: var(--txt3); font-family: 'IBM Plex Mono', monospace;
+}
+.build-ver { color: var(--txt2); font-weight: 700; }
+.status-live {
+  display: flex; align-items: center; gap: 5px;
+  color: var(--green); font-weight: 700; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10.5px; letter-spacing: 0.5px;
+}
+.status-live .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+/* Specs table */
+.specs { display: flex; flex-direction: column; gap: 0; }
+.spec-row {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 11.5px;
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-key { color: var(--txt3); font-weight: 600; flex-shrink: 0; }
+.spec-val { color: var(--txt2); text-align: right; font-weight: 500; }
+.signal   .spec-val.accent { color: #60A5FA; }
+.hopela   .spec-val.accent { color: #C4B5FD; }
+.cityinfra .spec-val.accent { color: #5EEAD4; }
+
+/* Action buttons */
+.card-actions { display: flex; flex-direction: column; gap: 8px; }
+
+.btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: 9px;
+  font-size: 12.5px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+  transition: all 0.15s; width: 100%;
+}
+.btn .btn-icon { font-size: 16px; flex-shrink: 0; }
+.btn .btn-label { flex: 1; text-align: left; }
+.btn .btn-arrow { color: rgba(255,255,255,0.3); font-size: 14px; }
+
+/* Primary CTA — per module color */
+.signal   .btn-primary { background: linear-gradient(135deg, #1D4ED8, #3B82F6); color: #fff; box-shadow: 0 4px 18px rgba(59,130,246,0.3); }
+.hopela   .btn-primary { background: linear-gradient(135deg, #5B21B6, #7C3AED); color: #fff; box-shadow: 0 4px 18px rgba(124,58,237,0.3); }
+.cityinfra .btn-primary { background: linear-gradient(135deg, #0F766E, #0D9488); color: #fff; box-shadow: 0 4px 18px rgba(20,184,166,0.3); }
+.btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); }
+
+/* Secondary */
+.btn-secondary {
+  background: transparent; color: var(--txt2);
+  border: 1.5px solid var(--border2);
+}
+.btn-secondary:hover { border-color: rgba(249,115,22,0.4); color: var(--txt); }
+
+/* Download Guide — uses orange accent */
+.btn-download {
+  background: rgba(249,115,22,0.08);
+  border: 1.5px solid rgba(249,115,22,0.2);
+  color: var(--orange2);
+}
+.btn-download:hover { background: rgba(249,115,22,0.14); border-color: rgba(249,115,22,0.4); }
+
+/* ── PLATFORM INSTALL BANNER ─────────── */
+.install-banner {
+  max-width: 1100px; margin: 0 auto 48px; padding: 0 24px;
+}
+.install-inner {
+  background: linear-gradient(135deg, rgba(249,115,22,0.07), rgba(59,130,246,0.07));
+  border: 1px solid rgba(249,115,22,0.2);
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap;
+}
+.install-text h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px; font-weight: 900; margin-bottom: 6px;
+}
+.install-text h2 .mark { color: var(--orange); }
+.install-text p { font-size: 13px; color: var(--txt2); line-height: 1.6; }
+.install-text .class-tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.class-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 5px;
+}
+.class-tag.c009 { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.25); color: var(--orange2); }
+.class-tag.c042 { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); color: #60A5FA; }
+.install-actions { display: flex; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
+.install-btn {
+  padding: 12px 22px; border-radius: 9px;
+  font-size: 13px; font-weight: 700;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.15s; border: none; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
+}
+.install-btn.primary { background: var(--orange); color: #fff; box-shadow: 0 4px 20px rgba(249,115,22,0.35); }
+.install-btn.primary:hover { filter: brightness(1.1); }
+.install-btn.ghost {
+  background: transparent; color: var(--txt2);
+  border: 1px solid var(--border2);
+}
+.install-btn.ghost:hover { border-color: var(--orange); color: var(--txt); }
+
+/* ── RESOURCES ───────────────────────── */
+.resources-section {
+  max-width: 1100px; margin: 0 auto 80px; padding: 0 24px;
+}
+.resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 680px) { .resources-grid { grid-template-columns: 1fr; } }
+
+.resource-card {
+  padding: 18px 20px; border-radius: 11px;
+  background: var(--card); border: 1px solid var(--border2);
+  text-decoration: none; display: block;
+  transition: border-color 0.15s;
+}
+.resource-card:hover { border-color: rgba(249,115,22,0.3); }
+.resource-icon { font-size: 24px; margin-bottom: 10px; }
+.resource-title { font-size: 13px; font-weight: 700; color: var(--txt); margin-bottom: 4px; }
+.resource-desc { font-size: 11.5px; color: var(--txt3); line-height: 1.5; }
+
+/* ── FOOTER ──────────────────────────── */
+footer {
+  border-top: 1px solid var(--border2);
+  padding: 32px 24px; text-align: center;
+}
+.footer-brand {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 900; letter-spacing: 1px;
+  color: var(--orange); margin-bottom: 8px;
+}
+.footer-legal {
+  font-size: 11px; color: var(--txt3); line-height: 2; margin-bottom: 16px;
+}
+.footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.footer-links a { font-size: 12px; color: var(--blue); text-decoration: none; }
+.footer-links a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="brand" href="https://astorix.ai">
+    <div class="brand-pill">ASTORIX™</div>
+    <div class="brand-sub">
+      Software Access Center<br>
+      <strong>Gensis.AI Inc.</strong>
+    </div>
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge">USPTO SN 99639401</span>
+    <a class="nav-link" href="https://astorix.ai">← astorix.ai</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Software Access Center</div>
+  <h1>
+    <span class="mark">ASTORIX™</span><br>
+    Software Modules
+  </h1>
+  <p class="hero-desc">
+    Access, download, and deploy ASTORIX™ enterprise AI software modules from Gensis.AI Inc.
+    Choose a module below to request access, download documentation, or schedule a live demo session.
+  </p>
+  <div class="hero-meta">
+    <span class="hero-meta-item"><span class="dot"></span> 3 Modules Available</span>
+    <span class="hero-meta-item">🏢 Gensis.AI Inc.</span>
+    <span class="hero-meta-item">📋 Int'l Class 009 — Computer Software</span>
+    <span class="hero-meta-item">☁️ Int'l Class 042 — AI as a Service</span>
+    <span class="hero-meta-item">⚖️ USPTO SN 99639401</span>
+  </div>
+</div>
+
+<!-- SOFTWARE MODULES -->
+<div class="modules-section">
+  <div class="section-label">Available Software Modules</div>
+  <div class="modules-grid">
+
+    <!-- MODULE 01: SIGNAL -->
+    <div class="module-card signal">
+      <div class="card-accent"></div>
+      <div class="card-head">
+        <div class="card-module-tag">ASTORIX™ Module 01 · Class 009 &amp; 042</div>
+        <div class="card-title">ASTORIX™ Signal</div>
+        <div class="card-desc">
+          AI-powered lead intelligence and business development software for California enterprises, startups, and government contractors. Discovers, scores, and drafts outreach for qualified prospects.
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="build-row">
+          <span>Build <span class="build-ver">v2.0 · 2026</span></span>
+          <span class="status-live"><span class="dot"></span>AVAILABLE</span>
+        </div>
+        <div class="specs">
+          <div class="spec-row"><span class="spec-key">Software Type</span><span class="spec-val accent">AI Lead Intelligence SaaS</span></div>
+          <div class="spec-row"><span class="spec-key">Deployment</span><span class="spec-val">Web-Based · Cloud Access</span></div>
+          <div class="spec-row"><span class="spec-key">Platform</span><span class="spec-val">Chrome · Edge · Safari</span></div>
+          <div class="spec-row"><span class="spec-key">AI Model</span><span class="spec-val">Azure OpenAI GPT-4o</span></div>
+          <div class="spec-row"><span class="spec-key">Data Source</span><span class="spec-val">Cal eProcure · CA Open Data</span></div>
+          <div class="spec-row"><span class="spec-key">Provider</span><span class="spec-val accent">Gensis.AI Inc.</span></div>
+        </div>
+        <div class="card-actions">
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Signal — Access Request" class="btn btn-primary">
+            <span class="btn-icon">🎯</span>
+            <span class="btn-label">Access Software Module</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Signal — Demo Request" class="btn btn-secondary">
+            <span class="btn-icon">🖥️</span>
+            <span class="btn-label">Request Live Demo</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Signal — User Guide" class="btn btn-download">
+            <span class="btn-icon">📄</span>
+            <span class="btn-label">Download User Guide</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 02: HOPE-LA -->
+    <div class="module-card hopela">
+      <div class="card-accent"></div>
+      <div class="card-head">
+        <div class="card-module-tag">ASTORIX™ Module 02 · Class 009 &amp; 042</div>
+        <div class="card-title">ASTORIX™ HOPE-LA</div>
+        <div class="card-desc">
+          AI civic operations dashboard software for homelessness response and city service coordination. Real-time 311 data intelligence for Los Angeles city agencies and public safety organizations.
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="build-row">
+          <span>Build <span class="build-ver">v2.0 · 2026</span></span>
+          <span class="status-live"><span class="dot"></span>AVAILABLE</span>
+        </div>
+        <div class="specs">
+          <div class="spec-row"><span class="spec-key">Software Type</span><span class="spec-val accent">AI Civic Operations SaaS</span></div>
+          <div class="spec-row"><span class="spec-key">Deployment</span><span class="spec-val">Web-Based · Cloud Access</span></div>
+          <div class="spec-row"><span class="spec-key">Platform</span><span class="spec-val">Chrome · Edge · Safari</span></div>
+          <div class="spec-row"><span class="spec-key">AI Model</span><span class="spec-val">Azure OpenAI GPT-4o</span></div>
+          <div class="spec-row"><span class="spec-key">Data Source</span><span class="spec-val">LA 311 Open Data · Auto-Refresh 60s</span></div>
+          <div class="spec-row"><span class="spec-key">Provider</span><span class="spec-val accent">Gensis.AI Inc.</span></div>
+        </div>
+        <div class="card-actions">
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX HOPE-LA — Access Request" class="btn btn-primary">
+            <span class="btn-icon">🏙️</span>
+            <span class="btn-label">Access Software Module</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX HOPE-LA — Demo Request" class="btn btn-secondary">
+            <span class="btn-icon">🖥️</span>
+            <span class="btn-label">Request Live Demo</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX HOPE-LA — User Guide" class="btn btn-download">
+            <span class="btn-icon">📄</span>
+            <span class="btn-label">Download User Guide</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 03: CITYINFRA AI -->
+    <div class="module-card cityinfra">
+      <div class="card-accent"></div>
+      <div class="card-head">
+        <div class="card-module-tag">ASTORIX™ Module 03 · Class 009 &amp; 042</div>
+        <div class="card-title">ASTORIX™ CityInfra AI</div>
+        <div class="card-desc">
+          AI infrastructure analytics software for California municipalities. Monitors road conditions, utility networks, and public works using AI-powered data analysis and predictive maintenance intelligence.
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="build-row">
+          <span>Build <span class="build-ver">v2.0 · 2026</span></span>
+          <span class="status-live"><span class="dot"></span>AVAILABLE</span>
+        </div>
+        <div class="specs">
+          <div class="spec-row"><span class="spec-key">Software Type</span><span class="spec-val accent">AI Infrastructure Analytics SaaS</span></div>
+          <div class="spec-row"><span class="spec-key">Deployment</span><span class="spec-val">Web-Based · Cloud Access</span></div>
+          <div class="spec-row"><span class="spec-key">Platform</span><span class="spec-val">Chrome · Edge · Safari</span></div>
+          <div class="spec-row"><span class="spec-key">AI Model</span><span class="spec-val">Azure OpenAI GPT-4o</span></div>
+          <div class="spec-row"><span class="spec-key">Data Source</span><span class="spec-val">CA Socrata APIs · Municipal Data</span></div>
+          <div class="spec-row"><span class="spec-key">Provider</span><span class="spec-val accent">Gensis.AI Inc.</span></div>
+        </div>
+        <div class="card-actions">
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX CityInfra AI — Access Request" class="btn btn-primary">
+            <span class="btn-icon">🏗️</span>
+            <span class="btn-label">Access Software Module</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX CityInfra AI — Demo Request" class="btn btn-secondary">
+            <span class="btn-icon">🖥️</span>
+            <span class="btn-label">Request Live Demo</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX CityInfra AI — User Guide" class="btn btn-download">
+            <span class="btn-icon">📄</span>
+            <span class="btn-label">Download User Guide</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PLATFORM INSTALL BANNER -->
+<div class="install-banner">
+  <div class="install-inner">
+    <div class="install-text">
+      <h2>Install the <span class="mark">ASTORIX™</span> Platform</h2>
+      <p>
+        Install the full ASTORIX™ Enterprise AI Platform as a Progressive Web App (PWA) directly on your device.
+        No app store required — install once, access all software modules offline-capable via your browser.
+      </p>
+      <div class="class-tags">
+        <span class="class-tag c009">Int'l Class 009 — Downloadable Software</span>
+        <span class="class-tag c042">Int'l Class 042 — AI as a Service</span>
+      </div>
+    </div>
+    <div class="install-actions">
+      <a href="https://astorix.ai" class="install-btn primary">⬇ Install ASTORIX™ Platform</a>
+      <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Enterprise Inquiry" class="install-btn ghost">🏢 Enterprise Inquiry</a>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div class="resources-section">
+  <div class="section-label">Software Documentation &amp; Resources</div>
+  <div class="resources-grid">
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Platform Overview Request" class="resource-card">
+      <div class="resource-icon">📋</div>
+      <div class="resource-title">Platform Overview</div>
+      <div class="resource-desc">High-level overview of ASTORIX™ architecture, AI capabilities, and module specifications.</div>
+    </a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Signal User Guide" class="resource-card">
+      <div class="resource-icon">📡</div>
+      <div class="resource-title">Signal User Guide</div>
+      <div class="resource-desc">Step-by-step documentation for ASTORIX™ Signal lead discovery, scoring, and outreach drafting.</div>
+    </a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX HOPE-LA Guide" class="resource-card">
+      <div class="resource-icon">🏙️</div>
+      <div class="resource-title">HOPE-LA Dashboard Guide</div>
+      <div class="resource-desc">Operator documentation for ASTORIX™ HOPE-LA civic operations and 311 data monitoring.</div>
+    </a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX CityInfra AI Guide" class="resource-card">
+      <div class="resource-icon">🏗️</div>
+      <div class="resource-title">CityInfra AI Guide</div>
+      <div class="resource-desc">Technical documentation for ASTORIX™ CityInfra AI infrastructure analytics and municipal integration.</div>
+    </a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX API Integration" class="resource-card">
+      <div class="resource-icon">🔗</div>
+      <div class="resource-title">API Integration Guide</div>
+      <div class="resource-desc">Developer documentation for integrating ASTORIX™ software modules with enterprise systems.</div>
+    </a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Enterprise Deployment" class="resource-card">
+      <div class="resource-icon">🏢</div>
+      <div class="resource-title">Enterprise Deployment</div>
+      <div class="resource-desc">Custom deployment, white-labeling, and enterprise integration services from Gensis.AI Inc.</div>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">ASTORIX™</div>
+  <div class="footer-legal">
+    ASTORIX™ Software Access Center · Gensis.AI Inc. · www.astorix.ai<br>
+    ASTORIX™ is a trademark of Gensis.AI Inc. pending registration · U.S. Trademark Application SN 99639401<br>
+    International Class 009 (Downloadable Computer Software) · International Class 042 (AI as a Service / SaaS)<br>
+    © 2026 Gensis.AI Inc. All Rights Reserved. Unauthorized reproduction or distribution is prohibited.<br>
+    ASTORIX™, ASTORIX Signal™, ASTORIX HOPE-LA™, and ASTORIX CityInfra AI™ are trademarks of Gensis.AI Inc.
+  </div>
+  <div class="footer-links">
+    <a href="https://astorix.ai">astorix.ai</a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX Signal Demo">Signal Demo</a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX HOPE-LA Demo">HOPE-LA Demo</a>
+    <a href="mailto:ashreekar@gensis.ai?subject=ASTORIX CityInfra Demo">CityInfra AI Demo</a>
+    <a href="mailto:ashreekar@gensis.ai">ashreekar@gensis.ai</a>
+  </div>
+</footer>
+
+</body>
+</html>
