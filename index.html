@@ -1032,7 +1032,7 @@ footer {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
         macOS
       </div>
-      <div class="install-platform">
+      <div class="install-platform" onclick="triggerInstall()" style="cursor:pointer;" title="Tap to install ASTORIX™">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
         iOS / Android
       </div>
@@ -1393,6 +1393,33 @@ footer {
 </footer>
 
 <!-- ============================================================
+     iOS INSTALL MODAL
+     ============================================================ -->
+<div id="ios-install-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);align-items:flex-end;justify-content:center;">
+  <div style="background:#0C1020;border:1px solid rgba(59,130,246,0.35);border-radius:20px 20px 0 0;padding:32px 28px 40px;width:100%;max-width:500px;text-align:center;">
+    <div style="width:48px;height:48px;background:linear-gradient(135deg,#1D4ED8,#3B82F6);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:16px;color:#fff;">A</div>
+    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:#F0F4FF;margin-bottom:8px;">Install ASTORIX™ on iPhone</h3>
+    <p style="font-size:14px;color:#94A3B8;margin-bottom:28px;">Follow these steps in Safari to add ASTORIX™ to your Home Screen:</p>
+    <div style="display:flex;flex-direction:column;gap:14px;text-align:left;margin-bottom:28px;">
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border-radius:10px;padding:14px 16px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#3B82F6;flex-shrink:0;">1</div>
+        <div style="font-size:14px;color:#F0F4FF;">Tap the <strong style="color:#3B82F6;">Share</strong> button <span style="font-size:16px;">⎋</span> at the bottom of Safari</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border-radius:10px;padding:14px 16px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#3B82F6;flex-shrink:0;">2</div>
+        <div style="font-size:14px;color:#F0F4FF;">Scroll down and tap <strong style="color:#3B82F6;">"Add to Home Screen"</strong></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border-radius:10px;padding:14px 16px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#3B82F6;flex-shrink:0;">3</div>
+        <div style="font-size:14px;color:#F0F4FF;">Tap <strong style="color:#3B82F6;">"Add"</strong> — ASTORIX™ appears on your Home Screen ✓</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#475569;margin-bottom:20px;">⚠️ Must use Safari. Chrome on iPhone cannot install PWAs.</p>
+    <button onclick="closeIOSModal()" style="width:100%;padding:14px;background:#3B82F6;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">Got it</button>
+  </div>
+</div>
+
+<!-- ============================================================
      PWA + SERVICE WORKER
      ============================================================ -->
 <script>
@@ -1423,9 +1450,25 @@ function showInstallUI() {
   if (sectionDemo) sectionDemo.style.display = 'none';
 }
 
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+function showIOSModal() {
+  document.getElementById('ios-install-modal').style.display = 'flex';
+}
+
+function closeIOSModal() {
+  document.getElementById('ios-install-modal').style.display = 'none';
+}
+
 function triggerInstall() {
+  if (isIOS()) {
+    showIOSModal();
+    return;
+  }
   if (!deferredPrompt) {
-    window.open('https://signal.demo.astorix.ai', '_blank');
+    window.open('https://demo.astorix.ai', '_blank');
     return;
   }
   deferredPrompt.prompt();
@@ -1437,6 +1480,22 @@ function triggerInstall() {
     deferredPrompt = null;
   });
 }
+
+// Show install UI on iOS on page load (beforeinstallprompt never fires on iOS)
+document.addEventListener('DOMContentLoaded', function() {
+  if (isIOS()) {
+    const sectionBtn  = document.getElementById('install-section-btn');
+    const sectionDemo = document.getElementById('install-section-demo');
+    if (sectionBtn)  { sectionBtn.style.display = 'inline-flex'; }
+    if (sectionDemo) { sectionDemo.style.display = 'none'; }
+    const navBtn = document.getElementById('nav-install-btn');
+    if (navBtn) navBtn.style.display = 'flex';
+    const heroInstall = document.getElementById('hero-install-btn');
+    const heroDemo    = document.getElementById('hero-demo-btn');
+    if (heroInstall) heroInstall.style.display = 'inline-flex';
+    if (heroDemo)    heroDemo.style.display    = 'none';
+  }
+});
 
 function dismissInstall() {
   const banner = document.getElementById('install-banner');
