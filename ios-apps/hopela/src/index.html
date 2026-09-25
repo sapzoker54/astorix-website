@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ASTORIX HOPE-LA</title>
+<style>
+  :root {
+    --bg: #07090F;
+    --bg2: #080D0A;
+    --bg3: #0C1410;
+    --card: #101A12;
+    --card2: #152018;
+    --border: #1A2E1C;
+    --text: #E8F5EC;
+    --text2: #7AB88A;
+    --text3: #4A7054;
+    --green: #22C55E;
+    --green2: #16A34A;
+    --teal: #14B8A6;
+    --blue: #3B82F6;
+    --gold: #F59E0B;
+    --orange: #F97316;
+    --red: #EF4444;
+    --purple: #8B5CF6;
+    --safe-top: env(safe-area-inset-top, 44px);
+    --safe-bottom: env(safe-area-inset-bottom, 34px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, sans-serif; overflow: hidden; }
+
+  .status-bar {
+    height: var(--safe-top); min-height: 44px;
+    background: var(--bg);
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 20px 8px;
+    font-size: 12px; font-weight: 600; color: var(--text);
+    position: relative; z-index: 100;
+  }
+  .status-bar .time { font-size: 15px; font-weight: 700; }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+
+  .app-header {
+    background: linear-gradient(135deg, #020D06 0%, #081408 100%);
+    padding: 12px 20px 14px;
+    border-bottom: 1px solid #1A3520;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-logo { display: flex; align-items: center; gap: 10px; }
+  .app-logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, #16A34A, #22C55E);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: white;
+  }
+  .app-logo-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .app-logo-sub { font-size: 10px; color: var(--text3); margin-top: 1px; }
+  .header-actions { display: flex; gap: 10px; }
+  .header-btn {
+    width: 34px; height: 34px;
+    border-radius: 8px; background: #0C1A0E;
+    border: 1px solid #1A3520;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2); font-size: 16px; cursor: pointer;
+  }
+
+  /* LIVE DATA BAR */
+  .live-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 16px;
+    background: #060E08;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px; color: var(--text3);
+  }
+  .live-indicator { display: flex; align-items: center; gap: 5px; }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    animation: livePulse 2s ease-in-out infinite;
+  }
+  .live-dot.loading { background: var(--gold); }
+  .live-dot.error { background: var(--red); animation: none; }
+  @keyframes livePulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  .content {
+    height: calc(100vh - var(--safe-top) - 44px - 28px - 62px - 74px - var(--safe-bottom));
+    min-height: 0; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+  }
+  .content::-webkit-scrollbar { display: none; }
+
+  .tab-panels { display: none; }
+  .tab-panels.active { display: block; }
+
+  /* NWS ALERT BANNER */
+  .nws-banner {
+    margin: 12px 16px 0;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.35);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: none;
+    cursor: pointer;
+  }
+  .nws-banner.visible { display: block; }
+  .nws-banner-title { font-size: 12px; font-weight: 700; color: var(--red); margin-bottom: 3px; }
+  .nws-banner-body { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  /* IMPACT BANNER */
+  .impact-banner {
+    margin: 14px 16px 0;
+    background: linear-gradient(135deg, #071A0C 0%, #0C1A0E 100%);
+    border: 1px solid #1F4A28;
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .impact-banner::before {
+    content: '';
+    position: absolute; top: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(34,197,94,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .impact-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--green); text-transform: uppercase; margin-bottom: 5px; }
+  .impact-headline { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .impact-sub { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+  .impact-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .impact-stat { text-align: center; }
+  .impact-stat-val { font-size: 18px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; }
+  .impact-stat-label { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+  /* KPI ROW */
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 14px 16px 0; }
+  .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 10px; text-align: center; }
+  .kpi-val { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
+  .kpi-label { font-size: 10px; color: var(--text3); margin-top: 3px; font-weight: 500; }
+
+  /* SECTION HEADER */
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 16px 10px; }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .section-link { font-size: 12px; color: var(--green); font-weight: 600; }
+
+  /* HEAT MAP */
+  .heatmap-card {
+    margin: 0 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .heatmap-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .heatmap-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .heatmap-filter {
+    font-size: 11px; color: var(--green); font-weight: 600;
+    background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 6px; padding: 3px 8px;
+  }
+  .heatmap-canvas {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px; padding: 12px;
+    background: #060E08;
+  }
+  .heatmap-cell { aspect-ratio: 1; border-radius: 4px; cursor: pointer; transition: transform 0.1s; position: relative; }
+  .heatmap-cell:active { transform: scale(0.9); }
+  .heatmap-cell .d-label {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.7);
+  }
+  .heat-0 { background: #0C1A0E; }
+  .heat-1 { background: rgba(34,197,94,0.2); }
+  .heat-2 { background: rgba(34,197,94,0.4); }
+  .heat-3 { background: rgba(34,197,94,0.65); }
+  .heat-4 { background: rgba(34,197,94,0.9); }
+  .heatmap-legend {
+    padding: 8px 12px;
+    display: flex; align-items: center; gap: 6px;
+    border-top: 1px solid var(--border);
+  }
+  .heatmap-legend-label { font-size: 10px; color: var(--text3); }
+  .heat-scale { display: flex; gap: 2px; }
+  .heat-scale-cell { width: 12px; height: 12px; border-radius: 2px; }
+  .districts-row { display: flex; gap: 6px; padding: 10px 12px 12px; overflow-x: auto; }
+  .districts-row::-webkit-scrollbar { display: none; }
+  .district-chip {
+    flex-shrink: 0;
+    background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; font-weight: 600; color: var(--green);
+    white-space: nowrap; cursor: pointer;
+  }
+  .district-chip.high-need { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: var(--red); }
+  .district-chip.med-need { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: var(--gold); }
+
+  /* RESOURCE / CATEGORY CARDS */
+  .resource-card {
+    margin: 0 16px 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px; cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .resource-card:active { border-color: var(--green); }
+  .resource-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .resource-program { font-size: 14px; font-weight: 700; color: var(--text); }
+  .resource-district { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .equity-score { font-size: 22px; font-weight: 900; line-height: 1; text-align: right; }
+  .equity-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-align: right; margin-top: 2px; }
+  .resource-bar-wrap { background: var(--bg3); border-radius: 4px; height: 6px; margin-bottom: 8px; overflow: hidden; }
+  .resource-bar { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+  .resource-footer { display: flex; justify-content: space-between; align-items: center; }
+  .resource-beneficiaries { font-size: 12px; color: var(--text2); }
+  .resource-action {
+    background: var(--green2); color: white;
+    border-radius: 8px; padding: 6px 14px;
+    font-size: 12px; font-weight: 700; border: none; cursor: pointer;
+  }
+
+  /* CASE CARDS */
+  .case-filter-row { padding: 8px 16px 0; display: flex; gap: 8px; overflow-x: auto; }
+  .case-filter-row::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    flex-shrink: 0; border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    background: var(--card); border: 1px solid var(--border); color: var(--text3);
+  }
+  .filter-chip.active { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
+
+  .case-card {
+    margin: 0 16px 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; cursor: pointer;
+  }
+  .case-header { padding: 12px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+  .case-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: white; flex-shrink: 0;
+  }
+  .case-info { flex: 1; min-width: 0; }
+  .case-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .case-id { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .case-status { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
+  .cs-active { background: rgba(34,197,94,0.15); color: var(--green); }
+  .cs-pending { background: rgba(245,158,11,0.15); color: var(--gold); }
+  .cs-review { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .cs-closed { background: rgba(74,112,84,0.2); color: var(--text3); }
+  .case-body { padding: 10px 14px 12px; }
+  .case-needs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .need-tag { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 600; color: var(--green); }
+  .case-outcome { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .case-outcome strong { color: var(--green); }
+
+  /* ANALYTICS TAB */
+  .analytics-section { padding: 16px 16px 0; }
+  .analytics-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .analytics-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+  .analytics-subtitle { font-size: 10px; color: var(--text3); margin-top: -10px; margin-bottom: 14px; }
+  .outcome-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .outcome-row:last-child { margin-bottom: 0; }
+  .outcome-program { font-size: 12px; color: var(--text2); width: 100px; flex-shrink: 0; }
+  .outcome-bar-wrap { flex: 1; background: var(--bg3); border-radius: 4px; height: 8px; overflow: hidden; }
+  .outcome-bar { height: 100%; border-radius: 4px; background: var(--green); transition: width 0.8s ease; }
+  .outcome-val { font-size: 12px; font-weight: 700; color: var(--green); width: 40px; text-align: right; }
+  .district-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .district-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .district-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .district-equity { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .district-trend { font-size: 11px; font-weight: 600; margin-top: 3px; color: var(--text3); }
+
+  /* SETTINGS TAB */
+  .settings-section { padding: 16px; }
+  .agency-card {
+    background: linear-gradient(135deg, #020D06 0%, #0C1A0E 100%);
+    border: 1px solid #1A3520; border-radius: 16px;
+    padding: 16px; text-align: center; margin-bottom: 16px;
+  }
+  .agency-seal { font-size: 40px; margin-bottom: 8px; }
+  .agency-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .agency-dept { font-size: 12px; color: var(--text3); margin-top: 3px; }
+  .agency-badges { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+  .agency-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: var(--green); }
+  .settings-group { margin-bottom: 16px; }
+  .settings-group-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px; padding-left: 2px; }
+  .settings-row { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 2px; cursor: pointer; }
+  .settings-row:active { opacity: 0.7; }
+  .settings-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .settings-label { flex: 1; font-size: 14px; font-weight: 500; color: var(--text); }
+  .settings-value { font-size: 13px; color: var(--text3); }
+  .settings-arrow { font-size: 12px; color: var(--text3); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: calc(74px + var(--safe-bottom));
+    background: rgba(7,9,15,0.95);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid #1A2E1C;
+    display: flex; align-items: flex-start;
+    padding-top: 8px; padding-bottom: var(--safe-bottom);
+    z-index: 50;
+  }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 0; }
+  .nav-icon { font-size: 22px; line-height: 1; filter: grayscale(1) opacity(0.5); transition: filter 0.2s; }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: -0.2px; transition: color 0.2s; }
+  .nav-item.active .nav-icon { filter: none; }
+  .nav-item.active .nav-label { color: var(--green); }
+
+  .toast { position: fixed; top: calc(var(--safe-top) + 70px); left: 50%; transform: translateX(-50%) translateY(-20px); background: rgba(2,10,5,0.95); border: 1px solid rgba(34,197,94,0.4); color: var(--text); padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 999; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; white-space: nowrap; backdrop-filter: blur(20px); }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .exec-badge { display: inline-block; background: linear-gradient(135deg, var(--green2), var(--green)); color: white; font-size: 10px; font-weight: 800; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; }
+
+  /* LOADING / EMPTY */
+  .data-loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 20px; color: var(--text3); font-size: 13px; }
+  .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .api-source-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.8px;
+    color: var(--text3); text-transform: uppercase;
+  }
+  .api-source-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span class="time" id="live-clock">9:41</span>
+  <div class="status-icons">
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="white" opacity="0.9"><rect x="0" y="3" width="3" height="8" rx="1"/><rect x="4.5" y="2" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="2.5" height="11" rx="1"/></svg>
+    <svg width="15" height="11" viewBox="0 0 15 11" fill="white" opacity="0.9"><path d="M7.5 2.2C9.8 2.2 11.9 3.1 13.4 4.6L15 3C13.1 1.1 10.4 0 7.5 0S1.9 1.1 0 3L1.6 4.6C3.1 3.1 5.2 2.2 7.5 2.2z"/><path d="M7.5 5.5C9 5.5 10.3 6.1 11.3 7L12.9 5.4C11.5 4.1 9.6 3.3 7.5 3.3S3.5 4.1 2.1 5.4L3.7 7C4.7 6.1 6 5.5 7.5 5.5z"/><circle cx="7.5" cy="9.5" r="1.5"/></svg>
+    <svg width="25" height="11" viewBox="0 0 25 11" fill="none"><rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="white" stroke-opacity="0.4"/><rect x="1.5" y="1.5" width="16" height="8" rx="1.5" fill="white"/><path d="M23 3.5v4c.8-.4 1.3-1.1 1.3-2s-.5-1.6-1.3-2z" fill="white" opacity="0.4"/></svg>
+  </div>
+</div>
+
+<div class="app-header">
+  <div class="app-logo">
+    <div class="app-logo-icon">A</div>
+    <div>
+      <div class="app-logo-name">ASTORIX HOPE-LA <span class="exec-badge">LIVE</span></div>
+      <div class="app-logo-sub">Human-Optimized Platform for Equitable LA</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="header-btn" onclick="showToast('Alerts active')">🔔</div>
+    <div class="header-btn" onclick="refreshNow()">🔄</div>
+  </div>
+</div>
+
+<!-- LIVE DATA STATUS BAR -->
+<div class="live-bar">
+  <div class="live-indicator">
+    <div class="live-dot" id="live-dot"></div>
+    <span id="live-label">Connecting to LA City 311...</span>
+  </div>
+  <span id="refresh-countdown">Refresh: 60s</span>
+</div>
+
+<div class="content" id="content">
+
+  <!-- DASHBOARD TAB -->
+  <div class="tab-panels active" id="tab-dashboard">
+
+    <!-- NWS ALERT BANNER -->
+    <div class="nws-banner" id="nws-banner" onclick="showToast('Full NWS alert details')">
+      <div class="nws-banner-title" id="nws-title"></div>
+      <div class="nws-banner-body" id="nws-body"></div>
+    </div>
+
+    <!-- IMPACT BANNER -->
+    <div class="impact-banner">
+      <div class="impact-label">📡 LA CITY 311 — REAL-TIME · LAST 24H</div>
+      <div class="impact-headline" id="impact-headline">Loading service request data...</div>
+      <div class="impact-sub" id="impact-sub">Pulling live data from LA City Open Data. Auto-refreshes every 60 seconds.</div>
+      <div class="impact-stats">
+        <div class="impact-stat">
+          <div class="impact-stat-val" id="impact-total">—</div>
+          <div class="impact-stat-label">Requests (24h)</div>
+        </div>
+        <div class="impact-stat">
+          <div class="impact-stat-val" id="impact-open">—</div>
+          <div class="impact-stat-label">Open Cases</div>
+        </div>
+        <div class="impact-stat">
+          <div class="impact-stat-val" id="impact-districts">15</div>
+          <div class="impact-stat-label">Districts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:var(--red)" id="kpi-housing">—</div>
+        <div class="kpi-label">Housing Need</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:var(--purple)" id="kpi-mental">—</div>
+        <div class="kpi-label">Mental Health</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:var(--gold)" id="kpi-infra">—</div>
+        <div class="kpi-label">Infrastructure</div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY NEEDS HEAT MAP -->
+    <div class="section-header">
+      <span class="section-title">Council District Need Map</span>
+      <span class="section-link api-source-tag"><span class="api-source-dot"></span> LA 311 Live</span>
+    </div>
+    <div class="heatmap-card">
+      <div class="heatmap-header">
+        <div class="heatmap-title">Los Angeles — 15 Council Districts</div>
+        <div class="heatmap-filter">Service Requests ▾</div>
+      </div>
+      <div class="heatmap-canvas" id="heatmap-cells">
+        <!-- Rendered by JS with real data -->
+        <div class="data-loading"><div class="spinner"></div></div>
+      </div>
+      <div class="heatmap-legend">
+        <div class="heatmap-legend-label">Low need</div>
+        <div class="heat-scale">
+          <div class="heat-scale-cell heat-0"></div>
+          <div class="heat-scale-cell heat-1"></div>
+          <div class="heat-scale-cell heat-2"></div>
+          <div class="heat-scale-cell heat-3"></div>
+          <div class="heat-scale-cell heat-4"></div>
+        </div>
+        <div class="heatmap-legend-label">High need</div>
+      </div>
+      <div class="districts-row" id="district-chips">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- TOP SERVICE CATEGORIES -->
+    <div class="section-header">
+      <span class="section-title">Top Service Categories</span>
+      <span class="section-link">Last 24h</span>
+    </div>
+
+    <div id="category-cards">
+      <div class="data-loading"><div class="spinner"></div><span>Loading real-time data...</span></div>
+    </div>
+
+  </div><!-- /tab-dashboard -->
+
+  <!-- CASES TAB -->
+  <div class="tab-panels" id="tab-cases">
+    <div class="case-filter-row">
+      <div class="filter-chip active" id="badge-active" onclick="filterCases('open')">Open</div>
+      <div class="filter-chip" id="badge-closed" onclick="filterCases('closed')">Closed</div>
+      <div class="filter-chip" id="badge-all" onclick="filterCases('all')">All</div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title">LA 311 Service Requests</span>
+      <span class="section-link api-source-tag"><span class="api-source-dot"></span> Live</span>
+    </div>
+
+    <div id="cases-list">
+      <div class="data-loading"><div class="spinner"></div><span>Loading cases...</span></div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div class="tab-panels" id="tab-analytics">
+    <div class="analytics-section">
+
+      <div class="analytics-card">
+        <div class="analytics-title">Request Categories — Last 24 Hours</div>
+        <div class="analytics-subtitle" id="analytics-subtitle">Source: LA City 311 Open Data</div>
+        <div id="outcome-rows">
+          <div class="data-loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-title">Top Districts by Request Volume</div>
+        <div class="analytics-subtitle">Tap district for breakdown</div>
+        <div class="district-grid" id="district-grid">
+          <div class="data-loading" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div class="tab-panels" id="tab-settings">
+    <div class="settings-section">
+      <div class="agency-card">
+        <div class="agency-seal">🏛</div>
+        <div class="agency-name">City of Los Angeles</div>
+        <div class="agency-dept">ASTORIX™ Powered by LA City Open Data</div>
+        <div class="agency-badges">
+          <div class="agency-badge">LA 311 Live</div>
+          <div class="agency-badge">NWS Alerts</div>
+          <div class="agency-badge">60s Refresh</div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">LIVE DATA SOURCES</div>
+        <div class="settings-row" onclick="showToast('LA City 311 — data.lacity.org')">
+          <div class="settings-icon" style="background:rgba(34,197,94,0.15)">📞</div>
+          <div class="settings-label">LA City 311 System</div>
+          <div class="settings-value" id="source-311" style="color:var(--text3)">Connecting…</div>
+          <div class="settings-arrow">›</div>
+        </div>
+        <div class="settings-row" onclick="showToast('NOAA National Weather Service — api.weather.gov')">
+          <div class="settings-icon" style="background:rgba(59,130,246,0.15)">⛈️</div>
+          <div class="settings-label">NWS Weather Alerts</div>
+          <div class="settings-value" id="source-nws" style="color:var(--text3)">Connecting…</div>
+          <div class="settings-arrow">›</div>
+        </div>
+        <div class="settings-row" onclick="showToast('60-second auto-refresh active')">
+          <div class="settings-icon" style="background:rgba(245,158,11,0.15)">🔄</div>
+          <div class="settings-label">Auto-Refresh Interval</div>
+          <div class="settings-value" style="color:var(--green)">60 seconds</div>
+          <div class="settings-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">REPORTING</div>
+        <div class="settings-row" onclick="showToast('Export coming in v1.1')">
+          <div class="settings-icon" style="background:rgba(139,92,246,0.15)">📄</div>
+          <div class="settings-label">Export District Report</div>
+          <div class="settings-value">PDF / CSV</div>
+          <div class="settings-arrow">›</div>
+        </div>
+        <div class="settings-row" onclick="showToast('Executive dashboard — coming soon')">
+          <div class="settings-icon" style="background:rgba(14,165,233,0.15)">📊</div>
+          <div class="settings-label">Executive Dashboards</div>
+          <div class="settings-value">Coming v1.1</div>
+          <div class="settings-arrow">›</div>
+        </div>
+      </div>
+
+      <div style="text-align:center; padding: 24px 20px 8px; color: var(--text3); font-size: 11px; line-height: 1.6;">
+        <div style="font-weight:700; color: var(--text2); margin-bottom:4px;">ASTORIX™ HOPE-LA</div>
+        <div>© 2026 Gensis.AI Inc. All Rights Reserved.</div>
+        <div>ASTORIX™ is a trademark of Gensis.AI Inc.</div>
+        <div style="margin-top:4px;">USPTO Serial No. 99639401 · IC 009</div>
+        <div style="margin-top:4px; font-size:10px;">v1.0.0 · Build 2026.09 · Live Data Edition</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+    <div class="nav-icon">🌿</div>
+    <div class="nav-label">Impact</div>
+  </div>
+  <div class="nav-item" id="nav-cases" onclick="switchTab('cases')">
+    <div class="nav-icon">👥</div>
+    <div class="nav-label">Cases</div>
+  </div>
+  <div class="nav-item" id="nav-analytics" onclick="switchTab('analytics')">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Analytics</div>
+  </div>
+  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">
+    <div class="nav-icon">⚙️</div>
+    <div class="nav-label">Settings</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// ASTORIX HOPE-LA — REAL DATA ENGINE
+// Sources: LA City Open Data (311), NOAA NWS Weather Alerts
+// Auto-refresh: 60 seconds
+// ============================================================
+
+// Capacitor init
+if (window.Capacitor) {
+  const { StatusBar } = Capacitor.Plugins;
+  if (StatusBar) { StatusBar.setStyle({ style: 'DARK' }); StatusBar.setBackgroundColor({ color: '#07090F' }); }
+  const { SplashScreen } = Capacitor.Plugins;
+  if (SplashScreen) setTimeout(() => SplashScreen.hide(), 2000);
+}
+
+// --- API ENDPOINTS ---
+const API_311  = 'https://data.lacity.org/resource/rqbj-xla4.json';
+const API_NWS  = 'https://api.weather.gov/alerts/active?area=CA&status=actual&urgency=Immediate,Expected&severity=Extreme,Severe,Moderate';
+
+// --- DISTRICT NAMES (LA City Council Districts 1-15) ---
+const DISTRICT_NAMES = {
+  1:'Eastside', 2:'Valley', 3:'W.Valley', 4:'Sherman Oaks',
+  5:'Westside', 6:'Van Nuys', 7:'N.Valley', 8:'S.W.',
+  9:'Downtown', 10:'W.Adams', 11:'Mar Vista', 12:'Chatsworth',
+  13:'Los Feliz', 14:'Eagle Rock', 15:'Harbor'
+};
+
+// --- CATEGORY CLASSIFIER ---
+function categorize(requestType) {
+  const t = (requestType || '').toLowerCase();
+  if (/homeless|encampment|illegal dump|bulky|abandoned|graffiti/.test(t)) return 'Housing & Homeless';
+  if (/pothole|sidewalk|street light|sewer|storm drain|road|pavement/.test(t)) return 'Infrastructure';
+  if (/tree|dead animal|weed|alley|debris/.test(t)) return 'Sanitation';
+  if (/parking|traffic|signal/.test(t)) return 'Traffic & Parking';
+  if (/mental|health|substance/.test(t)) return 'Mental Health';
+  if (/youth|school|recreation|park/.test(t)) return 'Youth Services';
+  if (/water|power|utility|noise/.test(t)) return 'Utilities';
+  return 'Other Services';
+}
+
+const CAT_COLORS = {
+  'Housing & Homeless': 'var(--red)',
+  'Infrastructure': 'var(--teal)',
+  'Sanitation': 'var(--gold)',
+  'Traffic & Parking': 'var(--blue)',
+  'Mental Health': 'var(--purple)',
+  'Youth Services': 'var(--green)',
+  'Utilities': 'var(--orange)',
+  'Other Services': 'var(--text2)'
+};
+
+// --- STATE ---
+let state = {
+  requests: [],
+  nwsAlerts: [],
+  lastFetch: null,
+  fetchError: null,
+  caseFilter: 'open'
+};
+
+// --- FETCH REAL DATA ---
+async function fetchAll() {
+  setLiveStatus('loading', 'Fetching live data...');
+
+  // Build 24-hour window
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const sinceISO = since.toISOString().slice(0, 19);
+
+  const url311 = `${API_311}?$where=createddate>='${sinceISO}'` +
+    `&$select=requesttype,cd,councildistrict,status,createddate,address,zipcode` +
+    `&$limit=2000&$order=createddate DESC`;
+
+  const [result311, resultNWS] = await Promise.allSettled([
+    fetch(url311).then(r => { if(!r.ok) throw new Error(`311: ${r.status}`); return r.json(); }),
+    fetch(API_NWS, {
+      headers: { 'User-Agent': 'ASTORIX HOPE-LA v1.0 / ashreekar@engineersoft.org' }
+    }).then(r => r.json())
+  ]);
+
+  if (result311.status === 'fulfilled' && Array.isArray(result311.value)) {
+    state.requests = result311.value;
+    state.fetchError = null;
+    document.getElementById('source-311').textContent = '● Live';
+    document.getElementById('source-311').style.color = 'var(--green)';
+  } else {
+    state.fetchError = result311.reason?.message || 'Fetch failed';
+    document.getElementById('source-311').textContent = '● Error';
+    document.getElementById('source-311').style.color = 'var(--red)';
+  }
+
+  if (resultNWS.status === 'fulfilled' && resultNWS.value.features) {
+    state.nwsAlerts = resultNWS.value.features.filter(f => {
+      const area = (f.properties?.areaDesc || '');
+      return /Los Angeles|Southern California/i.test(area);
+    });
+    document.getElementById('source-nws').textContent = state.nwsAlerts.length > 0
+      ? `● ${state.nwsAlerts.length} Alert${state.nwsAlerts.length>1?'s':''}` : '● Clear';
+    document.getElementById('source-nws').style.color = state.nwsAlerts.length > 0
+      ? 'var(--red)' : 'var(--green)';
+  } else {
+    document.getElementById('source-nws').textContent = '● N/A';
+    document.getElementById('source-nws').style.color = 'var(--text3)';
+  }
+
+  state.lastFetch = new Date();
+  setLiveStatus('live', `Updated ${state.lastFetch.toLocaleTimeString()}`);
+  renderAll();
+}
+
+// --- PROCESS DATA ---
+function computeStats() {
+  const byDistrict = {};
+  for (let i = 1; i <= 15; i++) byDistrict[i] = 0;
+  const byCategory = {};
+  let openCount = 0;
+
+  state.requests.forEach(r => {
+    // Council district — try 'cd' first, then 'councildistrict'
+    const d = parseInt(r.cd || r.councildistrict || '0');
+    if (d >= 1 && d <= 15) byDistrict[d] = (byDistrict[d] || 0) + 1;
+
+    const cat = categorize(r.requesttype);
+    byCategory[cat] = (byCategory[cat] || 0) + 1;
+
+    if ((r.status || '').toLowerCase() !== 'closed') openCount++;
+  });
+
+  const maxD = Math.max(...Object.values(byDistrict), 1);
+
+  const districtRanked = Object.entries(byDistrict)
+    .sort((a, b) => b[1] - a[1])
+    .map(([d, count]) => ({ district: parseInt(d), count }));
+
+  const catSorted = Object.entries(byCategory)
+    .sort((a, b) => b[1] - a[1]);
+
+  return {
+    byDistrict, byCategory: catSorted, districtRanked,
+    total: state.requests.length, openCount,
+    maxD,
+    housing: byCategory['Housing & Homeless'] || 0,
+    mental: byCategory['Mental Health'] || 0,
+    infra: byCategory['Infrastructure'] || 0
+  };
+}
+
+function heatClass(count, max) {
+  if (!count) return 'heat-0';
+  const p = count / max;
+  if (p > 0.75) return 'heat-4';
+  if (p > 0.5)  return 'heat-3';
+  if (p > 0.25) return 'heat-2';
+  return 'heat-1';
+}
+
+// --- RENDER ALL ---
+function renderAll() {
+  const s = computeStats();
+
+  // NWS alert banner
+  const banner = document.getElementById('nws-banner');
+  if (state.nwsAlerts.length > 0) {
+    const a = state.nwsAlerts[0].properties;
+    document.getElementById('nws-title').textContent = `⚠️ ${a.event} — NWS Active Alert`;
+    document.getElementById('nws-body').textContent =
+      (a.headline || a.description || '').slice(0, 140) + '…';
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+  }
+
+  // Impact banner
+  document.getElementById('impact-headline').textContent =
+    s.total > 0
+      ? `${s.total.toLocaleString()} LA residents filed service requests`
+      : 'No data in last 24 hours — check connection';
+  document.getElementById('impact-sub').textContent =
+    `Real-time LA City 311 data · ${s.openCount.toLocaleString()} open cases · as of ${state.lastFetch?.toLocaleTimeString() || '--'}`;
+  document.getElementById('impact-total').textContent = s.total > 0 ? s.total.toLocaleString() : '—';
+  document.getElementById('impact-open').textContent = s.total > 0 ? s.openCount.toLocaleString() : '—';
+
+  // KPI
+  document.getElementById('kpi-housing').textContent = s.housing > 0 ? s.housing.toLocaleString() : '—';
+  document.getElementById('kpi-mental').textContent  = s.mental > 0  ? s.mental.toLocaleString()  : '—';
+  document.getElementById('kpi-infra').textContent   = s.infra > 0   ? s.infra.toLocaleString()   : '—';
+
+  // Heatmap
+  const hmap = document.getElementById('heatmap-cells');
+  hmap.innerHTML = '';
+  for (let i = 1; i <= 15; i++) {
+    const count = s.byDistrict[i] || 0;
+    const cell = document.createElement('div');
+    cell.className = `heatmap-cell ${heatClass(count, s.maxD)}`;
+    cell.innerHTML = `<span class="d-label">D${i}</span>`;
+    cell.onclick = () => showToast(`D${i} ${DISTRICT_NAMES[i]}: ${count} requests today`);
+    hmap.appendChild(cell);
+  }
+
+  // District chips
+  const chips = document.getElementById('district-chips');
+  chips.innerHTML = '';
+  const top3 = s.districtRanked.slice(0, 3).map(d => d.district);
+  s.districtRanked.slice(0, 6).forEach(({ district, count }) => {
+    const chip = document.createElement('div');
+    const rank = top3.indexOf(district);
+    chip.className = 'district-chip' + (rank === 0 ? ' high-need' : rank <= 1 ? ' med-need' : '');
+    chip.textContent = `D${district} ${DISTRICT_NAMES[district]} (${count})`;
+    chip.onclick = () => showToast(`District ${district}: ${count} requests in last 24h`);
+    chips.appendChild(chip);
+  });
+
+  // Category resource cards
+  const catTotal = s.total || 1;
+  const catContainer = document.getElementById('category-cards');
+  catContainer.innerHTML = '';
+  s.byCategory.slice(0, 4).forEach(([cat, count]) => {
+    const pct = Math.round(count / catTotal * 100);
+    const color = CAT_COLORS[cat] || 'var(--green)';
+    catContainer.innerHTML += `
+      <div class="resource-card" onclick="showToast('${cat}: ${count} open requests')">
+        <div class="resource-top">
+          <div>
+            <div class="resource-program">${cat}</div>
+            <div class="resource-district">LA 311 · Last 24 hours · ${count.toLocaleString()} requests</div>
+          </div>
+          <div>
+            <div class="equity-score" style="color:${color}">${pct}%</div>
+            <div class="equity-label" style="color:${color}">OF VOLUME</div>
+          </div>
+        </div>
+        <div class="resource-bar-wrap">
+          <div class="resource-bar" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <div class="resource-footer">
+          <div class="resource-beneficiaries">📞 ${count.toLocaleString()} service requests</div>
+          <button class="resource-action" onclick="event.stopPropagation();switchTab('cases');filterCases('open')">View Cases</button>
+        </div>
+      </div>`;
+  });
+
+  if (s.byCategory.length === 0) {
+    catContainer.innerHTML = '<div class="data-loading"><span>No data — check connection</span></div>';
+  }
+
+  // Cases
+  renderCases(s);
+
+  // Analytics
+  renderAnalytics(s);
+}
+
+// --- RENDER CASES ---
+let allCases = [];
+function renderCases(stats) {
+  allCases = state.requests;
+  const filter = state.caseFilter;
+  const filtered = filter === 'all' ? allCases
+    : filter === 'open'
+      ? allCases.filter(r => (r.status || '').toLowerCase() !== 'closed')
+      : allCases.filter(r => (r.status || '').toLowerCase() === 'closed');
+
+  const openN   = allCases.filter(r => (r.status||'').toLowerCase() !== 'closed').length;
+  const closedN = allCases.filter(r => (r.status||'').toLowerCase() === 'closed').length;
+
+  document.getElementById('badge-active').textContent  = `Open (${openN})`;
+  document.getElementById('badge-closed').textContent  = `Closed (${closedN})`;
+  document.getElementById('badge-all').textContent     = `All (${allCases.length})`;
+
+  const container = document.getElementById('cases-list');
+  container.innerHTML = '';
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="data-loading"><span>No cases in this view</span></div>';
+    return;
+  }
+
+  filtered.slice(0, 20).forEach(r => {
+    const cat = categorize(r.requesttype);
+    const color = CAT_COLORS[cat] || 'var(--green)';
+    const isOpen = (r.status || '').toLowerCase() !== 'closed';
+    const statusClass = isOpen ? 'cs-active' : 'cs-closed';
+    const statusLabel = isOpen ? 'Open' : 'Closed';
+    const initials = cat.replace(/[^A-Z]/g, '').slice(0, 2) || cat.slice(0, 2).toUpperCase();
+    const ago = timeAgo(r.createddate);
+    const district = r.cd || r.councildistrict || '?';
+    const addr = (r.address || 'Los Angeles, CA').slice(0, 32);
+
+    container.innerHTML += `
+      <div class="case-card" onclick="showToast('${(r.requesttype||'').replace(/'/g,'`')} · D${district} · ${ago}')">
+        <div class="case-header">
+          <div class="case-avatar" style="background:${color}">${initials}</div>
+          <div class="case-info">
+            <div class="case-name">${r.requesttype || 'Service Request'}</div>
+            <div class="case-id">District ${district} · ${addr} · ${ago}</div>
+          </div>
+          <div class="case-status ${statusClass}">${statusLabel}</div>
+        </div>
+        <div class="case-body">
+          <div class="case-needs">
+            <div class="need-tag">${cat}</div>
+            <div class="need-tag">District ${district}</div>
+          </div>
+          <div class="case-outcome">LA 311 service request · Category: <strong>${cat}</strong></div>
+        </div>
+      </div>`;
+  });
+
+  if (filtered.length > 20) {
+    container.innerHTML += `<div style="text-align:center;padding:16px;font-size:12px;color:var(--text3)">+${filtered.length-20} more requests</div>`;
+  }
+}
+
+function filterCases(filter) {
+  state.caseFilter = filter;
+  ['open','closed','all'].forEach(f => {
+    const el = document.getElementById('badge-' + (f==='open'?'active':f==='closed'?'closed':'all'));
+    if (el) el.classList.toggle('active', f === filter);
+  });
+  renderCases(computeStats());
+}
+
+// --- RENDER ANALYTICS ---
+function renderAnalytics(s) {
+  const total = s.total || 1;
+
+  // Category rows
+  const rows = document.getElementById('outcome-rows');
+  rows.innerHTML = '';
+  s.byCategory.slice(0, 6).forEach(([cat, count]) => {
+    const pct = Math.round(count / total * 100);
+    const color = CAT_COLORS[cat] || 'var(--green)';
+    const label = cat.length > 14 ? cat.slice(0, 13) + '…' : cat;
+    rows.innerHTML += `
+      <div class="outcome-row">
+        <div class="outcome-program">${label}</div>
+        <div class="outcome-bar-wrap"><div class="outcome-bar" style="width:${pct}%;background:${color}"></div></div>
+        <div class="outcome-val" style="color:${color}">${count}</div>
+      </div>`;
+  });
+
+  if (!s.byCategory.length) {
+    rows.innerHTML = '<div class="data-loading"><span>Loading…</span></div>';
+  }
+
+  // Update subtitle
+  document.getElementById('analytics-subtitle').textContent =
+    `Source: LA City 311 Open Data · Total: ${s.total.toLocaleString()} requests`;
+
+  // District grid - top 4
+  const grid = document.getElementById('district-grid');
+  grid.innerHTML = '';
+  s.districtRanked.slice(0, 4).forEach(({ district, count }) => {
+    const color = count > 0 ? (count === s.districtRanked[0].count ? 'var(--red)'
+      : count > s.districtRanked[0].count * 0.5 ? 'var(--gold)' : 'var(--green)') : 'var(--text3)';
+    grid.innerHTML += `
+      <div class="district-box" onclick="showToast('D${district}: ${count} requests today')">
+        <div class="district-name">D${district} ${DISTRICT_NAMES[district]}</div>
+        <div class="district-equity" style="color:${color}">${count.toLocaleString()}</div>
+        <div class="district-trend">requests · last 24h</div>
+      </div>`;
+  });
+
+  if (!s.districtRanked.filter(d=>d.count>0).length) {
+    grid.innerHTML = '<div class="data-loading" style="grid-column:1/-1"><span>Loading…</span></div>';
+  }
+}
+
+// --- UTILITIES ---
+function timeAgo(dateStr) {
+  if (!dateStr) return 'recently';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h/24)}d ago`;
+}
+
+function setLiveStatus(mode, label) {
+  const dot = document.getElementById('live-dot');
+  const lbl = document.getElementById('live-label');
+  dot.className = 'live-dot' + (mode === 'loading' ? ' loading' : mode === 'error' ? ' error' : '');
+  lbl.textContent = label;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panels').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('nav-' + tab).classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function refreshNow() {
+  countdown = 60;
+  showToast('Refreshing live data...');
+  fetchAll();
+}
+
+// --- LIVE CLOCK ---
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('live-clock').textContent =
+    `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// --- AUTO-REFRESH COUNTDOWN ---
+let countdown = 60;
+setInterval(() => {
+  countdown--;
+  document.getElementById('refresh-countdown').textContent = `Refresh: ${countdown}s`;
+  if (countdown <= 0) {
+    countdown = 60;
+    fetchAll();
+  }
+}, 1000);
+
+// --- INITIAL FETCH ---
+fetchAll();
+</script>
+</body>
+</html>

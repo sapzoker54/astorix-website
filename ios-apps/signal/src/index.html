@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ASTORIX Signal</title>
+<style>
+  :root {
+    --bg: #07090F;
+    --bg2: #0A0F1A;
+    --bg3: #0F1621;
+    --card: #111927;
+    --card2: #162033;
+    --border: #1A2A3E;
+    --text: #E8F4FF;
+    --text2: #7CA3C4;
+    --text3: #4A6A80;
+    --blue: #0EA5E9;
+    --blue2: #0284C7;
+    --teal: #14B8A6;
+    --green: #22C55E;
+    --yellow: #EAB308;
+    --orange: #F97316;
+    --red: #EF4444;
+    --purple: #A855F7;
+    --safe-top: env(safe-area-inset-top, 44px);
+    --safe-bottom: env(safe-area-inset-bottom, 34px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, sans-serif; overflow: hidden; }
+
+  .status-bar {
+    height: var(--safe-top); min-height: 44px;
+    background: var(--bg);
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 20px 8px;
+    position: relative; z-index: 100;
+  }
+  .status-time { font-size: 15px; font-weight: 700; color: var(--text); }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+
+  .app-header {
+    background: linear-gradient(135deg, #030C1A 0%, #071628 100%);
+    padding: 12px 20px 14px;
+    border-bottom: 1px solid #1A3A52;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-logo { display: flex; align-items: center; gap: 10px; }
+  .app-logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, #7C3AED, #A855F7);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: white;
+  }
+  .app-logo-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .app-logo-sub { font-size: 10px; color: var(--text3); margin-top: 1px; }
+  .header-status {
+    text-align: right;
+  }
+  .live-pill {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; color: var(--green);
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); animation: pulse-live 1.5s infinite;
+  }
+  @keyframes pulse-live { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .refresh-label { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+  .content {
+    height: calc(100vh - var(--safe-top) - 62px - 74px - var(--safe-bottom));
+    min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+  }
+  .content::-webkit-scrollbar { display: none; }
+
+  .tab-panels { display: none; }
+  .tab-panels.active { display: block; }
+
+  /* SIGNAL STRENGTH METER */
+  .signal-hero {
+    background: linear-gradient(135deg, #0C0E1A, #0A1628);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px 16px;
+    text-align: center;
+  }
+  .signal-ring {
+    position: relative;
+    width: 120px; height: 120px;
+    margin: 0 auto 12px;
+  }
+  .signal-ring svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+  .signal-ring-bg { stroke: var(--border); fill: none; stroke-width: 8; }
+  .signal-ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.8s; }
+  .signal-ring-label {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .signal-score { font-size: 28px; font-weight: 900; }
+  .signal-grade { font-size: 11px; color: var(--text3); margin-top: 2px; font-weight: 600; }
+  .signal-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .signal-sub { font-size: 12px; color: var(--text3); }
+
+  /* METRIC CARDS ROW */
+  .metric-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px; padding: 12px 16px 0;
+  }
+  .metric-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px; text-align: center;
+  }
+  .metric-icon { font-size: 16px; margin-bottom: 4px; }
+  .metric-val { font-size: 16px; font-weight: 800; letter-spacing: -0.5px; }
+  .metric-label { font-size: 9px; color: var(--text3); margin-top: 2px; letter-spacing: 0.3px; }
+
+  /* PROVIDER INFO CARD */
+  .provider-card {
+    margin: 12px 16px 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px;
+  }
+  .provider-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .provider-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .provider-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 6px; background: rgba(168,85,247,0.15); color: var(--purple);
+  }
+  .provider-rows { display: flex; flex-direction: column; gap: 8px; }
+  .provider-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .provider-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .pr-label { font-size: 12px; color: var(--text3); }
+  .pr-value { font-size: 12px; font-weight: 600; color: var(--text); text-align: right; max-width: 60%; }
+
+  /* ENDPOINT LATENCY PANEL */
+  .latency-panel {
+    margin: 12px 16px 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px;
+  }
+  .latency-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .latency-list { display: flex; flex-direction: column; gap: 8px; }
+  .latency-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .latency-host { flex: 1; font-size: 12px; color: var(--text2); }
+  .latency-bar-wrap { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+  .latency-bar-fill { height: 4px; border-radius: 2px; transition: width 0.6s; }
+  .latency-val { font-size: 12px; font-weight: 700; min-width: 48px; text-align: right; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 16px 10px;
+  }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .section-sub { font-size: 11px; color: var(--text3); }
+
+  /* MONITOR TAB */
+  .test-card {
+    margin: 0 16px 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px;
+  }
+  .test-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .test-host { font-size: 13px; font-weight: 700; color: var(--text); }
+  .test-status-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .ts-ok { background: rgba(34,197,94,0.15); color: var(--green); }
+  .ts-warn { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .ts-fail { background: rgba(239,68,68,0.15); color: var(--red); }
+  .ts-testing { background: rgba(14,165,233,0.15); color: var(--blue); }
+  .test-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .test-metric { text-align: center; }
+  .tm-val { font-size: 16px; font-weight: 800; }
+  .tm-label { font-size: 9px; color: var(--text3); margin-top: 2px; }
+  .test-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 10px; }
+  .test-bar-fill { height: 3px; border-radius: 2px; transition: width 0.8s; }
+
+  /* HISTORY LOG */
+  .history-entry {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+  }
+  .history-entry:last-child { border-bottom: none; }
+  .hist-time { font-size: 11px; color: var(--text3); min-width: 50px; }
+  .hist-score { font-size: 16px; font-weight: 800; min-width: 36px; }
+  .hist-details { flex: 1; }
+  .hist-isp { font-size: 12px; font-weight: 600; color: var(--text); }
+  .hist-meta { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .hist-bar-wrap { width: 60px; height: 4px; background: var(--border); border-radius: 2px; }
+  .hist-bar-fill { height: 4px; border-radius: 2px; }
+
+  /* ANALYTICS TAB */
+  .analytics-area { padding: 16px 16px 0; }
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 10px; text-align: center; }
+  .stat-val { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .stat-label { font-size: 10px; color: var(--text3); margin-top: 3px; }
+  .cat-row { margin-bottom: 10px; }
+  .cat-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .cat-label { font-size: 12px; color: var(--text2); }
+  .cat-val { font-size: 12px; font-weight: 700; color: var(--text); }
+  .cat-bar-bg { height: 6px; background: var(--border); border-radius: 3px; }
+  .cat-bar-fill { height: 6px; border-radius: 3px; transition: width 0.6s; }
+  .analytics-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .analytics-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+
+  /* SETTINGS */
+  .settings-section { padding: 16px; }
+  .user-card {
+    background: linear-gradient(135deg, #0D0826 0%, #0C1538 100%);
+    border: 1px solid rgba(168,85,247,0.25); border-radius: 16px;
+    padding: 16px; text-align: center; margin-bottom: 16px;
+  }
+  .user-icon { font-size: 36px; margin-bottom: 8px; }
+  .user-name { font-size: 16px; font-weight: 700; color: var(--text); }
+  .user-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .user-badge {
+    display: inline-block; margin-top: 10px;
+    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
+    color: var(--purple); font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .settings-group { margin-bottom: 16px; }
+  .settings-group-label {
+    font-size: 11px; font-weight: 600; color: var(--text3);
+    letter-spacing: 0.8px; text-transform: uppercase;
+    margin-bottom: 8px; padding-left: 2px;
+  }
+  .settings-row {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    margin-bottom: 2px;
+  }
+  .settings-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .settings-label { flex: 1; font-size: 14px; font-weight: 500; color: var(--text); }
+  .settings-value { font-size: 13px; color: var(--text3); }
+  .data-source-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .data-source-row:last-child { border-bottom: none; }
+  .ds-name { font-size: 13px; color: var(--text); font-weight: 500; }
+  .ds-status { font-size: 11px; font-weight: 700; }
+  .ds-live { color: var(--green); }
+  .ds-error { color: var(--red); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: calc(74px + var(--safe-bottom));
+    background: rgba(7,9,15,0.95);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid #1A2A3E;
+    display: flex; align-items: flex-start;
+    padding-top: 8px; padding-bottom: var(--safe-bottom); z-index: 50;
+  }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 0; }
+  .nav-icon { font-size: 22px; line-height: 1; filter: grayscale(1) opacity(0.5); transition: filter 0.2s; }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: -0.2px; transition: color 0.2s; }
+  .nav-item.active .nav-icon { filter: none; }
+  .nav-item.active .nav-label { color: var(--purple); }
+
+  .toast {
+    position: fixed; top: calc(var(--safe-top) + 70px);
+    left: 50%; transform: translateX(-50%) translateY(-20px);
+    background: rgba(3,11,20,0.95); border: 1px solid rgba(168,85,247,0.4);
+    color: var(--text); padding: 10px 20px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; z-index: 999; opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none; white-space: nowrap; backdrop-filter: blur(20px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .loading-spin {
+    width: 24px; height: 24px;
+    border: 3px solid var(--border);
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block; margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { padding: 30px 16px; text-align: center; color: var(--text3); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span class="status-time" id="live-clock">9:41</span>
+  <div class="status-icons">
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="white" opacity="0.9"><rect x="0" y="3" width="3" height="8" rx="1"/><rect x="4.5" y="2" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="2.5" height="11" rx="1"/></svg>
+    <svg width="15" height="11" viewBox="0 0 15 11" fill="white" opacity="0.9"><path d="M7.5 2.2C9.8 2.2 11.9 3.1 13.4 4.6L15 3C13.1 1.1 10.4 0 7.5 0S1.9 1.1 0 3L1.6 4.6C3.1 3.1 5.2 2.2 7.5 2.2z"/><path d="M7.5 5.5C9 5.5 10.3 6.1 11.3 7L12.9 5.4C11.5 4.1 9.6 3.3 7.5 3.3S3.5 4.1 2.1 5.4L3.7 7C4.7 6.1 6 5.5 7.5 5.5z"/><circle cx="7.5" cy="9.5" r="1.5"/></svg>
+    <svg width="25" height="11" viewBox="0 0 25 11" fill="none"><rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="white" stroke-opacity="0.4"/><rect x="1.5" y="1.5" width="16" height="8" rx="1.5" fill="white"/><path d="M23 3.5v4c.8-.4 1.3-1.1 1.3-2s-.5-1.6-1.3-2z" fill="white" opacity="0.4"/></svg>
+  </div>
+</div>
+
+<!-- APP HEADER -->
+<div class="app-header">
+  <div class="app-logo">
+    <div class="app-logo-icon">⚡</div>
+    <div>
+      <div class="app-logo-name">ASTORIX Signal</div>
+      <div class="app-logo-sub">Network Intelligence Platform</div>
+    </div>
+  </div>
+  <div class="header-status">
+    <div class="live-pill"><div class="live-dot"></div><span id="data-status">MEASURING</span></div>
+    <div class="refresh-label" id="refresh-countdown">Refresh: 60s</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="content">
+
+  <!-- DASHBOARD TAB -->
+  <div class="tab-panels active" id="tab-dashboard">
+
+    <!-- Signal Quality Ring -->
+    <div class="signal-hero">
+      <div class="signal-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="signal-ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="signal-ring-fill" id="score-ring" cx="60" cy="60" r="52"
+            stroke="#A855F7"
+            stroke-dasharray="326.7"
+            stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="signal-ring-label">
+          <div class="signal-score" id="score-val" style="color:var(--purple)">—</div>
+          <div class="signal-grade" id="score-grade">TESTING</div>
+        </div>
+      </div>
+      <div class="signal-title" id="signal-quality-label">Measuring connection quality...</div>
+      <div class="signal-sub" id="signal-isp">Detecting your network provider</div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="metric-icon">📶</div>
+        <div class="metric-val" id="conn-type" style="color:var(--blue)">—</div>
+        <div class="metric-label">CONNECTION</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">⚡</div>
+        <div class="metric-val" id="latency-avg" style="color:var(--green)">—</div>
+        <div class="metric-label">LATENCY</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">📡</div>
+        <div class="metric-val" id="bandwidth-est" style="color:var(--teal)">—</div>
+        <div class="metric-label">DOWNLINK</div>
+      </div>
+    </div>
+
+    <!-- Provider Info -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-title">🌐 Network Provider</div>
+        <div class="provider-badge" id="provider-status-badge">Live</div>
+      </div>
+      <div class="provider-rows">
+        <div class="provider-row">
+          <span class="pr-label">IP Address</span>
+          <span class="pr-value" id="ip-addr">Detecting...</span>
+        </div>
+        <div class="provider-row">
+          <span class="pr-label">ISP / Org</span>
+          <span class="pr-value" id="isp-name">—</span>
+        </div>
+        <div class="provider-row">
+          <span class="pr-label">Location</span>
+          <span class="pr-value" id="net-location">—</span>
+        </div>
+        <div class="provider-row">
+          <span class="pr-label">ASN</span>
+          <span class="pr-value" id="net-asn">—</span>
+        </div>
+        <div class="provider-row">
+          <span class="pr-label">Timezone</span>
+          <span class="pr-value" id="net-tz">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latency to Endpoints -->
+    <div class="latency-panel">
+      <div class="latency-title">📊 Real-Time Endpoint Latency</div>
+      <div class="latency-list" id="latency-list">
+        <div class="empty-state"><span class="loading-spin"></span>Measuring...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MONITOR TAB -->
+  <div class="tab-panels" id="tab-monitor">
+    <div class="section-header">
+      <div class="section-title">⚙️ Live Endpoint Tests</div>
+      <div class="section-sub" id="monitor-updated">—</div>
+    </div>
+    <div id="monitor-cards">
+      <div class="empty-state"><span class="loading-spin"></span>Running connectivity tests...</div>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div class="tab-panels" id="tab-history">
+    <div class="section-header">
+      <div class="section-title">📋 Session Log</div>
+      <div class="section-sub" id="history-count">—</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;margin:0 16px;overflow:hidden">
+      <div id="history-list">
+        <div class="empty-state">Session log will appear here after first measurement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div class="tab-panels" id="tab-settings">
+    <div class="settings-section">
+      <div class="user-card">
+        <div class="user-icon">📡</div>
+        <div class="user-name">ASTORIX Signal</div>
+        <div class="user-sub">Network Intelligence Platform</div>
+        <div class="user-badge">● Enterprise Edition</div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Data Sources</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px">
+          <div class="data-source-row">
+            <div class="ds-name">IP Geolocation (ipapi.co)</div>
+            <div class="ds-status" id="src-ipapi">Checking...</div>
+          </div>
+          <div class="data-source-row">
+            <div class="ds-name">Browser Network API</div>
+            <div class="ds-status" id="src-nav">Checking...</div>
+          </div>
+          <div class="data-source-row">
+            <div class="ds-name">Endpoint Latency Tests</div>
+            <div class="ds-status" id="src-latency">Checking...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Configuration</div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(168,85,247,0.15)">🔄</div>
+          <div class="settings-label">Auto-Refresh</div>
+          <div class="settings-value">60 seconds</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(14,165,233,0.15)">🌐</div>
+          <div class="settings-label">Test Endpoints</div>
+          <div class="settings-value">8 hosts</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(34,197,94,0.15)">📊</div>
+          <div class="settings-label">Scoring Model</div>
+          <div class="settings-value">Latency + Connection</div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Legal</div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(59,130,246,0.15)">™</div>
+          <div class="settings-label">Trademark</div>
+          <div class="settings-value">SN 99639401</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(239,68,68,0.15)">©</div>
+          <div class="settings-label">Copyright</div>
+          <div class="settings-value">Gensis.AI Inc. 2026</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:8px 0;font-size:10px;color:var(--text3)">
+        ASTORIX™ · IC 009 Commercial App<br>SN 99639401 · ai.astorix.signal
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Dashboard</div>
+  </div>
+  <div class="nav-item" id="nav-monitor" onclick="switchTab('monitor')">
+    <div class="nav-icon">🔍</div>
+    <div class="nav-label">Monitor</div>
+  </div>
+  <div class="nav-item" id="nav-history" onclick="switchTab('history')">
+    <div class="nav-icon">📋</div>
+    <div class="nav-label">History</div>
+  </div>
+  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">
+    <div class="nav-icon">⚙️</div>
+    <div class="nav-label">Settings</div>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================================
+// ASTORIX Signal — Real Network Intelligence Engine v2.0
+// Real Data: IP Geolocation | Browser Network API | Latency Tests
+// © Gensis.AI Inc. / ASTORIX.AI — SN 99639401
+// =============================================================
+
+// ENDPOINTS TO TEST (free, no auth, CORS-enabled)
+const TEST_ENDPOINTS = [
+  { host: 'Cloudflare DNS', url: 'https://1.1.1.1/dns-query?name=astorix.ai&type=A', label: 'cdn' },
+  { host: 'Google DNS', url: 'https://dns.google/resolve?name=google.com&type=A', label: 'dns' },
+  { host: 'ipify.org', url: 'https://api.ipify.org?format=json', label: 'api' },
+  { host: 'ipapi.co', url: 'https://ipapi.co/json/', label: 'geo' },
+  { host: 'GitHub API', url: 'https://api.github.com', label: 'api' },
+  { host: 'OpenWeather', url: 'https://api.openweathermap.org/data/2.5/weather?lat=34.05&lon=-118.24&appid=demo', label: 'api' },
+  { host: 'USGS Feeds', url: 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5.0&limit=1', label: 'gov' },
+  { host: 'NWS API', url: 'https://api.weather.gov/points/34.0522,-118.2437', label: 'gov' },
+];
+
+// SESSION HISTORY
+const sessionHistory = [];
+
+// CURRENT METRICS
+let currentMetrics = {};
+
+// =============================================================
+// UTILITIES
+// =============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panels').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('nav-' + tab).classList.add('active');
+}
+
+function latencyColor(ms) {
+  if (ms === null) return '#EF4444';
+  if (ms < 50) return '#22C55E';
+  if (ms < 100) return '#14B8A6';
+  if (ms < 200) return '#EAB308';
+  if (ms < 400) return '#F97316';
+  return '#EF4444';
+}
+
+function scoreToGrade(score) {
+  if (score >= 90) return 'EXCELLENT';
+  if (score >= 75) return 'GOOD';
+  if (score >= 60) return 'FAIR';
+  if (score >= 40) return 'POOR';
+  return 'CRITICAL';
+}
+
+function scoreToColor(score) {
+  if (score >= 75) return '#22C55E';
+  if (score >= 50) return '#EAB308';
+  return '#EF4444';
+}
+
+function timeNow() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ap}`;
+}
+
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  if (m > 0) return `${m}m ${s}s ago`;
+  return `${s}s ago`;
+}
+
+// =============================================================
+// LATENCY MEASUREMENT
+// =============================================================
+async function measureLatency(url, timeout = 5000) {
+  const start = performance.now();
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    await fetch(url, {
+      method: 'HEAD',
+      mode: 'no-cors',
+      signal: controller.signal,
+      cache: 'no-cache'
+    });
+    clearTimeout(timer);
+    return Math.round(performance.now() - start);
+  } catch (e) {
+    // For no-cors, a network error means unreachable, opaque response means reachable
+    const elapsed = Math.round(performance.now() - start);
+    if (e.name === 'AbortError') return null;
+    // If we got a TypeError but it completed quickly, endpoint was reachable (opaque response)
+    if (elapsed < timeout - 100) return elapsed;
+    return null;
+  }
+}
+
+async function measureAllLatencies() {
+  const results = await Promise.all(
+    TEST_ENDPOINTS.map(async (ep) => {
+      // Run 2 measurements for accuracy
+      const t1 = await measureLatency(ep.url);
+      const t2 = await measureLatency(ep.url);
+      let avg = null;
+      if (t1 !== null && t2 !== null) avg = Math.round((t1 + t2) / 2);
+      else if (t1 !== null) avg = t1;
+      else if (t2 !== null) avg = t2;
+      return { ...ep, latency: avg };
+    })
+  );
+  return results;
+}
+
+// =============================================================
+// IP GEOLOCATION
+// =============================================================
+async function fetchIPInfo() {
+  try {
+    const r = await fetch('https://ipapi.co/json/', {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    document.getElementById('src-ipapi').textContent = '● Live';
+    document.getElementById('src-ipapi').className = 'ds-status ds-live';
+    return {
+      ip: d.ip,
+      org: d.org || d.asn,
+      city: d.city,
+      region: d.region,
+      country: d.country_name,
+      asn: d.asn,
+      timezone: d.timezone
+    };
+  } catch(e) {
+    // Fallback: try ipify just for IP
+    try {
+      const r2 = await fetch('https://api.ipify.org?format=json');
+      const d2 = await r2.json();
+      document.getElementById('src-ipapi').textContent = '◑ Partial';
+      document.getElementById('src-ipapi').className = 'ds-status ds-live';
+      return { ip: d2.ip, org: '—', city: '—', region: '—', country: '—', asn: '—', timezone: '—' };
+    } catch(e2) {
+      document.getElementById('src-ipapi').textContent = '✕ Error';
+      document.getElementById('src-ipapi').className = 'ds-status ds-error';
+      return null;
+    }
+  }
+}
+
+// =============================================================
+// BROWSER NETWORK API
+// =============================================================
+function getBrowserNetworkInfo() {
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  document.getElementById('src-nav').textContent = conn ? '● Live' : '◑ Limited';
+  document.getElementById('src-nav').className = 'ds-status ' + (conn ? 'ds-live' : 'ds-live');
+  if (!conn) return { type: 'wifi', effectiveType: '4g', downlink: null, rtt: null };
+  return {
+    type: conn.type || 'wifi',
+    effectiveType: conn.effectiveType || '4g',
+    downlink: conn.downlink || null,
+    rtt: conn.rtt || null,
+    saveData: conn.saveData || false
+  };
+}
+
+// =============================================================
+// COMPUTE NETWORK SCORE
+// =============================================================
+function computeScore(latencies, navInfo) {
+  const reachable = latencies.filter(l => l.latency !== null);
+  if (reachable.length === 0) return 10;
+
+  const avgLatency = reachable.reduce((s, l) => s + l.latency, 0) / reachable.length;
+  const reachPct = (reachable.length / latencies.length) * 100;
+
+  // Score from latency (0–60 points)
+  let latScore = 60;
+  if (avgLatency > 50) latScore = Math.max(0, 60 - (avgLatency - 50) * 0.3);
+
+  // Score from reachability (0–30 points)
+  const reachScore = (reachPct / 100) * 30;
+
+  // Score from connection type (0–10 points)
+  let connScore = 8;
+  if (navInfo.effectiveType === '3g') connScore = 5;
+  if (navInfo.effectiveType === '2g' || navInfo.effectiveType === 'slow-2g') connScore = 2;
+
+  return Math.round(Math.min(100, latScore + reachScore + connScore));
+}
+
+// =============================================================
+// MAIN MEASUREMENT LOOP
+// =============================================================
+async function runMeasurement() {
+  document.getElementById('data-status').textContent = 'MEASURING';
+
+  // 1. Get browser network info (instant)
+  const navInfo = getBrowserNetworkInfo();
+
+  // 2. Fetch IP geo (parallel with latency tests)
+  const [ipInfo, latencies] = await Promise.all([
+    fetchIPInfo(),
+    measureAllLatencies()
+  ]);
+
+  document.getElementById('src-latency').textContent = '● Live';
+  document.getElementById('src-latency').className = 'ds-status ds-live';
+
+  // Compute score
+  const score = computeScore(latencies, navInfo);
+  const grade = scoreToGrade(score);
+  const scoreColor = scoreToColor(score);
+
+  // Save to session history
+  const entry = {
+    ts: Date.now(),
+    score,
+    grade,
+    avgLatency: Math.round(latencies.filter(l=>l.latency!==null).reduce((s,l)=>s+l.latency,0)/Math.max(1,latencies.filter(l=>l.latency!==null).length)),
+    reachable: latencies.filter(l=>l.latency!==null).length,
+    total: latencies.length,
+    isp: ipInfo ? (ipInfo.org || '—') : '—',
+    connType: navInfo.effectiveType
+  };
+  sessionHistory.unshift(entry);
+  if (sessionHistory.length > 30) sessionHistory.pop();
+
+  // Store current metrics
+  currentMetrics = { score, grade, scoreColor, navInfo, ipInfo, latencies, entry };
+
+  // Render everything
+  renderDashboard(score, grade, scoreColor, navInfo, ipInfo, latencies);
+  renderMonitor(latencies);
+  renderHistory();
+
+  document.getElementById('data-status').textContent = 'LIVE';
+}
+
+// =============================================================
+// RENDER DASHBOARD
+// =============================================================
+function renderDashboard(score, grade, scoreColor, navInfo, ipInfo, latencies) {
+  // Score ring (circumference = 2πr = 2π×52 ≈ 326.7)
+  const circ = 326.7;
+  const offset = circ - (score / 100) * circ;
+  const ring = document.getElementById('score-ring');
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = scoreColor;
+
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('score-val').style.color = scoreColor;
+  document.getElementById('score-grade').textContent = grade;
+
+  // Quality label
+  const labels = {
+    EXCELLENT: 'Excellent network performance',
+    GOOD: 'Good network performance',
+    FAIR: 'Fair performance — minor issues',
+    POOR: 'Poor performance detected',
+    CRITICAL: 'Critical connectivity issues'
+  };
+  document.getElementById('signal-quality-label').textContent = labels[grade] || grade;
+
+  // ISP sub-line
+  if (ipInfo && ipInfo.org) {
+    document.getElementById('signal-isp').textContent = ipInfo.org + (ipInfo.city ? ' · ' + ipInfo.city : '');
+  } else {
+    document.getElementById('signal-isp').textContent = 'Network provider detected';
+  }
+
+  // Metrics
+  const connTypeMap = { '4g': '4G/LTE', '3g': '3G', '2g': '2G', 'slow-2g': 'SLOW', wifi: 'WiFi', ethernet: 'ETH' };
+  document.getElementById('conn-type').textContent = connTypeMap[navInfo.effectiveType] || navInfo.effectiveType || 'WiFi';
+
+  const reachable = latencies.filter(l => l.latency !== null);
+  const avgLat = reachable.length > 0
+    ? Math.round(reachable.reduce((s, l) => s + l.latency, 0) / reachable.length)
+    : null;
+  document.getElementById('latency-avg').textContent = avgLat !== null ? avgLat + 'ms' : '—';
+  document.getElementById('latency-avg').style.color = avgLat !== null ? latencyColor(avgLat) : 'var(--text3)';
+
+  document.getElementById('bandwidth-est').textContent = navInfo.downlink ? navInfo.downlink + ' Mbps' : '—';
+
+  // Provider info
+  if (ipInfo) {
+    document.getElementById('ip-addr').textContent = ipInfo.ip || '—';
+    document.getElementById('isp-name').textContent = ipInfo.org || '—';
+    document.getElementById('net-location').textContent =
+      [ipInfo.city, ipInfo.region, ipInfo.country].filter(Boolean).join(', ') || '—';
+    document.getElementById('net-asn').textContent = ipInfo.asn || '—';
+    document.getElementById('net-tz').textContent = ipInfo.timezone || '—';
+  }
+
+  // Latency bars
+  const maxL = Math.max(...latencies.map(l => l.latency || 0), 200);
+  document.getElementById('latency-list').innerHTML = latencies.map(ep => {
+    const ms = ep.latency;
+    const color = latencyColor(ms);
+    const pct = ms !== null ? Math.min(100, (ms / maxL) * 100) : 100;
+    const label = ms !== null ? ms + 'ms' : 'TIMEOUT';
+    return `<div class="latency-row">
+      <div class="latency-host">${ep.host}</div>
+      <div class="latency-bar-wrap">
+        <div class="latency-bar-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <div class="latency-val" style="color:${color}">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================================
+// RENDER MONITOR
+// =============================================================
+function renderMonitor(latencies) {
+  document.getElementById('monitor-updated').textContent = 'Updated ' + timeNow();
+  document.getElementById('monitor-cards').innerHTML = latencies.map(ep => {
+    const ms = ep.latency;
+    const color = latencyColor(ms);
+    const statusText = ms === null ? 'TIMEOUT' : ms < 100 ? 'EXCELLENT' : ms < 200 ? 'GOOD' : ms < 400 ? 'SLOW' : 'CRITICAL';
+    const statusCls = ms === null ? 'ts-fail' : ms < 200 ? 'ts-ok' : ms < 400 ? 'ts-warn' : 'ts-fail';
+    const pct = ms !== null ? Math.max(5, Math.min(100, 100 - (ms / 5))) : 0;
+
+    return `<div class="test-card">
+      <div class="test-header">
+        <div class="test-host">${ep.host}</div>
+        <div class="test-status-badge ${statusCls}">${statusText}</div>
+      </div>
+      <div class="test-metrics">
+        <div class="test-metric">
+          <div class="tm-val" style="color:${color}">${ms !== null ? ms+'ms' : '—'}</div>
+          <div class="tm-label">LATENCY</div>
+        </div>
+        <div class="test-metric">
+          <div class="tm-val" style="color:${ms!==null?'var(--green)':'var(--red)'}">${ms !== null ? '✓' : '✕'}</div>
+          <div class="tm-label">REACHABLE</div>
+        </div>
+        <div class="test-metric">
+          <div class="tm-val" style="color:var(--text3)">${ep.label.toUpperCase()}</div>
+          <div class="tm-label">TYPE</div>
+        </div>
+      </div>
+      <div class="test-bar">
+        <div class="test-bar-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================================
+// RENDER HISTORY
+// =============================================================
+function renderHistory() {
+  document.getElementById('history-count').textContent = sessionHistory.length + ' readings this session';
+  if (!sessionHistory.length) return;
+
+  document.getElementById('history-list').innerHTML = sessionHistory.map(e => {
+    const color = scoreToColor(e.score);
+    const barPct = e.score;
+    return `<div class="history-entry">
+      <div class="hist-time">${new Date(e.ts).toLocaleTimeString('en-US',{hour12:true,hour:'numeric',minute:'2-digit'})}</div>
+      <div class="hist-score" style="color:${color}">${e.score}</div>
+      <div class="hist-details">
+        <div class="hist-isp">${e.isp}</div>
+        <div class="hist-meta">${e.avgLatency}ms avg · ${e.reachable}/${e.total} hosts · ${(e.connType||'').toUpperCase()}</div>
+      </div>
+      <div class="hist-bar-wrap">
+        <div class="hist-bar-fill" style="width:${barPct}%;background:${color}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================================
+// LIVE CLOCK
+// =============================================================
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('live-clock').textContent = `${h}:${String(m).padStart(2,'0')} ${ap}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// =============================================================
+// AUTO-REFRESH (60-second countdown)
+// =============================================================
+let countdown = 60;
+setInterval(() => {
+  countdown--;
+  document.getElementById('refresh-countdown').textContent = `Refresh: ${countdown}s`;
+  if (countdown <= 0) {
+    countdown = 60;
+    runMeasurement();
+  }
+}, 1000);
+
+// =============================================================
+// CAPACITOR NATIVE INTEGRATION
+// =============================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    if (window.Capacitor) {
+      const { StatusBar, SplashScreen, Network } = window.Capacitor.Plugins;
+      if (StatusBar) {
+        await StatusBar.setStyle({ style: 'DARK' });
+        await StatusBar.setBackgroundColor({ color: '#07090F' });
+      }
+      if (SplashScreen) SplashScreen.hide({ fadeOutDuration: 300 });
+      // Use Capacitor Network plugin when available
+      if (Network) {
+        const status = await Network.getStatus();
+        document.getElementById('conn-type').textContent = status.connectionType.toUpperCase();
+      }
+    }
+  } catch(e) {}
+
+  // Start measurement
+  runMeasurement();
+});
+</script>
+</body>
+</html>

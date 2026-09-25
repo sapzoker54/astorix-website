@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ASTORIX Signal Pro</title>
+<style>
+  :root {
+    --bg: #07090F;
+    --bg2: #0A0F1A;
+    --bg3: #0F1621;
+    --card: #111927;
+    --card2: #162033;
+    --border: #1A2A3E;
+    --text: #E8F4FF;
+    --text2: #7CA3C4;
+    --text3: #4A6A80;
+    --blue: #0EA5E9;
+    --blue2: #0284C7;
+    --teal: #14B8A6;
+    --green: #22C55E;
+    --yellow: #EAB308;
+    --orange: #F97316;
+    --red: #EF4444;
+    --purple: #A855F7;
+    --gold: #F59E0B;
+    --safe-top: env(safe-area-inset-top, 44px);
+    --safe-bottom: env(safe-area-inset-bottom, 34px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, sans-serif; overflow: hidden; }
+
+  .status-bar {
+    height: var(--safe-top); min-height: 44px;
+    background: var(--bg);
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 20px 8px;
+    position: relative; z-index: 100;
+  }
+  .status-time { font-size: 15px; font-weight: 700; color: var(--text); }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+
+  .app-header {
+    background: linear-gradient(135deg, #0D0826 0%, #0C0E1E 100%);
+    padding: 12px 20px 14px;
+    border-bottom: 1px solid rgba(168,85,247,0.25);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-logo { display: flex; align-items: center; gap: 10px; }
+  .app-logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, #6D28D9, #A855F7, #F59E0B);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: white;
+  }
+  .app-logo-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .app-logo-sub { font-size: 10px; color: rgba(168,85,247,0.8); margin-top: 1px; }
+  .header-right { text-align: right; }
+  .pro-live-pill {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700;
+    background: linear-gradient(90deg, rgba(168,85,247,0.15), rgba(245,158,11,0.1));
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 10px; padding: 2px 8px;
+    color: var(--purple);
+  }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse-live 1.5s infinite; }
+  @keyframes pulse-live { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .refresh-label { font-size: 10px; color: var(--text3); margin-top: 4px; text-align: right; }
+
+  .content {
+    height: calc(100vh - var(--safe-top) - 62px - 74px - var(--safe-bottom));
+    min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+  }
+  .content::-webkit-scrollbar { display: none; }
+
+  .tab-panels { display: none; }
+  .tab-panels.active { display: block; }
+
+  /* NWS / SEISMIC BANNER */
+  .alert-banner {
+    display: none; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(90deg, rgba(239,68,68,0.12), rgba(239,68,68,0.04));
+    border-bottom: 1px solid rgba(239,68,68,0.25);
+  }
+  .alert-banner.visible { display: flex; }
+  .alert-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse-live 1s infinite; flex-shrink: 0; }
+  .alert-text { font-size: 11px; color: #FCA5A5; font-weight: 600; flex: 1; }
+  .alert-tag { font-size: 10px; color: var(--red); font-weight: 700; }
+
+  /* PRO INTEL BANNER */
+  .intel-banner {
+    background: linear-gradient(135deg, rgba(109,40,217,0.2), rgba(168,85,247,0.08));
+    border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 14px; margin: 12px 16px 0; padding: 14px;
+  }
+  .intel-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 9px; font-weight: 700; color: var(--purple);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .intel-badge::before { content: '⚡'; }
+  .intel-headline { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .intel-sub { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  /* SCORE DASHBOARD */
+  .score-dashboard {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; padding: 12px 16px 0;
+  }
+  .score-primary {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #0C0E1A, #0A1628);
+    border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 16px; padding: 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .score-ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+  .score-ring-wrap svg { width: 80px; height: 80px; transform: rotate(-90deg); }
+  .ring-bg { stroke: var(--border); fill: none; stroke-width: 7; }
+  .ring-fill { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 0.8s; }
+  .ring-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .ring-score { font-size: 20px; font-weight: 900; line-height: 1; }
+  .ring-grade { font-size: 8px; color: var(--text3); font-weight: 700; margin-top: 2px; }
+  .score-details { flex: 1; }
+  .score-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .score-sub { font-size: 11px; color: var(--text2); margin-bottom: 8px; }
+  .score-bar-row { display: flex; gap: 4px; margin-bottom: 4px; }
+  .score-bar-seg { height: 4px; border-radius: 2px; flex: 1; }
+
+  .metric-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px; text-align: center;
+  }
+  .metric-icon { font-size: 16px; margin-bottom: 4px; }
+  .metric-val { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  .metric-label { font-size: 9px; color: var(--text3); margin-top: 2px; letter-spacing: 0.3px; }
+  .metric-trend { font-size: 9px; margin-top: 4px; font-weight: 600; }
+
+  /* THREAT FEED */
+  .threat-card {
+    margin: 12px 16px 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .threat-header {
+    padding: 12px 14px;
+    background: linear-gradient(90deg, rgba(239,68,68,0.08), transparent);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; font-weight: 700; color: var(--text);
+  }
+  .threat-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+  }
+  .threat-row:last-child { border-bottom: none; }
+  .threat-sev { width: 4px; height: 36px; border-radius: 2px; flex-shrink: 0; }
+  .threat-info { flex: 1; }
+  .threat-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .threat-detail { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .threat-val { font-size: 13px; font-weight: 800; }
+  .threat-time { font-size: 10px; color: var(--text3); min-width: 50px; text-align: right; }
+
+  /* ENDPOINT INTELLIGENCE */
+  .endpoint-card {
+    margin: 12px 16px 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .endpoint-header {
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .endpoint-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .endpoint-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; }
+  .ep-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+  }
+  .ep-row:last-child { border-bottom: none; }
+  .ep-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .ep-host { flex: 1; font-size: 12px; color: var(--text); font-weight: 600; }
+  .ep-latency { font-size: 13px; font-weight: 700; min-width: 50px; text-align: right; }
+  .ep-bar-wrap { width: 50px; height: 4px; background: var(--border); border-radius: 2px; }
+  .ep-bar-fill { height: 4px; border-radius: 2px; }
+
+  /* SECTION HEADER */
+  .section-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 10px; }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .section-sub { font-size: 11px; color: var(--text3); }
+
+  /* DEEP ANALYTICS */
+  .analytics-area { padding: 16px 16px 0; }
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 8px; text-align: center; }
+  .stat-val { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  .stat-label { font-size: 9px; color: var(--text3); margin-top: 3px; }
+  .analytics-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .analytics-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .cat-row { margin-bottom: 10px; }
+  .cat-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .cat-label { font-size: 12px; color: var(--text2); }
+  .cat-val { font-size: 12px; font-weight: 700; color: var(--text); }
+  .cat-bar-bg { height: 5px; background: var(--border); border-radius: 3px; }
+  .cat-bar-fill { height: 5px; border-radius: 3px; transition: width 0.6s; }
+
+  /* SEISMIC MINI */
+  .seismic-mini { display: flex; flex-direction: column; gap: 6px; }
+  .quake-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .quake-row:last-child { border-bottom: none; }
+  .quake-mag { font-size: 14px; font-weight: 800; min-width: 36px; }
+  .quake-info { flex: 1; }
+  .quake-place { font-size: 11px; font-weight: 600; color: var(--text); }
+  .quake-time { font-size: 10px; color: var(--text3); }
+
+  /* SETTINGS */
+  .settings-section { padding: 16px; }
+  .pro-identity-card {
+    background: linear-gradient(135deg, #0D0826 0%, #0C0E1E 100%);
+    border: 1px solid rgba(168,85,247,0.3); border-radius: 16px;
+    padding: 16px; text-align: center; margin-bottom: 16px;
+  }
+  .pro-badge-large {
+    display: inline-block; margin-bottom: 8px;
+    background: linear-gradient(90deg, #6D28D9, #A855F7);
+    color: white; font-size: 11px; font-weight: 700;
+    padding: 3px 12px; border-radius: 12px; letter-spacing: 0.5px;
+  }
+  .pro-name { font-size: 16px; font-weight: 800; color: var(--text); }
+  .pro-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .settings-group { margin-bottom: 16px; }
+  .settings-group-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px; padding-left: 2px; }
+  .settings-row { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 2px; }
+  .settings-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .settings-label { flex: 1; font-size: 14px; font-weight: 500; color: var(--text); }
+  .settings-value { font-size: 13px; color: var(--text3); }
+  .data-source-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .data-source-row:last-child { border-bottom: none; }
+  .ds-name { font-size: 13px; color: var(--text); font-weight: 500; }
+  .ds-status { font-size: 11px; font-weight: 700; }
+  .ds-live { color: var(--green); }
+  .ds-error { color: var(--red); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: calc(74px + var(--safe-bottom));
+    background: rgba(7,9,15,0.97);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(168,85,247,0.15);
+    display: flex; align-items: flex-start;
+    padding-top: 8px; padding-bottom: var(--safe-bottom); z-index: 50;
+  }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 0; }
+  .nav-icon { font-size: 22px; line-height: 1; filter: grayscale(1) opacity(0.5); transition: filter 0.2s; }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--text3); transition: color 0.2s; }
+  .nav-item.active .nav-icon { filter: none; }
+  .nav-item.active .nav-label { color: var(--purple); }
+
+  .toast {
+    position: fixed; top: calc(var(--safe-top) + 70px);
+    left: 50%; transform: translateX(-50%) translateY(-20px);
+    background: rgba(13,8,38,0.97); border: 1px solid rgba(168,85,247,0.4);
+    color: var(--text); padding: 10px 20px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; z-index: 999; opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .loading-spin { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { padding: 24px 16px; text-align: center; color: var(--text3); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span class="status-time" id="live-clock">9:41</span>
+  <div class="status-icons">
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="white" opacity="0.9"><rect x="0" y="3" width="3" height="8" rx="1"/><rect x="4.5" y="2" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="2.5" height="11" rx="1"/></svg>
+    <svg width="15" height="11" viewBox="0 0 15 11" fill="white" opacity="0.9"><path d="M7.5 2.2C9.8 2.2 11.9 3.1 13.4 4.6L15 3C13.1 1.1 10.4 0 7.5 0S1.9 1.1 0 3L1.6 4.6C3.1 3.1 5.2 2.2 7.5 2.2z"/><path d="M7.5 5.5C9 5.5 10.3 6.1 11.3 7L12.9 5.4C11.5 4.1 9.6 3.3 7.5 3.3S3.5 4.1 2.1 5.4L3.7 7C4.7 6.1 6 5.5 7.5 5.5z"/><circle cx="7.5" cy="9.5" r="1.5"/></svg>
+    <svg width="25" height="11" viewBox="0 0 25 11" fill="none"><rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="white" stroke-opacity="0.4"/><rect x="1.5" y="1.5" width="16" height="8" rx="1.5" fill="white"/><path d="M23 3.5v4c.8-.4 1.3-1.1 1.3-2s-.5-1.6-1.3-2z" fill="white" opacity="0.4"/></svg>
+  </div>
+</div>
+
+<!-- APP HEADER -->
+<div class="app-header">
+  <div class="app-logo">
+    <div class="app-logo-icon">⚡</div>
+    <div>
+      <div class="app-logo-name">ASTORIX Signal <span style="color:var(--gold);font-weight:800">Pro</span></div>
+      <div class="app-logo-sub">Enterprise Network Intelligence</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="pro-live-pill">
+      <div class="live-dot"></div>
+      <span id="data-status">MEASURING</span>
+    </div>
+    <div class="refresh-label" id="refresh-countdown">Refresh: 60s</div>
+  </div>
+</div>
+
+<!-- NWS ALERT BANNER -->
+<div class="alert-banner" id="nws-banner">
+  <div class="alert-dot"></div>
+  <div class="alert-text" id="nws-text">Active weather alert affecting network infrastructure</div>
+  <div class="alert-tag" id="nws-count">Details →</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="content">
+
+  <!-- DASHBOARD TAB -->
+  <div class="tab-panels active" id="tab-dashboard">
+
+    <!-- PRO AI INTEL BANNER -->
+    <div class="intel-banner">
+      <div class="intel-badge">PRO AI INTELLIGENCE</div>
+      <div class="intel-headline" id="intel-headline">Analyzing network environment...</div>
+      <div class="intel-sub" id="intel-sub">Collecting live data from all sources</div>
+    </div>
+
+    <!-- COMPOSITE SCORE + METRICS -->
+    <div class="score-dashboard">
+      <div class="score-primary">
+        <div class="score-ring-wrap">
+          <svg viewBox="0 0 80 80">
+            <circle class="ring-bg" cx="40" cy="40" r="34"/>
+            <circle class="ring-fill" id="score-ring" cx="40" cy="40" r="34"
+              stroke="#A855F7" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+          </svg>
+          <div class="ring-label">
+            <div class="ring-score" id="score-val" style="color:var(--purple)">—</div>
+            <div class="ring-grade" id="score-grade">PRO</div>
+          </div>
+        </div>
+        <div class="score-details">
+          <div class="score-title" id="score-title">Network Intelligence Score</div>
+          <div class="score-sub" id="score-sub">Measuring all dimensions...</div>
+          <div class="score-bar-row" id="score-bars">
+            <div class="score-bar-seg" style="background:var(--border)"></div>
+            <div class="score-bar-seg" style="background:var(--border)"></div>
+            <div class="score-bar-seg" style="background:var(--border)"></div>
+            <div class="score-bar-seg" style="background:var(--border)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">⚡</div>
+        <div class="metric-val" id="m-latency" style="color:var(--green)">—</div>
+        <div class="metric-label">AVG LATENCY</div>
+        <div class="metric-trend" id="m-latency-trend" style="color:var(--text3)">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">🌐</div>
+        <div class="metric-val" id="m-reach" style="color:var(--blue)">—</div>
+        <div class="metric-label">REACHABILITY</div>
+        <div class="metric-trend" id="m-reach-trend" style="color:var(--text3)">— hosts</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">📶</div>
+        <div class="metric-val" id="m-conn" style="color:var(--teal)">—</div>
+        <div class="metric-label">CONNECTION</div>
+        <div class="metric-trend" id="m-bw" style="color:var(--text3)">— Mbps</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">🌍</div>
+        <div class="metric-val" id="m-seismic" style="color:var(--yellow)">—</div>
+        <div class="metric-label">SEISMIC RISK</div>
+        <div class="metric-trend" id="m-quakes" style="color:var(--text3)">— events</div>
+      </div>
+    </div>
+
+    <!-- THREAT / RISK FEED -->
+    <div class="threat-card">
+      <div class="threat-header">🔴 Live Risk Feed</div>
+      <div id="threat-list">
+        <div class="empty-state"><span class="loading-spin"></span>Building risk assessment...</div>
+      </div>
+    </div>
+
+    <!-- ENDPOINT PANEL (compact) -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <div class="endpoint-title">📡 Endpoint Intelligence</div>
+        <div class="endpoint-badge" style="background:rgba(168,85,247,0.15);color:var(--purple)" id="ep-reach-badge">— / 8</div>
+      </div>
+      <div id="ep-list">
+        <div class="empty-state"><span class="loading-spin"></span>Testing...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEISMIC TAB -->
+  <div class="tab-panels" id="tab-seismic">
+    <div class="section-header">
+      <div class="section-title">🌍 Seismic Monitor</div>
+      <div class="section-sub" id="seismic-updated">USGS Real-Time Feed</div>
+    </div>
+    <div style="padding: 0 16px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">⚠️ Seismic Risk to Network Infrastructure</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5">Earthquakes M3.5+ can damage fiber conduits, data centers, and cell towers. Los Angeles sits on multiple active fault systems. Real-time monitoring enables infrastructure teams to pre-position repair resources.</div>
+      </div>
+    </div>
+
+    <!-- NWS Alerts section -->
+    <div style="padding: 0 16px; margin-bottom: 12px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text)">🌩️ NOAA NWS Active Alerts</div>
+        <div id="nws-list">
+          <div class="empty-state"><span class="loading-spin"></span>Loading alerts...</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 0 16px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text)">📊 Recent Earthquakes · 100km Radius</div>
+        <div class="seismic-mini" id="seismic-list" style="padding:4px 0">
+          <div class="empty-state"><span class="loading-spin"></span>Loading USGS data...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div class="tab-panels" id="tab-analytics">
+    <div class="analytics-area">
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-val" id="a-score" style="color:var(--purple)">—</div>
+          <div class="stat-label">Pro Score</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="a-lat" style="color:var(--green)">—</div>
+          <div class="stat-label">Avg Latency</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="a-reach" style="color:var(--blue)">—</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">Network Dimension Analysis</div>
+        <div id="dimension-bars"></div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">Provider Intelligence</div>
+        <div id="provider-intel">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">Session Trend (Last 10 readings)</div>
+        <div id="trend-chart" style="height:60px;position:relative;overflow:hidden">
+          <div class="empty-state">Collecting trend data...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div class="tab-panels" id="tab-settings">
+    <div class="settings-section">
+      <div class="pro-identity-card">
+        <div class="pro-badge-large">⚡ PRO EDITION</div>
+        <div class="pro-name">ASTORIX Signal Pro</div>
+        <div class="pro-sub">Enterprise Network Intelligence Platform</div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Live Data Sources</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px">
+          <div class="data-source-row">
+            <div class="ds-name">IP Geolocation (ipapi.co)</div>
+            <div class="ds-status" id="src-ipapi">Checking...</div>
+          </div>
+          <div class="data-source-row">
+            <div class="ds-name">Browser Network API</div>
+            <div class="ds-status" id="src-nav">Checking...</div>
+          </div>
+          <div class="data-source-row">
+            <div class="ds-name">Latency Tests (8 endpoints)</div>
+            <div class="ds-status" id="src-lat">Checking...</div>
+          </div>
+          <div class="data-source-row">
+            <div class="ds-name">USGS Earthquake Feed</div>
+            <div class="ds-status" id="src-usgs">Checking...</div>
+          </div>
+          <div class="data-source-row">
+            <div class="ds-name">NOAA NWS Alerts</div>
+            <div class="ds-status" id="src-nws">Checking...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Pro Features</div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(168,85,247,0.15)">🤖</div>
+          <div class="settings-label">AI Risk Intelligence</div>
+          <div class="settings-value">Active</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(245,158,11,0.15)">🌍</div>
+          <div class="settings-label">Seismic Monitoring</div>
+          <div class="settings-value">100km · USGS</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(239,68,68,0.15)">🌩️</div>
+          <div class="settings-label">Weather Impact</div>
+          <div class="settings-value">NOAA NWS</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(34,197,94,0.15)">🔄</div>
+          <div class="settings-label">Auto-Refresh</div>
+          <div class="settings-value">60 seconds</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(14,165,233,0.15)">📊</div>
+          <div class="settings-label">Composite Scoring</div>
+          <div class="settings-value">5 dimensions</div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-label">Legal</div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(59,130,246,0.15)">™</div>
+          <div class="settings-label">Trademark</div>
+          <div class="settings-value">SN 99639401</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-icon" style="background:rgba(239,68,68,0.15)">©</div>
+          <div class="settings-label">Copyright</div>
+          <div class="settings-value">Gensis.AI Inc. 2026</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:8px 0;font-size:10px;color:var(--text3)">
+        ASTORIX™ Signal Pro · IC 009 Commercial App<br>
+        SN 99639401 · ai.astorix.signalpro<br>
+        Data: ipapi.co · USGS · NOAA NWS
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Dashboard</div>
+  </div>
+  <div class="nav-item" id="nav-seismic" onclick="switchTab('seismic')">
+    <div class="nav-icon">🌍</div>
+    <div class="nav-label">Seismic</div>
+  </div>
+  <div class="nav-item" id="nav-analytics" onclick="switchTab('analytics')">
+    <div class="nav-icon">📈</div>
+    <div class="nav-label">Analytics</div>
+  </div>
+  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">
+    <div class="nav-icon">⚙️</div>
+    <div class="nav-label">Settings</div>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================================
+// ASTORIX Signal Pro — Enterprise Network Intelligence v2.0
+// 5 LIVE DATA SOURCES: IP Geo | Network API | Latency | USGS | NWS
+// © Gensis.AI Inc. / ASTORIX.AI — SN 99639401
+// =============================================================
+
+const TEST_ENDPOINTS = [
+  { host: 'Cloudflare', url: 'https://1.1.1.1/dns-query?name=astorix.ai&type=A' },
+  { host: 'Google DNS', url: 'https://dns.google/resolve?name=google.com&type=A' },
+  { host: 'ipify.org', url: 'https://api.ipify.org?format=json' },
+  { host: 'ipapi.co', url: 'https://ipapi.co/json/' },
+  { host: 'GitHub API', url: 'https://api.github.com' },
+  { host: 'OpenWeather', url: 'https://api.openweathermap.org/data/2.5/weather?lat=34.05&lon=-118.24&appid=demo' },
+  { host: 'USGS Feed', url: 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5.0&limit=1' },
+  { host: 'NOAA NWS', url: 'https://api.weather.gov/points/34.0522,-118.2437' },
+];
+
+const API_USGS = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=1.0&latitude=34.0522&longitude=-118.2437&maxradiuskm=100&limit=15&orderby=time';
+const API_NWS  = 'https://api.weather.gov/alerts/active?area=CA&status=actual&urgency=Immediate,Expected&severity=Extreme,Severe,Moderate';
+
+let sessionLog = [];
+let latestMetrics = {};
+
+// =============================================================
+// UTILITIES
+// =============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panels').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('nav-' + tab).classList.add('active');
+}
+
+function latColor(ms) {
+  if (ms === null) return '#EF4444';
+  if (ms < 50) return '#22C55E';
+  if (ms < 100) return '#14B8A6';
+  if (ms < 200) return '#EAB308';
+  if (ms < 400) return '#F97316';
+  return '#EF4444';
+}
+
+function magColor(m) {
+  if (m >= 5) return '#EF4444';
+  if (m >= 3.5) return '#F97316';
+  if (m >= 2.5) return '#EAB308';
+  return '#22C55E';
+}
+
+function timeAgo(ts) {
+  const d = Date.now() - new Date(ts).getTime();
+  const h = Math.floor(d / 3600000), m = Math.floor((d % 3600000) / 60000);
+  if (h > 23) return `${Math.floor(h/24)}d ago`;
+  if (h > 0) return `${h}h ${m}m ago`;
+  return `${m}m ago`;
+}
+
+// =============================================================
+// LATENCY MEASUREMENT
+// =============================================================
+async function measureLatency(url, timeout = 5000) {
+  const start = performance.now();
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeout);
+    await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: ctrl.signal, cache: 'no-cache' });
+    clearTimeout(t);
+    return Math.round(performance.now() - start);
+  } catch(e) {
+    const elapsed = Math.round(performance.now() - start);
+    if (e.name === 'AbortError') return null;
+    if (elapsed < timeout - 100) return elapsed;
+    return null;
+  }
+}
+
+async function measureAll() {
+  return Promise.all(TEST_ENDPOINTS.map(async ep => {
+    const t1 = await measureLatency(ep.url);
+    const t2 = await measureLatency(ep.url);
+    let avg = null;
+    if (t1 !== null && t2 !== null) avg = Math.round((t1+t2)/2);
+    else avg = t1 || t2;
+    return { ...ep, latency: avg };
+  }));
+}
+
+// =============================================================
+// IP GEO
+// =============================================================
+async function fetchIPGeo() {
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    document.getElementById('src-ipapi').textContent = '● Live';
+    document.getElementById('src-ipapi').className = 'ds-status ds-live';
+    return { ip: d.ip, org: d.org, asn: d.asn, city: d.city, region: d.region, country: d.country_name, tz: d.timezone };
+  } catch {
+    document.getElementById('src-ipapi').textContent = '✕ Error';
+    document.getElementById('src-ipapi').className = 'ds-status ds-error';
+    return null;
+  }
+}
+
+// =============================================================
+// USGS EARTHQUAKE
+// =============================================================
+async function fetchUSGS() {
+  try {
+    const r = await fetch(API_USGS);
+    const d = await r.json();
+    const quakes = (d.features || []).map(f => ({
+      mag: f.properties.mag,
+      place: f.properties.place,
+      time: f.properties.time,
+      depth: f.geometry ? f.geometry.coordinates[2] : null,
+    })).sort((a,b) => b.time - a.time).slice(0,10);
+    document.getElementById('src-usgs').textContent = '● Live';
+    document.getElementById('src-usgs').className = 'ds-status ds-live';
+    return quakes;
+  } catch {
+    document.getElementById('src-usgs').textContent = '✕ Error';
+    document.getElementById('src-usgs').className = 'ds-status ds-error';
+    return [];
+  }
+}
+
+// =============================================================
+// NWS ALERTS
+// =============================================================
+async function fetchNWS() {
+  try {
+    const r = await fetch(API_NWS, { headers: { 'User-Agent': 'ASTORIX-SignalPro/2.0 ashreekar@engineersoft.org' } });
+    const d = await r.json();
+    const alerts = (d.features || []).filter(f => {
+      const a = (f.properties.areaDesc || '').toLowerCase();
+      return a.includes('los angeles') || a.includes('ventura') || a.includes('orange') || a.includes('san bernardino');
+    });
+    document.getElementById('src-nws').textContent = '● Live';
+    document.getElementById('src-nws').className = 'ds-status ds-live';
+    return alerts;
+  } catch {
+    document.getElementById('src-nws').textContent = '✕ Error';
+    document.getElementById('src-nws').className = 'ds-status ds-error';
+    return [];
+  }
+}
+
+// =============================================================
+// COMPOSITE SCORE (PRO: 5 dimensions)
+// =============================================================
+function computeProScore(latencies, navInfo, quakes, nwsAlerts) {
+  const reachable = latencies.filter(l => l.latency !== null);
+  const avgLat = reachable.length > 0
+    ? Math.round(reachable.reduce((s,l) => s + l.latency, 0) / reachable.length) : 999;
+
+  // Dimension 1: Latency (0–25)
+  const latScore = Math.max(0, 25 - Math.max(0, avgLat - 30) * 0.1);
+
+  // Dimension 2: Reachability (0–25)
+  const reachScore = (reachable.length / latencies.length) * 25;
+
+  // Dimension 3: Connection quality (0–20)
+  const et = navInfo.effectiveType || '4g';
+  const connScore = et === '4g' ? 20 : et === '3g' ? 12 : et === '2g' ? 6 : 20;
+
+  // Dimension 4: Seismic risk (0–15)
+  const maxMag = quakes.length > 0 ? Math.max(...quakes.map(q => q.mag)) : 0;
+  const seismicScore = maxMag >= 5 ? 5 : maxMag >= 3.5 ? 10 : 15;
+
+  // Dimension 5: Weather risk (0–15)
+  const weatherScore = nwsAlerts.length === 0 ? 15 : nwsAlerts.length <= 2 ? 10 : 5;
+
+  const total = Math.round(Math.min(100, latScore + reachScore + connScore + seismicScore + weatherScore));
+  return {
+    total,
+    dims: {
+      latency: Math.round(latScore),
+      reachability: Math.round(reachScore),
+      connection: Math.round(connScore),
+      seismic: Math.round(seismicScore),
+      weather: Math.round(weatherScore)
+    }
+  };
+}
+
+// =============================================================
+// MAIN
+// =============================================================
+async function runAll() {
+  document.getElementById('data-status').textContent = 'MEASURING';
+
+  const navInfo = (() => {
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    document.getElementById('src-nav').textContent = c ? '● Live' : '◑ Limited';
+    document.getElementById('src-nav').className = 'ds-status ds-live';
+    return { effectiveType: c?.effectiveType || '4g', downlink: c?.downlink || null, rtt: c?.rtt || null };
+  })();
+
+  const [latencies, ipGeo, quakes, nwsAlerts] = await Promise.all([
+    measureAll(),
+    fetchIPGeo(),
+    fetchUSGS(),
+    fetchNWS()
+  ]);
+
+  document.getElementById('src-lat').textContent = '● Live';
+  document.getElementById('src-lat').className = 'ds-status ds-live';
+
+  const scoring = computeProScore(latencies, navInfo, quakes, nwsAlerts);
+  const reachable = latencies.filter(l => l.latency !== null);
+  const avgLat = reachable.length > 0
+    ? Math.round(reachable.reduce((s,l) => s + l.latency, 0) / reachable.length) : null;
+
+  latestMetrics = { scoring, latencies, ipGeo, quakes, nwsAlerts, navInfo, avgLat, reachable, ts: Date.now() };
+
+  sessionLog.unshift({ ts: Date.now(), score: scoring.total, avgLat, reachCount: reachable.length });
+  if (sessionLog.length > 10) sessionLog.pop();
+
+  renderDashboard();
+  renderSeismic();
+  renderAnalytics();
+  renderNWSBanner();
+
+  document.getElementById('data-status').textContent = 'LIVE';
+}
+
+// =============================================================
+// RENDER DASHBOARD
+// =============================================================
+function renderDashboard() {
+  const { scoring, latencies, ipGeo, quakes, nwsAlerts, navInfo, avgLat, reachable } = latestMetrics;
+  const score = scoring.total;
+  const color = score >= 75 ? '#22C55E' : score >= 50 ? '#EAB308' : '#EF4444';
+  const grade = score >= 90 ? 'EXCELLENT' : score >= 75 ? 'GOOD' : score >= 60 ? 'FAIR' : score >= 40 ? 'POOR' : 'CRITICAL';
+
+  // Score ring (r=34, circ=2π×34≈213.6)
+  const circ = 213.6;
+  const ring = document.getElementById('score-ring');
+  ring.style.strokeDashoffset = circ - (score / 100) * circ;
+  ring.style.stroke = color;
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('score-val').style.color = color;
+  document.getElementById('score-grade').textContent = grade;
+
+  document.getElementById('score-title').textContent = grade + ' Network Performance';
+  const isp = ipGeo ? (ipGeo.org || ipGeo.asn || '—') : 'Detected';
+  document.getElementById('score-sub').textContent = isp + (ipGeo?.city ? ' · ' + ipGeo.city : '');
+
+  // Dimension bars
+  const dims = scoring.dims;
+  const dimColors = ['#22C55E','#0EA5E9','#14B8A6','#EAB308','#A855F7'];
+  const dimVals = [dims.latency/25, dims.reachability/25, dims.connection/20, dims.seismic/15, dims.weather/15];
+  document.getElementById('score-bars').innerHTML = dimVals.map((v,i) =>
+    `<div class="score-bar-seg" style="background:${dimColors[i]};opacity:${Math.max(0.2, v)}"></div>`
+  ).join('');
+
+  // Metrics
+  document.getElementById('m-latency').textContent = avgLat !== null ? avgLat + 'ms' : '—';
+  document.getElementById('m-latency').style.color = avgLat !== null ? latColor(avgLat) : 'var(--text3)';
+  document.getElementById('m-latency-trend').textContent = avgLat !== null ? (avgLat < 100 ? 'Fast' : avgLat < 200 ? 'Normal' : 'Slow') : '—';
+
+  const reachPct = Math.round((reachable.length / latencies.length) * 100);
+  document.getElementById('m-reach').textContent = reachPct + '%';
+  document.getElementById('m-reach-trend').textContent = `${reachable.length}/${latencies.length} hosts`;
+
+  const connMap = { '4g': '4G/LTE', '3g': '3G', '2g': '2G', wifi: 'WiFi', ethernet: 'ETH' };
+  document.getElementById('m-conn').textContent = connMap[navInfo.effectiveType] || 'WiFi';
+  document.getElementById('m-bw').textContent = navInfo.downlink ? navInfo.downlink + ' Mbps' : '—';
+
+  const maxMag = quakes.length > 0 ? Math.max(...quakes.map(q => q.mag)) : 0;
+  document.getElementById('m-seismic').textContent = maxMag > 0 ? 'M' + maxMag.toFixed(1) : 'Quiet';
+  document.getElementById('m-seismic').style.color = maxMag >= 3.5 ? '#F97316' : maxMag > 0 ? '#EAB308' : '#22C55E';
+  document.getElementById('m-quakes').textContent = quakes.length + ' events 24h';
+
+  // AI Intel headline
+  const headlines = [];
+  if (reachPct < 75) headlines.push(`Only ${reachPct}% of critical endpoints reachable — investigate routing`);
+  if (avgLat !== null && avgLat > 300) headlines.push(`High latency detected: ${avgLat}ms avg — potential congestion`);
+  if (maxMag >= 3.5) headlines.push(`M${maxMag.toFixed(1)} earthquake within 100km — check infrastructure`);
+  if (nwsAlerts.length > 0) headlines.push(`${nwsAlerts.length} active NWS weather alert${nwsAlerts.length>1?'s':''} in SoCal`);
+  if (!headlines.length) headlines.push(`All systems nominal · Score ${score}/100 · ${reachable.length} endpoints healthy`);
+
+  document.getElementById('intel-headline').textContent = headlines[0];
+  const subs = [`Latency: ${avgLat !== null ? avgLat + 'ms avg' : 'N/A'} · Reach: ${reachPct}% · Seismic: ${quakes.length} events · Weather: ${nwsAlerts.length} alerts`];
+  document.getElementById('intel-sub').textContent = subs[0];
+
+  // Threat feed
+  const threats = [];
+  if (maxMag >= 3.5) threats.push({ sev: 'var(--red)', name: `Seismic Event M${maxMag.toFixed(1)}`, detail: `${quakes[0].place} — infrastructure risk`, val: 'HIGH', time: timeAgo(quakes[0].time) });
+  if (nwsAlerts.length > 0) {
+    const top = nwsAlerts[0].properties;
+    threats.push({ sev: 'var(--orange)', name: top.event || 'Weather Alert', detail: (top.headline || 'Active NWS alert').slice(0, 50) + '...', val: 'MODERATE', time: 'NWS' });
+  }
+  if (avgLat !== null && avgLat > 200) threats.push({ sev: 'var(--yellow)', name: 'High Latency Detected', detail: `${avgLat}ms average across ${latencies.length} endpoints`, val: 'WARNING', time: 'Now' });
+  latencies.filter(l => l.latency === null).forEach(l => {
+    threats.push({ sev: 'var(--yellow)', name: l.host + ' Unreachable', detail: 'Connection timeout — endpoint offline or blocked', val: 'ALERT', time: 'Now' });
+  });
+
+  if (threats.length === 0) {
+    threats.push({ sev: 'var(--green)', name: 'All Systems Nominal', detail: 'No active threats detected across all data sources', val: 'CLEAR', time: 'Now' });
+  }
+
+  document.getElementById('threat-list').innerHTML = threats.slice(0,5).map(th =>
+    `<div class="threat-row">
+      <div class="threat-sev" style="background:${th.sev}"></div>
+      <div class="threat-info">
+        <div class="threat-name">${th.name}</div>
+        <div class="threat-detail">${th.detail}</div>
+      </div>
+      <div class="threat-val" style="color:${th.sev}">${th.val}</div>
+      <div class="threat-time">${th.time}</div>
+    </div>`).join('');
+
+  // Endpoint list
+  document.getElementById('ep-reach-badge').textContent = `${reachable.length}/${latencies.length} OK`;
+  const maxLat = Math.max(...latencies.map(l => l.latency || 0), 300);
+  document.getElementById('ep-list').innerHTML = latencies.map(ep => {
+    const ms = ep.latency;
+    const color = latColor(ms);
+    const pct = ms !== null ? Math.min(100, (ms / maxLat) * 100) : 100;
+    return `<div class="ep-row">
+      <div class="ep-status" style="background:${color}"></div>
+      <div class="ep-host">${ep.host}</div>
+      <div class="ep-bar-wrap"><div class="ep-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="ep-latency" style="color:${color}">${ms !== null ? ms+'ms' : '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================================
+// RENDER SEISMIC / NWS TAB
+// =============================================================
+function renderSeismic() {
+  const { quakes, nwsAlerts } = latestMetrics;
+
+  // NWS alerts
+  const nwsEl = document.getElementById('nws-list');
+  if (!nwsAlerts.length) {
+    nwsEl.innerHTML = '<div class="empty-state">✓ No active weather alerts for SoCal region</div>';
+  } else {
+    nwsEl.innerHTML = nwsAlerts.slice(0,5).map(a => {
+      const p = a.properties;
+      return `<div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:3px">${p.event || 'Alert'}</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.4">${(p.headline || p.description || '').slice(0,100)}...</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">${(p.areaDesc || '').slice(0,60)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Earthquakes
+  const seisEl = document.getElementById('seismic-list');
+  if (!quakes.length) {
+    seisEl.innerHTML = '<div class="empty-state">No significant seismic activity in 100km radius</div>';
+    return;
+  }
+  document.getElementById('seismic-updated').textContent = 'Updated ' + timeAgo(quakes[0].time);
+  seisEl.innerHTML = quakes.map(q => {
+    const place = (q.place || 'Near LA').replace(/^\d+km \w+ of /, '');
+    const depth = q.depth ? ` · ${q.depth.toFixed(0)}km deep` : '';
+    return `<div class="quake-row" style="padding: 8px 14px">
+      <div class="quake-mag" style="color:${magColor(q.mag)}">M${q.mag ? q.mag.toFixed(1) : '?'}</div>
+      <div class="quake-info">
+        <div class="quake-place">${place}</div>
+        <div class="quake-time">${timeAgo(q.time)}${depth}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================================
+// RENDER ANALYTICS
+// =============================================================
+function renderAnalytics() {
+  const { scoring, latencies, ipGeo, quakes, reachable, avgLat } = latestMetrics;
+  const reachPct = Math.round((reachable.length / latencies.length) * 100);
+
+  document.getElementById('a-score').textContent = scoring.total;
+  document.getElementById('a-lat').textContent = avgLat !== null ? avgLat + 'ms' : '—';
+  document.getElementById('a-reach').textContent = reachPct + '%';
+
+  // Dimension bars
+  const dims = [
+    { name: '⚡ Latency', val: scoring.dims.latency, max: 25, color: '#22C55E' },
+    { name: '🌐 Reachability', val: scoring.dims.reachability, max: 25, color: '#0EA5E9' },
+    { name: '📶 Connection', val: scoring.dims.connection, max: 20, color: '#14B8A6' },
+    { name: '🌍 Seismic Safety', val: scoring.dims.seismic, max: 15, color: '#EAB308' },
+    { name: '🌩️ Weather Clear', val: scoring.dims.weather, max: 15, color: '#A855F7' },
+  ];
+
+  document.getElementById('dimension-bars').innerHTML = dims.map(d =>
+    `<div class="cat-row">
+      <div class="cat-label-row">
+        <span class="cat-label">${d.name}</span>
+        <span class="cat-val">${d.val}/${d.max}</span>
+      </div>
+      <div class="cat-bar-bg">
+        <div class="cat-bar-fill" style="width:${Math.round(d.val/d.max*100)}%;background:${d.color}"></div>
+      </div>
+    </div>`).join('');
+
+  // Provider intel
+  if (ipGeo) {
+    document.getElementById('provider-intel').innerHTML = `
+      <div class="cat-row">
+        <div class="cat-label-row"><span class="cat-label">IP Address</span><span class="cat-val">${ipGeo.ip || '—'}</span></div>
+      </div>
+      <div class="cat-row">
+        <div class="cat-label-row"><span class="cat-label">Provider / ASN</span><span class="cat-val" style="font-size:11px;max-width:55%;text-align:right">${ipGeo.org || ipGeo.asn || '—'}</span></div>
+      </div>
+      <div class="cat-row">
+        <div class="cat-label-row"><span class="cat-label">Location</span><span class="cat-val">${[ipGeo.city, ipGeo.region].filter(Boolean).join(', ') || '—'}</span></div>
+      </div>
+      <div class="cat-row">
+        <div class="cat-label-row"><span class="cat-label">Timezone</span><span class="cat-val">${ipGeo.tz || '—'}</span></div>
+      </div>`;
+  }
+
+  // Trend sparkline
+  if (sessionLog.length > 1) {
+    const maxScore = 100, h = 60, w = 100;
+    const pts = sessionLog.slice().reverse();
+    const xStep = w / (pts.length - 1);
+    const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${Math.round(i * xStep)},${Math.round(h - (p.score/maxScore) * h)}`).join(' ');
+    document.getElementById('trend-chart').innerHTML =
+      `<svg viewBox="0 0 100 60" preserveAspectRatio="none" style="width:100%;height:60px">
+        <polyline points="${pts.map((p,i) => `${Math.round(i*xStep)},${Math.round(h-(p.score/maxScore)*h)}`).join(' ')}"
+          fill="none" stroke="#A855F7" stroke-width="2" stroke-linejoin="round"/>
+        ${pts.map((p,i) => `<circle cx="${Math.round(i*xStep)}" cy="${Math.round(h-(p.score/maxScore)*h)}" r="2" fill="#A855F7"/>`).join('')}
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);padding-top:4px">
+        <span>${pts[0].score}</span><span style="color:var(--purple)">→ ${pts[pts.length-1].score}</span>
+      </div>`;
+  }
+}
+
+// =============================================================
+// NWS BANNER
+// =============================================================
+function renderNWSBanner() {
+  const { nwsAlerts, quakes } = latestMetrics;
+  const banner = document.getElementById('nws-banner');
+  const maxMag = quakes.length > 0 ? Math.max(...quakes.map(q => q.mag)) : 0;
+
+  if (nwsAlerts.length > 0) {
+    const top = nwsAlerts[0].properties;
+    document.getElementById('nws-text').textContent = (top.event || 'Alert') + ': ' + (top.headline || '').slice(0, 50) + '...';
+    document.getElementById('nws-count').textContent = nwsAlerts.length + ' active';
+    banner.classList.add('visible');
+  } else if (maxMag >= 3.5) {
+    document.getElementById('nws-text').textContent = `M${maxMag.toFixed(1)} earthquake — network infrastructure may be affected`;
+    document.getElementById('nws-count').textContent = 'USGS';
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+  }
+}
+
+// =============================================================
+// LIVE CLOCK
+// =============================================================
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('live-clock').textContent = `${h}:${String(m).padStart(2,'0')} ${ap}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// =============================================================
+// AUTO-REFRESH 60s
+// =============================================================
+let countdown = 60;
+setInterval(() => {
+  countdown--;
+  document.getElementById('refresh-countdown').textContent = `Refresh: ${countdown}s`;
+  if (countdown <= 0) { countdown = 60; runAll(); }
+}, 1000);
+
+// =============================================================
+// CAPACITOR
+// =============================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    if (window.Capacitor) {
+      const { StatusBar, SplashScreen, Network } = window.Capacitor.Plugins;
+      if (StatusBar) {
+        await StatusBar.setStyle({ style: 'DARK' });
+        await StatusBar.setBackgroundColor({ color: '#07090F' });
+      }
+      if (SplashScreen) SplashScreen.hide({ fadeOutDuration: 300 });
+    }
+  } catch(e) {}
+  runAll();
+});
+</script>
+</body>
+</html>
