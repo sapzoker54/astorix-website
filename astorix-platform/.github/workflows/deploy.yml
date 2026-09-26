@@ -1,0 +1,151 @@
+name: ASTORIX Platform — Deploy to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'prod'
+        type: choice
+        options: [prod, staging]
+
+env:
+  AZURE_SUBSCRIPTION_ID: c22ac7c4-b4c1-4eb6-b4c4-19557268f706
+  NODE_VERSION: '18.x'
+
+jobs:
+  # ── TEST BACKEND ──────────────────────────────────────────
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: astorix_test
+          POSTGRES_USER: astorix_admin
+          POSTGRES_PASSWORD: test_password_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ['5432:5432']
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run database migrations (test)
+        working-directory: backend
+        run: psql postgresql://astorix_admin:test_password_ci@localhost:5432/astorix_test -f migrations/001_initial_schema.sql
+        env:
+          PGPASSWORD: test_password_ci
+
+      - name: Run tests
+        working-directory: backend
+        run: npm test
+        env:
+          NODE_ENV: test
+          JWT_SECRET: test_jwt_secret_64_chars_minimum_for_tests_only_never_production
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: astorix_test
+          DB_USER: astorix_admin
+          DB_PASSWORD: test_password_ci
+          DB_SSL: 'false'
+          REDIS_URL: redis://localhost:6379
+
+  # ── DEPLOY API (Azure App Service) ───────────────────────
+  deploy-api:
+    name: Deploy API to Azure
+    needs: test
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'prod' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies (production only)
+        working-directory: backend
+        run: npm ci --omit=dev
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: astorix-${{ github.event.inputs.environment || 'prod' }}-api
+          package: backend/
+          startup-command: 'node src/server.js'
+
+      - name: Run database migrations (production)
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            az webapp ssh --name astorix-prod-api --resource-group astorix-rg \
+              --command "cd /home/site/wwwroot && node src/scripts/migrate.js"
+
+      - name: Health check
+        run: |
+          sleep 30
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://api.astorix.ai/health)
+          echo "Health check status: $STATUS"
+          if [ "$STATUS" != "200" ]; then echo "HEALTH CHECK FAILED"; exit 1; fi
+
+  # ── DEPLOY FRONTEND (Azure Static Web Apps) ──────────────
+  deploy-frontend:
+    name: Deploy Frontend to Azure Static Web Apps
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: 'upload'
+          app_location: 'frontend/civicops'
+          skip_app_build: true
+
+  # ── NOTIFY ON FAILURE ────────────────────────────────────
+  notify-failure:
+    name: Notify on failure
+    needs: [test, deploy-api, deploy-frontend]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify team
+        run: |
+          echo "Deployment failed — check workflow logs"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref }}"

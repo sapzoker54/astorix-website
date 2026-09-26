@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ASTORIX CivicOps — Real-time civic intelligence for Los Angeles">
+<title>ASTORIX CivicOps — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg:         #07090F;
+  --surface:    #0D1117;
+  --surface2:   #111827;
+  --border:     #1A2333;
+  --border2:    #243044;
+  --blue:       #2563EB;
+  --blue-light: #3B82F6;
+  --blue-glow:  rgba(37,99,235,0.18);
+  --purple:     #7C3AED;
+  --green:      #10B981;
+  --amber:      #F59E0B;
+  --red:        #EF4444;
+  --text:       #EFF4FF;
+  --text2:      #8896A8;
+  --text3:      #4A5A6E;
+  --mono:       'JetBrains Mono', monospace;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 58px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-mark { width: 32px; height: 32px; background: linear-gradient(135deg, #2563EB, #7C3AED); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; }
+.logo-name { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.logo-product { color: var(--blue-light); }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.status-dot { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+.avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg,#2563EB,#7C3AED); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  overflow-y: auto;
+  position: sticky;
+  top: 58px;
+  height: calc(100vh - 58px);
+}
+.nav-section { padding: 0 12px; margin-bottom: 24px; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); padding: 0 10px; margin-bottom: 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  color: var(--text2); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .15s; text-decoration: none;
+  margin-bottom: 2px;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--blue-glow); color: var(--blue-light); }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-badge { margin-left: auto; background: var(--red); color: #fff; border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 600; }
+
+/* ── MAIN CONTENT ── */
+main {
+  padding: 24px;
+  overflow-y: auto;
+}
+.page-header { margin-bottom: 24px; }
+.page-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.page-sub { font-size: 14px; color: var(--text2); margin-top: 4px; }
+.refresh-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.refresh-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 7px; padding: 7px 14px; color: var(--text2);
+  font-size: 13px; font-weight: 500; font-family: inherit;
+  cursor: pointer; transition: all .15s;
+}
+.refresh-btn:hover { border-color: var(--blue); color: var(--blue-light); }
+.last-updated { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+
+/* ── KPI TILES ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.kpi.blue::before  { background: linear-gradient(90deg, #2563EB, #7C3AED); }
+.kpi.green::before { background: linear-gradient(90deg, #10B981, #059669); }
+.kpi.amber::before { background: linear-gradient(90deg, #F59E0B, #D97706); }
+.kpi.red::before   { background: linear-gradient(90deg, #EF4444, #DC2626); }
+.kpi-label { font-size: 12px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.kpi-value { font-size: 36px; font-weight: 800; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; line-height: 1; }
+.kpi-sub { font-size: 12px; color: var(--text2); margin-top: 6px; }
+.kpi-trend { font-size: 12px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+.trend-up   { color: var(--red); }
+.trend-down { color: var(--green); }
+
+/* ── CITY STATUS BANNER ── */
+.status-banner {
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 16px;
+  border: 1px solid;
+}
+.status-banner.normal   { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); }
+.status-banner.elevated { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+.status-banner.critical { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.25); }
+.banner-icon { font-size: 28px; }
+.banner-title { font-size: 16px; font-weight: 700; }
+.banner-sub   { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.banner-score { margin-left: auto; text-align: right; }
+.score-val { font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.score-label { font-size: 11px; color: var(--text2); }
+
+/* ── DATA PANELS ── */
+.panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.panel-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.panel-count { font-size: 12px; color: var(--text2); background: var(--surface2); border-radius: 6px; padding: 3px 8px; font-family: var(--mono); }
+.panel-body { padding: 16px 20px; max-height: 380px; overflow-y: auto; }
+
+/* ── REQUEST ROWS ── */
+.req-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.req-row:last-child { border-bottom: none; }
+.req-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.req-body { flex: 1; min-width: 0; }
+.req-type { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.req-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.req-cd { font-family: var(--mono); font-size: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; color: var(--text2); }
+.req-age { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+/* ── EARTHQUAKE ROW ── */
+.eq-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.eq-row:last-child { border-bottom: none; }
+.mag-chip { font-size: 15px; font-weight: 800; width: 48px; text-align: center; padding: 4px 6px; border-radius: 7px; font-family: var(--mono); flex-shrink: 0; }
+.mag-high   { background: rgba(239,68,68,0.15);  color: #FCA5A5; }
+.mag-medium { background: rgba(245,158,11,0.15); color: #FCD34D; }
+.mag-low    { background: rgba(37,99,235,0.15);  color: #93C5FD; }
+.eq-place { font-size: 13px; font-weight: 500; }
+.eq-meta  { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+
+/* ── WEATHER ALERT ROW ── */
+.alert-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.alert-row:last-child { border-bottom: none; }
+.alert-event { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.alert-headline { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.sev-chip { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 4px; padding: 2px 7px; margin-right: 6px; }
+.sev-Extreme  { background: rgba(239,68,68,0.2);  color: #FCA5A5; }
+.sev-Severe   { background: rgba(245,158,11,0.2); color: #FCD34D; }
+.sev-Moderate { background: rgba(37,99,235,0.2);  color: #93C5FD; }
+.sev-Minor    { background: rgba(16,185,129,0.2); color: #6EE7B7; }
+
+/* ── DISTRICT HEATMAP ── */
+.district-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.dist-cell {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+}
+.dist-cell:hover { border-color: var(--blue); }
+.dist-num  { font-size: 11px; color: var(--text2); margin-bottom: 4px; font-family: var(--mono); }
+.dist-count { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.dist-bar { height: 3px; border-radius: 2px; margin-top: 6px; background: var(--border2); overflow: hidden; }
+.dist-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #2563EB, #7C3AED); }
+
+/* ── LOADING SKELETON ── */
+.skeleton { background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── NO DATA ── */
+.no-data { text-align: center; padding: 32px 16px; color: var(--text3); font-size: 14px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  body { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  main { padding: 16px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── UPGRADE PROMPT ── */
+.upgrade-bar {
+  background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(124,58,237,0.12));
+  border: 1px solid rgba(37,99,235,0.25);
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.upgrade-text { font-size: 14px; }
+.upgrade-text strong { color: var(--blue-light); }
+.upgrade-btn { background: var(--blue); border: none; border-radius: 7px; padding: 8px 18px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a class="logo" href="index.html">
+    <div class="logo-mark">A</div>
+    <div class="logo-name">ASTORIX <span class="logo-product">CivicOps</span></div>
+  </a>
+  <div class="topbar-right">
+    <div class="status-dot">
+      <div class="dot" id="apiDot"></div>
+      <span id="apiStatus">Live data</span>
+    </div>
+    <div class="user-chip" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarInitial">?</div>
+      <span id="userName">Loading…</span>
+    </div>
+    <button onclick="logout()" style="background:none;border:1px solid var(--border);border-radius:7px;padding:6px 12px;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit">Sign out</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active" href="#" onclick="showView('dashboard')">
+      <span class="nav-icon">⬡</span> Dashboard
+    </a>
+    <a class="nav-item" href="#" onclick="showView('map')">
+      <span class="nav-icon">🗺</span> District Map
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Data Sources</div>
+    <a class="nav-item" href="#" onclick="showView('311')">
+      <span class="nav-icon">📋</span> LA 311 Requests
+    </a>
+    <a class="nav-item" href="#" onclick="showView('earthquakes')">
+      <span class="nav-icon">📡</span> Seismic Activity
+    </a>
+    <a class="nav-item" href="#" onclick="showView('weather')">
+      <span class="nav-icon">⛈</span> Weather Alerts
+      <span class="nav-badge" id="weatherBadge" style="display:none">!</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Management</div>
+    <a class="nav-item" href="#" onclick="showView('alerts')">
+      <span class="nav-icon">🔔</span> Alert Rules
+    </a>
+    <a class="nav-item" href="#" onclick="exportData()">
+      <span class="nav-icon">⬇</span> Export CSV
+    </a>
+    <a class="nav-item" href="#" onclick="showView('usage')">
+      <span class="nav-icon">📊</span> API Usage
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Account</div>
+    <a class="nav-item" href="https://astorix.ai/billing">
+      <span class="nav-icon">💳</span> Subscription
+    </a>
+    <a class="nav-item" href="https://astorix.ai/support">
+      <span class="nav-icon">💬</span> Support
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN DASHBOARD -->
+<main id="mainContent">
+  <div class="page-header">
+    <div class="page-title">City Intelligence Dashboard</div>
+    <div class="page-sub" id="orgLabel">Los Angeles — Real-Time Civic Operations</div>
+    <div class="refresh-row">
+      <button class="refresh-btn" onclick="loadDashboard()">↻ Refresh now</button>
+      <span class="last-updated" id="lastUpdated">Updating…</span>
+    </div>
+  </div>
+
+  <!-- Upgrade bar for trial users -->
+  <div class="upgrade-bar" id="upgradeBar" style="display:none">
+    <div class="upgrade-text">⭐ You're on a <strong>14-day free trial</strong>. Upgrade to CivicOps for unlimited districts, alerts, and CSV export.</div>
+    <button class="upgrade-btn" onclick="window.open('https://astorix.ai/billing/upgrade','_blank')">Upgrade now</button>
+  </div>
+
+  <!-- CITY STATUS BANNER -->
+  <div class="status-banner normal" id="cityStatusBanner">
+    <div class="banner-icon" id="bannerIcon">⬡</div>
+    <div>
+      <div class="banner-title" id="bannerTitle">Loading city status…</div>
+      <div class="banner-sub"  id="bannerSub">Fetching real-time data from city APIs</div>
+    </div>
+    <div class="banner-score">
+      <div class="score-val" id="cityScore">–</div>
+      <div class="score-label">City Health Score</div>
+    </div>
+  </div>
+
+  <!-- KPI TILES -->
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi blue"><div class="kpi-label">Open 311 Requests</div><div class="kpi-value skeleton" id="kpi311" style="height:44px;width:80px">&nbsp;</div><div class="kpi-sub" id="kpi311sub">Loading…</div></div>
+    <div class="kpi green"><div class="kpi-label">Infrastructure Health</div><div class="kpi-value skeleton" id="kpiHealth" style="height:44px;width:80px">&nbsp;</div><div class="kpi-sub" id="kpiHealthSub">Loading…</div></div>
+    <div class="kpi amber"><div class="kpi-label">Seismic Events (24h)</div><div class="kpi-value skeleton" id="kpiEq" style="height:44px;width:60px">&nbsp;</div><div class="kpi-sub" id="kpiEqSub">Loading…</div></div>
+    <div class="kpi red"><div class="kpi-label">Weather Alerts</div><div class="kpi-value skeleton" id="kpiWx" style="height:44px;width:60px">&nbsp;</div><div class="kpi-sub" id="kpiWxSub">Loading…</div></div>
+  </div>
+
+  <!-- DISTRICT HEATMAP -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-header">
+      <div class="panel-title">📍 District Activity Heatmap</div>
+      <span class="panel-count" id="districtCount">15 districts</span>
+    </div>
+    <div class="panel-body">
+      <div class="district-grid" id="districtGrid">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA PANELS ROW -->
+  <div class="panel-grid">
+
+    <!-- 311 REQUESTS -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">📋 Recent 311 Requests</div>
+        <span class="panel-count" id="req311Count">–</span>
+      </div>
+      <div class="panel-body" id="req311Body">
+        <div class="skeleton" style="height:60px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:60px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:60px"></div>
+      </div>
+    </div>
+
+    <!-- EARTHQUAKES -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">📡 Seismic Activity</div>
+        <span class="panel-count" id="eqCount">–</span>
+      </div>
+      <div class="panel-body" id="eqBody">
+        <div class="skeleton" style="height:50px;margin-bottom:10px"></div>
+        <div class="skeleton" style="height:50px;margin-bottom:10px"></div>
+        <div class="skeleton" style="height:50px"></div>
+      </div>
+    </div>
+
+    <!-- WEATHER -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">⛈ NOAA Weather Alerts</div>
+        <span class="panel-count" id="wxCount">–</span>
+      </div>
+      <div class="panel-body" id="wxBody">
+        <div class="skeleton" style="height:60px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:60px"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SOURCE ATTRIBUTION -->
+  <div style="font-size:11px;color:var(--text3);text-align:center;padding:16px 0">
+    Live data from: LA City 311 (data.lacity.org) · USGS Earthquake Hazards · NOAA National Weather Service<br>
+    All data is public government data. ASTORIX Platform — © 2026 Gensis.AI Inc. · ASTORIX.AI
+  </div>
+</main>
+
+<script>
+'use strict';
+
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3001'
+  : 'https://api.astorix.ai';
+
+let TOKEN = sessionStorage.getItem('astorix_token');
+const USER = JSON.parse(sessionStorage.getItem('astorix_user') || '{}');
+const ORG  = JSON.parse(sessionStorage.getItem('astorix_org')  || '{}');
+
+// Auth guard
+if (!TOKEN) { window.location.href = 'login.html'; }
+
+// Initialize UI
+document.getElementById('userName').textContent = USER.first_name ? `${USER.first_name} ${USER.last_name}` : 'User';
+document.getElementById('avatarInitial').textContent = USER.first_name?.[0]?.toUpperCase() || 'U';
+if (ORG.name) document.getElementById('orgLabel').textContent = ORG.name + ' — Real-Time Civic Operations';
+if (ORG.subscription_tier === 'trial') document.getElementById('upgradeBar').style.display = 'flex';
+
+// ── API CALL ──
+async function apiFetch(path) {
+  const res = await fetch(`${API}${path}`, {
+    headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' }
+  });
+
+  if (res.status === 401) {
+    // Try refresh token
+    const rToken = sessionStorage.getItem('astorix_refresh');
+    if (rToken) {
+      const rRes = await fetch(`${API}/api/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: rToken }),
+      });
+      if (rRes.ok) {
+        const rData = await rRes.json();
+        TOKEN = rData.access_token;
+        sessionStorage.setItem('astorix_token', TOKEN);
+        sessionStorage.setItem('astorix_refresh', rData.refresh_token);
+        return apiFetch(path); // retry
+      }
+    }
+    sessionStorage.clear();
+    window.location.href = 'login.html';
+  }
+  return res.json();
+}
+
+// ── LOAD DASHBOARD ──
+async function loadDashboard() {
+  document.getElementById('apiDot').style.background = 'var(--amber)';
+  document.getElementById('apiStatus').textContent = 'Updating…';
+
+  try {
+    const data = await apiFetch('/api/civicops/dashboard');
+
+    document.getElementById('apiDot').style.background = 'var(--green)';
+    document.getElementById('apiStatus').textContent = 'Live data';
+    document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-US');
+
+    renderCityStatus(data);
+    renderKPIs(data);
+    renderDistrictHeatmap(data.la311?.district_breakdown);
+    render311Requests(data.la311?.recent_requests);
+    renderEarthquakes(data.earthquakes?.events);
+    renderWeather(data.weather?.alerts);
+
+  } catch (err) {
+    document.getElementById('apiDot').style.background = 'var(--red)';
+    document.getElementById('apiStatus').textContent = 'Connection error';
+    console.error('Dashboard load failed:', err);
+  }
+}
+
+function renderCityStatus(data) {
+  const score  = data.city_health_score || 0;
+  const status = (data.city_status || 'NORMAL').toLowerCase();
+  const banner = document.getElementById('cityStatusBanner');
+  banner.className = `status-banner ${status}`;
+
+  const icons   = { normal: '✅', elevated: '⚠️', critical: '🔴' };
+  const titles  = { normal: 'City Systems Normal', elevated: 'Elevated Activity Detected', critical: 'Critical Conditions Active' };
+  const subs    = { normal: 'All monitored systems operating within normal parameters', elevated: 'One or more systems showing elevated activity — monitor closely', critical: 'Critical conditions detected — immediate attention may be required' };
+
+  document.getElementById('bannerIcon').textContent  = icons[status]  || '⬡';
+  document.getElementById('bannerTitle').textContent = titles[status] || 'Status Unknown';
+  document.getElementById('bannerSub').textContent   = subs[status]   || '';
+  document.getElementById('cityScore').textContent   = score;
+  document.getElementById('cityScore').style.color   = score >= 80 ? 'var(--green)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+}
+
+function renderKPIs(data) {
+  const la311 = data.la311 || {};
+  const eq    = data.earthquakes || {};
+  const wx    = data.weather || {};
+
+  setKPI('kpi311',    la311.total_open_requests ?? '–', 'kpi311sub',    `Infrastructure health: ${la311.infrastructure_health_score ?? '–'}/100`);
+  setKPI('kpiHealth', (la311.infrastructure_health_score ?? '–') + (la311.infrastructure_health_score != null ? '/100' : ''), 'kpiHealthSub', `${la311.categories?.roads || 0} road · ${la311.categories?.water || 0} water issues`);
+  setKPI('kpiEq',     eq.total_events ?? '–', 'kpiEqSub', `Risk: ${eq.seismic_risk_level || 'UNKNOWN'} · Max M${eq.max_magnitude ?? '–'}`);
+  setKPI('kpiWx',     wx.total_alerts ?? '–', 'kpiWxSub', `Highest: ${wx.highest_severity || 'None'}`);
+
+  // Show weather badge if severe
+  const wxBadge = document.getElementById('weatherBadge');
+  if (wx.total_alerts > 0) { wxBadge.style.display = 'block'; wxBadge.textContent = wx.total_alerts; }
+  else wxBadge.style.display = 'none';
+}
+
+function setKPI(valId, value, subId, sub) {
+  const el = document.getElementById(valId);
+  el.textContent = value;
+  el.classList.remove('skeleton');
+  el.style.height = '';
+  el.style.width  = '';
+  if (subId) document.getElementById(subId).textContent = sub || '';
+}
+
+function renderDistrictHeatmap(breakdown) {
+  const grid = document.getElementById('districtGrid');
+  if (!breakdown || breakdown.length === 0) {
+    grid.innerHTML = '<div class="no-data" style="grid-column:1/-1">District data loading…</div>';
+    return;
+  }
+
+  const maxCount = Math.max(...breakdown.map(d => d.count), 1);
+  const distMap  = {};
+  breakdown.forEach(d => { distMap[d.district] = d; });
+
+  let html = '';
+  for (let i = 1; i <= 15; i++) {
+    const cd    = String(i);
+    const d     = distMap[cd] || { count: 0 };
+    const pct   = Math.round((d.count / maxCount) * 100);
+    const color = pct > 75 ? 'var(--red)' : pct > 40 ? 'var(--amber)' : 'var(--green)';
+    html += `<div class="dist-cell" onclick="filterByDistrict(${i})" title="District ${i}: ${d.count} open cases">
+      <div class="dist-num">CD ${i}</div>
+      <div class="dist-count" style="color:${color}">${d.count}</div>
+      <div class="dist-bar"><div class="dist-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function render311Requests(requests) {
+  const body = document.getElementById('req311Body');
+  if (!requests || requests.length === 0) {
+    body.innerHTML = '<div class="no-data">No open 311 requests in selected area</div>';
+    document.getElementById('req311Count').textContent = '0 requests';
+    return;
+  }
+
+  const CAT_ICONS = { 'Road Services':'🛣', 'Street Light Maintenance':'💡', 'Water Leak Investigation':'💧', 'Sidewalk Repair':'🚶', 'Pothole Repair':'⚠️', 'Sewer Emergency':'🔧' };
+  const CAT_COLORS = { roads:'rgba(239,68,68,0.12)', lighting:'rgba(245,158,11,0.12)', water:'rgba(37,99,235,0.12)', sidewalks:'rgba(16,185,129,0.12)' };
+
+  const html = requests.slice(0, 20).map(r => {
+    const icon  = CAT_ICONS[r.requesttype] || '📋';
+    const age   = r.createddate ? timeAgo(r.createddate) : '';
+    return `<div class="req-row">
+      <div class="req-icon" style="background:rgba(37,99,235,0.12)">${icon}</div>
+      <div class="req-body">
+        <div class="req-type">${esc(r.requesttype || 'Unknown')}</div>
+        <div class="req-meta">${esc(r.address || 'Address unknown')} <span class="req-cd">CD ${r.cd || '?'}</span> <span class="req-age">${age}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+  document.getElementById('req311Count').textContent = requests.length.toLocaleString() + ' requests';
+}
+
+function renderEarthquakes(events) {
+  const body = document.getElementById('eqBody');
+  if (!events || events.length === 0) {
+    body.innerHTML = '<div class="no-data">✓ No significant seismic activity near LA</div>';
+    document.getElementById('eqCount').textContent = '0 events';
+    return;
+  }
+
+  const html = events.slice(0, 15).map(e => {
+    const magClass = e.magnitude >= 4.0 ? 'mag-high' : e.magnitude >= 2.5 ? 'mag-medium' : 'mag-low';
+    return `<div class="eq-row">
+      <div class="mag-chip ${magClass}">M${e.magnitude?.toFixed(1)}</div>
+      <div>
+        <div class="eq-place">${esc(e.place || 'Unknown location')}</div>
+        <div class="eq-meta">${e.distance_from_la_km}km from LA · Depth ${e.depth_km?.toFixed(1)}km · ${timeAgo(e.time)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+  document.getElementById('eqCount').textContent = events.length + ' events';
+}
+
+function renderWeather(alerts) {
+  const body = document.getElementById('wxBody');
+  if (!alerts || alerts.length === 0) {
+    body.innerHTML = '<div class="no-data">✓ No active weather alerts for California</div>';
+    document.getElementById('wxCount').textContent = '0 alerts';
+    return;
+  }
+
+  const html = alerts.slice(0, 10).map(a => `<div class="alert-row">
+    <div class="alert-event"><span class="sev-chip sev-${a.severity}">${a.severity || 'Unknown'}</span>${esc(a.event || '')}</div>
+    <div class="alert-headline">${esc((a.headline || '').substring(0, 120))}</div>
+  </div>`).join('');
+
+  body.innerHTML = html;
+  document.getElementById('wxCount').textContent = alerts.length + ' active';
+}
+
+// ── UTILITIES ──
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h > 24) return `${Math.floor(h/24)}d ago`;
+  if (h > 0)  return `${h}h ago`;
+  return `${m}m ago`;
+}
+
+function showView(view) {
+  // Navigate to specific views
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.target.closest('.nav-item').classList.add('active');
+  // For MVP: just reload dashboard
+  if (view === 'dashboard') loadDashboard();
+}
+
+function filterByDistrict(cd) {
+  console.log(`Filter by Council District ${cd}`);
+  // TODO: filter 311 data by district
+}
+
+async function exportData() {
+  const tier = ORG.subscription_tier;
+  if (tier === 'trial' || tier === 'basic') {
+    alert('CSV export requires Pro or CivicOps subscription.\n\nUpgrade at: astorix.ai/billing/upgrade');
+    return;
+  }
+  window.open(`${API}/api/civicops/export?token=${TOKEN}`, '_blank');
+}
+
+async function logout() {
+  try {
+    await fetch(`${API}/api/auth/logout`, {
+      method: 'POST', headers: { 'Authorization': `Bearer ${TOKEN}` }
+    });
+  } catch (e) {}
+  sessionStorage.clear();
+  window.location.href = 'login.html';
+}
+
+function toggleUserMenu() { /* Future: dropdown */ }
+
+// ── AUTO-REFRESH every 60 seconds ──
+loadDashboard();
+setInterval(loadDashboard, 60000);
+
+// Welcome message for new users
+if (new URLSearchParams(window.location.search).get('welcome') === '1') {
+  setTimeout(() => alert(`Welcome to ASTORIX CivicOps, ${USER.first_name}!\n\nYour 14-day free trial has started.\nReal-time data from LA 311, USGS, and NOAA is loading now.`), 500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ASTORIX CivicOps — Sign in to your civic intelligence platform">
+<meta name="robots" content="noindex, nofollow">
+<title>ASTORIX CivicOps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg:        #0A0E1A;
+  --surface:   #111827;
+  --border:    #1F2A3C;
+  --blue:      #2563EB;
+  --blue-dark: #1D4ED8;
+  --blue-glow: rgba(37,99,235,0.15);
+  --text:      #F0F4FF;
+  --muted:     #8896A8;
+  --error:     #EF4444;
+  --success:   #10B981;
+  --input-bg:  #0F1823;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+.wrap {
+  width: 100%;
+  max-width: 420px;
+}
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+.logo-mark {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; color: #fff;
+}
+.logo-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.logo-name span { color: var(--blue); }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 36px;
+}
+.card-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.card-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+.field { margin-bottom: 20px; }
+label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 8px; }
+input[type="email"], input[type="password"], input[type="text"] {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s;
+}
+input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
+input::placeholder { color: #3A4A5C; }
+.pw-row { position: relative; }
+.pw-toggle {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 13px; padding: 4px;
+}
+.btn {
+  width: 100%;
+  background: var(--blue);
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  margin-top: 8px;
+}
+.btn:hover { background: var(--blue-dark); }
+.btn:active { transform: scale(0.99); }
+.btn:disabled { background: #1E3A6E; color: #4A6080; cursor: not-allowed; }
+.err-msg {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #FCA5A5;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.err-msg.show { display: block; }
+.divider { text-align: center; color: var(--muted); font-size: 13px; margin: 20px 0; position: relative; }
+.divider::before, .divider::after {
+  content: ''; position: absolute; top: 50%; width: 40%;
+  height: 1px; background: var(--border);
+}
+.divider::before { left: 0; } .divider::after { right: 0; }
+.link-row { text-align: center; margin-top: 20px; font-size: 14px; color: var(--muted); }
+.link-row a { color: var(--blue); text-decoration: none; font-weight: 500; }
+.link-row a:hover { text-decoration: underline; }
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.trial-badge {
+  background: rgba(37,99,235,0.12);
+  border: 1px solid rgba(37,99,235,0.25);
+  border-radius: 6px; padding: 10px 14px;
+  font-size: 12px; color: #93C5FD;
+  margin-bottom: 24px; text-align: center;
+}
+footer { text-align: center; margin-top: 24px; font-size: 12px; color: #3A4A5C; }
+footer a { color: #4A6080; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-row">
+    <div class="logo-mark">A</div>
+    <div class="logo-name">ASTORIX <span>CivicOps</span></div>
+  </div>
+
+  <!-- LOGIN FORM (default) -->
+  <div id="loginSection" class="card">
+    <div class="card-title">Sign in</div>
+    <div class="card-sub">City department or business intelligence platform</div>
+    <div id="loginErr" class="err-msg"></div>
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="email">Work email</label>
+        <input type="email" id="email" name="email" placeholder="you@lacity.org" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-row">
+          <input type="password" id="password" name="password" placeholder="••••••••••••" autocomplete="current-password" required>
+          <button type="button" class="pw-toggle" onclick="togglePw('password', this)">Show</button>
+        </div>
+      </div>
+      <button type="submit" class="btn" id="loginBtn">Sign in</button>
+    </form>
+    <div class="divider">or</div>
+    <div class="link-row">Don't have an account? <a href="#" onclick="showRegister()">Start free trial</a></div>
+    <div class="link-row" style="margin-top:8px"><a href="#" style="font-size:13px">Forgot password?</a></div>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="registerSection" class="card" style="display:none">
+    <div class="card-title">Start free trial</div>
+    <div class="card-sub">14 days free — no credit card required</div>
+    <div class="trial-badge">✓ 14-day free trial &nbsp;·&nbsp; $299/mo for CivicOps &nbsp;·&nbsp; $29/mo for BusinessAlert</div>
+    <div id="registerErr" class="err-msg"></div>
+    <form id="registerForm" novalidate>
+      <div class="field">
+        <label for="orgName">Organization name</label>
+        <input type="text" id="orgName" placeholder="City of Los Angeles — Public Works" required>
+      </div>
+      <div class="field">
+        <label for="orgType">Organization type</label>
+        <select id="orgType" style="width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:15px;outline:none">
+          <option value="city_department">City Department</option>
+          <option value="small_business">Small Business</option>
+          <option value="enterprise">Enterprise</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field" style="margin-bottom:0">
+          <label for="firstName">First name</label>
+          <input type="text" id="firstName" placeholder="John" required>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="lastName">Last name</label>
+          <input type="text" id="lastName" placeholder="Smith" required>
+        </div>
+      </div>
+      <div class="field" style="margin-top:20px">
+        <label for="regEmail">Work email</label>
+        <input type="email" id="regEmail" placeholder="you@lacity.org" required>
+      </div>
+      <div class="field">
+        <label for="regPw">Password <span style="color:var(--muted);font-weight:400">(12+ chars, uppercase, number, symbol)</span></label>
+        <div class="pw-row">
+          <input type="password" id="regPw" placeholder="Create strong password" required>
+          <button type="button" class="pw-toggle" onclick="togglePw('regPw', this)">Show</button>
+        </div>
+      </div>
+      <button type="submit" class="btn" id="regBtn">Create account &amp; start trial</button>
+    </form>
+    <div class="link-row" style="margin-top:20px">Already have an account? <a href="#" onclick="showLogin()">Sign in</a></div>
+  </div>
+
+  <footer>
+    By continuing, you agree to <a href="https://astorix.ai/privacy">Privacy Policy</a> &amp; Terms of Service.<br>
+    CCPA compliant · SOC 2 aligned · © 2026 Gensis.AI Inc.
+  </footer>
+</div>
+
+<script>
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3001'
+  : 'https://api.astorix.ai';
+
+function togglePw(id, btn) {
+  const el = document.getElementById(id);
+  if (el.type === 'password') { el.type = 'text'; btn.textContent = 'Hide'; }
+  else { el.type = 'password'; btn.textContent = 'Show'; }
+}
+
+function showRegister() { document.getElementById('loginSection').style.display='none'; document.getElementById('registerSection').style.display='block'; }
+function showLogin()    { document.getElementById('registerSection').style.display='none'; document.getElementById('loginSection').style.display='block'; }
+
+function setLoading(btn, loading) {
+  if (loading) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Please wait…';
+  } else {
+    btn.disabled = false;
+  }
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearErr(id) { document.getElementById(id).classList.remove('show'); }
+
+// ── LOGIN ──
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErr('loginErr');
+  const btn = document.getElementById('loginBtn');
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!email || !password) { showErr('loginErr', 'Email and password are required.'); return; }
+
+  setLoading(btn, true);
+  try {
+    const res = await fetch(`${API}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showErr('loginErr', data.error || 'Login failed. Please try again.');
+      return;
+    }
+
+    // Store tokens
+    sessionStorage.setItem('astorix_token', data.access_token);
+    sessionStorage.setItem('astorix_refresh', data.refresh_token);
+    sessionStorage.setItem('astorix_user', JSON.stringify(data.user));
+    sessionStorage.setItem('astorix_org', JSON.stringify(data.organization));
+
+    // Redirect to dashboard
+    window.location.href = 'index.html';
+  } catch (err) {
+    showErr('loginErr', 'Connection error. Please check your internet and try again.');
+  } finally {
+    setLoading(btn, false);
+    btn.innerHTML = 'Sign in';
+  }
+});
+
+// ── REGISTER ──
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErr('registerErr');
+  const btn = document.getElementById('regBtn');
+
+  const payload = {
+    org_name:   document.getElementById('orgName').value.trim(),
+    org_type:   document.getElementById('orgType').value,
+    first_name: document.getElementById('firstName').value.trim(),
+    last_name:  document.getElementById('lastName').value.trim(),
+    email:      document.getElementById('regEmail').value.trim().toLowerCase(),
+    password:   document.getElementById('regPw').value,
+  };
+
+  if (!payload.org_name || !payload.first_name || !payload.last_name || !payload.email || !payload.password) {
+    showErr('registerErr', 'All fields are required.'); return;
+  }
+
+  setLoading(btn, true);
+  try {
+    const res = await fetch(`${API}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      const msg = data.details ? data.details.join('\n') : (data.error || 'Registration failed.');
+      showErr('registerErr', msg); return;
+    }
+
+    sessionStorage.setItem('astorix_token', data.access_token);
+    sessionStorage.setItem('astorix_refresh', data.refresh_token);
+    sessionStorage.setItem('astorix_user', JSON.stringify(data.user));
+    sessionStorage.setItem('astorix_org', JSON.stringify(data.organization));
+
+    window.location.href = 'index.html?welcome=1';
+  } catch (err) {
+    showErr('registerErr', 'Connection error. Please try again.');
+  } finally {
+    setLoading(btn, false);
+    btn.innerHTML = 'Create account &amp; start trial';
+  }
+});
+
+// Redirect to dashboard if already logged in
+if (sessionStorage.getItem('astorix_token')) {
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
