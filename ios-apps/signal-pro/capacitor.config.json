@@ -2,21 +2,11 @@
   "appId": "ai.astorix.signalpro",
   "appName": "ASTORIX Signal Pro",
   "webDir": "src",
-  "server": { "androidScheme": "https" },
-  "ios": {
-    "contentInset": "always",
-    "scrollEnabled": true,
-    "backgroundColor": "#07090F"
+  "server": {
+    "androidScheme": "https"
   },
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 2000,
-      "launchAutoHide": true,
-      "backgroundColor": "#07090F",
-      "showSpinner": false,
-      "splashFullScreen": true
-    },
-    "StatusBar": { "style": "Dark", "backgroundColor": "#07090F" },
-    "PushNotifications": { "presentationOptions": ["badge", "sound", "alert"] }
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#0D0520"
   }
 }
