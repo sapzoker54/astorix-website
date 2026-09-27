@@ -28,14 +28,17 @@ definitions:
       submit_to_app_store: false    # flip to true when ready for review submission
 
   # ── Shared pre-build steps ───────────────────────────────────────────────
-  setup_steps: &setup_steps
-    - name: Set Xcode version
+  setup_steps:
+    - &step_xcode
+      name: Set Xcode version
       script: xcode-select -p && xcode-select --version
-    - name: Install Node 20
+    - &step_node
+      name: Install Node 20
       script: |
         brew install node@20 2>/dev/null || true
         node --version && npm --version
-    - name: Install Capacitor CLI
+    - &step_cap_cli
+      name: Install Capacitor CLI
       script: npm install -g @capacitor/cli@6
 
 workflows:
@@ -59,7 +62,9 @@ workflows:
         XCODE_WORKSPACE: ios/App/App.xcworkspace
         XCODE_SCHEME: App
     scripts:
-      - *setup_steps
+      - *step_xcode
+      - *step_node
+      - *step_cap_cli
       - name: Install npm dependencies
         script: |
           cd $APP_DIR
@@ -144,7 +149,9 @@ workflows:
         XCODE_WORKSPACE: ios/App/App.xcworkspace
         XCODE_SCHEME: App
     scripts:
-      - *setup_steps
+      - *step_xcode
+      - *step_node
+      - *step_cap_cli
       - name: Install npm dependencies
         script: cd $APP_DIR && npm ci
       - name: Capacitor sync
@@ -209,7 +216,9 @@ workflows:
         XCODE_WORKSPACE: ios/App/App.xcworkspace
         XCODE_SCHEME: App
     scripts:
-      - *setup_steps
+      - *step_xcode
+      - *step_node
+      - *step_cap_cli
       - name: Install npm dependencies
         script: cd $APP_DIR && npm ci
       - name: Capacitor sync
@@ -274,7 +283,9 @@ workflows:
         XCODE_WORKSPACE: ios/App/App.xcworkspace
         XCODE_SCHEME: App
     scripts:
-      - *setup_steps
+      - *step_xcode
+      - *step_node
+      - *step_cap_cli
       - name: Install npm dependencies
         script: cd $APP_DIR && npm ci
       - name: Capacitor sync
