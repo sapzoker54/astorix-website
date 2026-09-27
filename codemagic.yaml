@@ -1,0 +1,322 @@
+###############################################################################
+# ASTORIX iOS Apps — Codemagic CI/CD Build Workflow
+# Builds all 4 apps: HOPE-LA, CityInfra, Signal, Signal Pro
+# Team ID:  GV32459XCX
+# Bundle IDs: ai.astorix.hopela | ai.astorix.cityinfra |
+#             ai.astorix.signal | ai.astorix.signalpro
+#
+# SETUP STEPS in Codemagic dashboard (one-time):
+# 1. Connect GitHub repo: sapzoker54/astorix-website
+# 2. Team & signing: Settings → Apple Developer Portal
+#    - API Key: generate at appstoreconnect.apple.com → Users & Access → Keys
+#    - Set env vars: APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER,
+#      APP_STORE_CONNECT_PRIVATE_KEY (paste the .p8 contents)
+# 3. Click "Start new build" on any workflow below
+###############################################################################
+
+definitions:
+  # ── Re-usable iOS build environment ──────────────────────────────────────
+  ios_env: &ios_env
+    instance_type: mac_mini_m2
+    max_build_duration: 60  # minutes
+
+  # ── App Store Connect credentials (set in Codemagic UI, not here) ───────
+  publishing: &app_store_publishing
+    app_store_connect:
+      auth: integration
+      submit_to_testflight: false
+      submit_to_app_store: false    # flip to true when ready for review submission
+
+  # ── Shared pre-build steps ───────────────────────────────────────────────
+  setup_steps: &setup_steps
+    - name: Set Xcode version
+      script: xcode-select -p && xcode-select --version
+    - name: Install Node 20
+      script: |
+        brew install node@20 2>/dev/null || true
+        node --version && npm --version
+    - name: Install Capacitor CLI
+      script: npm install -g @capacitor/cli@6
+
+workflows:
+
+  ###########################################################################
+  # WORKFLOW 1: HOPE-LA
+  ###########################################################################
+  hopela-ios:
+    name: "HOPE-LA iOS"
+    <<: *ios_env
+    integrations:
+      app_store_connect: Codemagic  # name of your ASC API key in Codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: ai.astorix.hopela
+      vars:
+        APP_DIR: ios-apps/hopela
+        BUNDLE_ID: ai.astorix.hopela
+        APP_NAME: "ASTORIX HOPE-LA"
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+    scripts:
+      - *setup_steps
+      - name: Install npm dependencies
+        script: |
+          cd $APP_DIR
+          npm ci
+      - name: Capacitor sync (adds ios/ if missing)
+        script: |
+          cd $APP_DIR
+          npx cap add ios 2>/dev/null || true
+          npx cap sync ios
+      - name: Copy app icon
+        script: |
+          ICON_SRC="$APP_DIR/assets/icon.png"
+          ICON_DST="$APP_DIR/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          mkdir -p "$ICON_DST"
+          cp "$ICON_SRC" "$ICON_DST/Icon-1024.png"
+          cat > "$ICON_DST/Contents.json" <<'EOF'
+          {
+            "images": [
+              {"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}
+            ],
+            "info": {"author":"xcode","version":1}
+          }
+          EOF
+      - name: Build iOS app (Archive)
+        script: |
+          cd $APP_DIR
+          xcodebuild archive \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath "$CM_BUILD_DIR/hopela.xcarchive" \
+            DEVELOPMENT_TEAM=GV32459XCX \
+            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.hopela \
+            CODE_SIGN_STYLE=Automatic \
+            | xcpretty
+      - name: Export .ipa
+        script: |
+          cat > /tmp/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store</string>
+            <key>teamID</key><string>GV32459XCX</string>
+            <key>uploadBitcode</key><false/>
+            <key>uploadSymbols</key><true/>
+          </dict>
+          </plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/hopela.xcarchive" \
+            -exportPath "$CM_BUILD_DIR/hopela-ipa" \
+            -exportOptionsPlist /tmp/ExportOptions.plist \
+            | xcpretty
+    artifacts:
+      - "$CM_BUILD_DIR/hopela-ipa/*.ipa"
+      - "$CM_BUILD_DIR/hopela.xcarchive"
+    publishing:
+      <<: *app_store_publishing
+      email:
+        recipients:
+          - ashreekar@gmail.com
+        notify:
+          success: true
+          failure: true
+
+  ###########################################################################
+  # WORKFLOW 2: CityInfra
+  ###########################################################################
+  cityinfra-ios:
+    name: "CityInfra iOS"
+    <<: *ios_env
+    integrations:
+      app_store_connect: Codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: ai.astorix.cityinfra
+      vars:
+        APP_DIR: ios-apps/cityinfra
+        BUNDLE_ID: ai.astorix.cityinfra
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+    scripts:
+      - *setup_steps
+      - name: Install npm dependencies
+        script: cd $APP_DIR && npm ci
+      - name: Capacitor sync
+        script: |
+          cd $APP_DIR
+          npx cap add ios 2>/dev/null || true
+          npx cap sync ios
+      - name: Copy app icon
+        script: |
+          ICON_DST="$APP_DIR/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          mkdir -p "$ICON_DST"
+          cp "$APP_DIR/assets/icon.png" "$ICON_DST/Icon-1024.png"
+          cat > "$ICON_DST/Contents.json" <<'EOF'
+          {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
+          EOF
+      - name: Build iOS app
+        script: |
+          cd $APP_DIR
+          xcodebuild archive \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath "$CM_BUILD_DIR/cityinfra.xcarchive" \
+            DEVELOPMENT_TEAM=GV32459XCX \
+            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.cityinfra \
+            CODE_SIGN_STYLE=Automatic \
+            | xcpretty
+      - name: Export .ipa
+        script: |
+          cat > /tmp/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict><key>method</key><string>app-store</string><key>teamID</key><string>GV32459XCX</string></dict></plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/cityinfra.xcarchive" \
+            -exportPath "$CM_BUILD_DIR/cityinfra-ipa" \
+            -exportOptionsPlist /tmp/ExportOptions.plist | xcpretty
+    artifacts:
+      - "$CM_BUILD_DIR/cityinfra-ipa/*.ipa"
+    publishing:
+      <<: *app_store_publishing
+      email:
+        recipients: [ashreekar@gmail.com]
+        notify: { success: true, failure: true }
+
+  ###########################################################################
+  # WORKFLOW 3: Signal
+  ###########################################################################
+  signal-ios:
+    name: "Signal iOS"
+    <<: *ios_env
+    integrations:
+      app_store_connect: Codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: ai.astorix.signal
+      vars:
+        APP_DIR: ios-apps/signal
+        BUNDLE_ID: ai.astorix.signal
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+    scripts:
+      - *setup_steps
+      - name: Install npm dependencies
+        script: cd $APP_DIR && npm ci
+      - name: Capacitor sync
+        script: |
+          cd $APP_DIR
+          npx cap add ios 2>/dev/null || true
+          npx cap sync ios
+      - name: Copy app icon
+        script: |
+          ICON_DST="$APP_DIR/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          mkdir -p "$ICON_DST"
+          cp "$APP_DIR/assets/icon.png" "$ICON_DST/Icon-1024.png"
+          cat > "$ICON_DST/Contents.json" <<'EOF'
+          {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
+          EOF
+      - name: Build iOS app
+        script: |
+          cd $APP_DIR
+          xcodebuild archive \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath "$CM_BUILD_DIR/signal.xcarchive" \
+            DEVELOPMENT_TEAM=GV32459XCX \
+            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.signal \
+            CODE_SIGN_STYLE=Automatic \
+            | xcpretty
+      - name: Export .ipa
+        script: |
+          cat > /tmp/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict><key>method</key><string>app-store</string><key>teamID</key><string>GV32459XCX</string></dict></plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/signal.xcarchive" \
+            -exportPath "$CM_BUILD_DIR/signal-ipa" \
+            -exportOptionsPlist /tmp/ExportOptions.plist | xcpretty
+    artifacts:
+      - "$CM_BUILD_DIR/signal-ipa/*.ipa"
+    publishing:
+      <<: *app_store_publishing
+      email:
+        recipients: [ashreekar@gmail.com]
+        notify: { success: true, failure: true }
+
+  ###########################################################################
+  # WORKFLOW 4: Signal Pro
+  ###########################################################################
+  signal-pro-ios:
+    name: "Signal Pro iOS"
+    <<: *ios_env
+    integrations:
+      app_store_connect: Codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: ai.astorix.signalpro
+      vars:
+        APP_DIR: ios-apps/signal-pro
+        BUNDLE_ID: ai.astorix.signalpro
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+    scripts:
+      - *setup_steps
+      - name: Install npm dependencies
+        script: cd $APP_DIR && npm ci
+      - name: Capacitor sync
+        script: |
+          cd $APP_DIR
+          npx cap add ios 2>/dev/null || true
+          npx cap sync ios
+      - name: Copy app icon
+        script: |
+          ICON_DST="$APP_DIR/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          mkdir -p "$ICON_DST"
+          cp "$APP_DIR/assets/icon.png" "$ICON_DST/Icon-1024.png"
+          cat > "$ICON_DST/Contents.json" <<'EOF'
+          {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
+          EOF
+      - name: Build iOS app
+        script: |
+          cd $APP_DIR
+          xcodebuild archive \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath "$CM_BUILD_DIR/signal-pro.xcarchive" \
+            DEVELOPMENT_TEAM=GV32459XCX \
+            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.signalpro \
+            CODE_SIGN_STYLE=Automatic \
+            | xcpretty
+      - name: Export .ipa
+        script: |
+          cat > /tmp/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict><key>method</key><string>app-store</string><key>teamID</key><string>GV32459XCX</string></dict></plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/signal-pro.xcarchive" \
+            -exportPath "$CM_BUILD_DIR/signal-pro-ipa" \
+            -exportOptionsPlist /tmp/ExportOptions.plist | xcpretty
+    artifacts:
+      - "$CM_BUILD_DIR/signal-pro-ipa/*.ipa"
+    publishing:
+      <<: *app_store_publishing
+      email:
+        recipients: [ashreekar@gmail.com]
+        notify: { success: true, failure: true }
