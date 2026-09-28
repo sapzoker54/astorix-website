@@ -88,6 +88,8 @@ workflows:
             "info": {"author":"xcode","version":1}
           }
           EOF
+      - name: Set up code signing
+        script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app (Archive)
         script: |
           cd $APP_DIR
@@ -98,7 +100,6 @@ workflows:
             -archivePath "$CM_BUILD_DIR/hopela.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
             PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.hopela \
-            CODE_SIGN_STYLE=Automatic \
             | xcpretty
       - name: Export .ipa
         script: |
@@ -117,7 +118,7 @@ workflows:
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/hopela.xcarchive" \
             -exportPath "$CM_BUILD_DIR/hopela-ipa" \
-            -exportOptionsPlist /tmp/ExportOptions.plist \
+            -exportOptionsPlist /Users/builder/export_options.plist \
             | xcpretty
     artifacts:
       - "$CM_BUILD_DIR/hopela-ipa/*.ipa"
@@ -167,6 +168,8 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set up code signing
+        script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
         script: |
           cd $APP_DIR
@@ -177,7 +180,6 @@ workflows:
             -archivePath "$CM_BUILD_DIR/cityinfra.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
             PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.cityinfra \
-            CODE_SIGN_STYLE=Automatic \
             | xcpretty
       - name: Export .ipa
         script: |
@@ -189,7 +191,7 @@ workflows:
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/cityinfra.xcarchive" \
             -exportPath "$CM_BUILD_DIR/cityinfra-ipa" \
-            -exportOptionsPlist /tmp/ExportOptions.plist | xcpretty
+            -exportOptionsPlist /Users/builder/export_options.plist | xcpretty
     artifacts:
       - "$CM_BUILD_DIR/cityinfra-ipa/*.ipa"
     publishing:
@@ -234,6 +236,8 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set up code signing
+        script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
         script: |
           cd $APP_DIR
@@ -244,7 +248,6 @@ workflows:
             -archivePath "$CM_BUILD_DIR/signal.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
             PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.signal \
-            CODE_SIGN_STYLE=Automatic \
             | xcpretty
       - name: Export .ipa
         script: |
@@ -256,7 +259,7 @@ workflows:
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/signal.xcarchive" \
             -exportPath "$CM_BUILD_DIR/signal-ipa" \
-            -exportOptionsPlist /tmp/ExportOptions.plist | xcpretty
+            -exportOptionsPlist /Users/builder/export_options.plist | xcpretty
     artifacts:
       - "$CM_BUILD_DIR/signal-ipa/*.ipa"
     publishing:
@@ -301,6 +304,8 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set up code signing
+        script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
         script: |
           cd $APP_DIR
@@ -311,7 +316,6 @@ workflows:
             -archivePath "$CM_BUILD_DIR/signal-pro.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
             PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.signalpro \
-            CODE_SIGN_STYLE=Automatic \
             | xcpretty
       - name: Export .ipa
         script: |
@@ -323,7 +327,7 @@ workflows:
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/signal-pro.xcarchive" \
             -exportPath "$CM_BUILD_DIR/signal-pro-ipa" \
-            -exportOptionsPlist /tmp/ExportOptions.plist | xcpretty
+            -exportOptionsPlist /Users/builder/export_options.plist | xcpretty
     artifacts:
       - "$CM_BUILD_DIR/signal-pro-ipa/*.ipa"
     publishing:
