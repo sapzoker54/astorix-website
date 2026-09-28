@@ -88,6 +88,13 @@ workflows:
             "info": {"author":"xcode","version":1}
           }
           EOF
+      - name: Set iOS deployment target 15.0
+        script: |
+          cd $APP_DIR/ios/App
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[0-9]\.[0-9]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' App.xcodeproj/project.pbxproj
+          sed -i '' "s/platform :ios, '1[0-9]\.[0-9]*'/platform :ios, '15.0'/" Podfile
+          pod install
+          grep "IPHONEOS_DEPLOYMENT_TARGET" App.xcodeproj/project.pbxproj | sort -u
       - name: Set build number
         script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
@@ -171,6 +178,13 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set iOS deployment target 15.0
+        script: |
+          cd $APP_DIR/ios/App
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[0-9]\.[0-9]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' App.xcodeproj/project.pbxproj
+          sed -i '' "s/platform :ios, '1[0-9]\.[0-9]*'/platform :ios, '15.0'/" Podfile
+          pod install
+          grep "IPHONEOS_DEPLOYMENT_TARGET" App.xcodeproj/project.pbxproj | sort -u
       - name: Set build number
         script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
@@ -242,6 +256,13 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set iOS deployment target 15.0
+        script: |
+          cd $APP_DIR/ios/App
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[0-9]\.[0-9]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' App.xcodeproj/project.pbxproj
+          sed -i '' "s/platform :ios, '1[0-9]\.[0-9]*'/platform :ios, '15.0'/" Podfile
+          pod install
+          grep "IPHONEOS_DEPLOYMENT_TARGET" App.xcodeproj/project.pbxproj | sort -u
       - name: Set build number
         script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
@@ -313,6 +334,13 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set iOS deployment target 15.0
+        script: |
+          cd $APP_DIR/ios/App
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[0-9]\.[0-9]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' App.xcodeproj/project.pbxproj
+          sed -i '' "s/platform :ios, '1[0-9]\.[0-9]*'/platform :ios, '15.0'/" Podfile
+          pod install
+          grep "IPHONEOS_DEPLOYMENT_TARGET" App.xcodeproj/project.pbxproj | sort -u
       - name: Set build number
         script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
