@@ -1,5 +1,7 @@
 {
   "routes": [
+    { "route": "/privacy", "rewrite": "/privacy.html" },
+    { "route": "/support", "rewrite": "/support.html" },
     {
       "route": "/sw.js",
       "headers": {

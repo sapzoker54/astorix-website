@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — ASTORIX</title>
+  <meta name="description" content="Support for ASTORIX iOS apps: HOPE-LA, CityInfra, Signal, and Signal Pro by Gensis.AI Inc.">
+  <style>
+    :root {
+      --bg: #07090F;
+      --surface: #0F1522;
+      --border: #1E2D4A;
+      --text: #F1F5F9;
+      --muted: #94A3B8;
+      --accent: #1A6AFF;
+      --accent2: #A855F7;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 0 16px;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 60px 0 80px; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: linear-gradient(135deg, #1A6AFF 0%, #A855F7 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff;
+    }
+    .brand-name { font-size: 22px; font-weight: 700; letter-spacing: 0.04em; }
+    h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+    h2 { font-size: 20px; font-weight: 700; margin: 40px 0 14px; }
+    p { color: #CBD5E1; margin-bottom: 14px; }
+    a { color: #60A5FA; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 24px; margin-bottom: 14px;
+    }
+    .card h3 { font-size: 17px; margin-bottom: 6px; }
+    .card p { margin: 0; font-size: 15px; }
+    .contact {
+      background: linear-gradient(135deg, rgba(26,106,255,0.15), rgba(168,85,247,0.15));
+      border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+    }
+    .contact .email { font-size: 20px; font-weight: 700; }
+    .faq dt { font-weight: 700; margin-top: 18px; }
+    .faq dd { color: #CBD5E1; margin: 4px 0 0; }
+    footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+    footer p { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div class="brand-name">ASTORIX</div>
+    </div>
+
+    <h1>Support</h1>
+    <p class="subtitle">Help for all ASTORIX iOS apps by Gensis.AI Inc.</p>
+
+    <div class="contact">
+      <p style="margin-bottom:6px;color:var(--muted)">Questions, problems or feedback? Email us:</p>
+      <p class="email" style="margin:0"><a href="mailto:ashreekar@engineersoft.org">ashreekar@engineersoft.org</a></p>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Please include the app name, your iPhone model and iOS version.</p>
+    </div>
+
+    <h2>Our apps</h2>
+    <div class="card">
+      <h3>HOPE-LA</h3>
+      <p>Live Los Angeles 311 service requests for the last 24 hours, by Council District and category, plus NOAA weather alerts.</p>
+    </div>
+    <div class="card">
+      <h3>CityInfra</h3>
+      <p>Los Angeles infrastructure issues from LA 311, USGS earthquakes within 100 km, and NOAA weather alerts.</p>
+    </div>
+    <div class="card">
+      <h3>Signal</h3>
+      <p>Your internet connection at a glance: provider, connection type and live latency to 8 public endpoints.</p>
+    </div>
+    <div class="card">
+      <h3>Signal Pro</h3>
+      <p>Network quality combined with seismic and weather risk, with a 5-dimension composite score.</p>
+    </div>
+
+    <h2>Common questions</h2>
+    <dl class="faq">
+      <dt>Do I need an account?</dt>
+      <dd>No. There is no sign-up or login. Every feature works as soon as you open the app.</dd>
+
+      <dt>Where does the data come from?</dt>
+      <dd>Public sources only: City of Los Angeles Open Data (data.lacity.org) for 311 requests, USGS for earthquakes, and the NOAA National Weather Service for alerts.</dd>
+
+      <dt>How often does the data update?</dt>
+      <dd>The apps reload data every 60 seconds, and the refresh button reloads it instantly. The City of Los Angeles publishes new 311 requests roughly every 20 minutes, so the newest requests shown may be up to about 20 minutes old.</dd>
+
+      <dt>The app shows an error or no data.</dt>
+      <dd>Check that your iPhone is connected to the internet, then tap the refresh button. If a public data source is temporarily unavailable, the app shows that source's status on its Settings tab. If the problem continues, email us.</dd>
+
+      <dt>Do the apps collect my personal data?</dt>
+      <dd>No. See our <a href="/privacy.html">Privacy Policy</a> for full details.</dd>
+    </dl>
+
+    <footer>
+      <p>ASTORIX™ is a trademark of Gensis.AI Inc. · <a href="https://astorix.ai">astorix.ai</a> · <a href="/privacy.html">Privacy Policy</a></p>
+      <p>© 2026 Engineersoft, Gensis.AI, and ASTORIX.AI. All Rights Reserved. Unauthorized reproduction or distribution is prohibited.</p>
+    </footer>
+  </div>
+</body>
+</html>
