@@ -87,6 +87,7 @@ workflows:
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app (Archive)
         script: |
+          set -o pipefail
           cd $APP_DIR
           xcodebuild archive \
             -workspace "$XCODE_WORKSPACE" \
@@ -94,10 +95,10 @@ workflows:
             -configuration Release \
             -archivePath "$CM_BUILD_DIR/hopela.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
-            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.hopela \
             | xcpretty
       - name: Export .ipa
         script: |
+          set -o pipefail
           cat > /tmp/ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -165,6 +166,7 @@ workflows:
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
         script: |
+          set -o pipefail
           cd $APP_DIR
           xcodebuild archive \
             -workspace "$XCODE_WORKSPACE" \
@@ -172,10 +174,10 @@ workflows:
             -configuration Release \
             -archivePath "$CM_BUILD_DIR/cityinfra.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
-            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.cityinfra \
             | xcpretty
       - name: Export .ipa
         script: |
+          set -o pipefail
           cat > /tmp/ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -231,6 +233,7 @@ workflows:
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
         script: |
+          set -o pipefail
           cd $APP_DIR
           xcodebuild archive \
             -workspace "$XCODE_WORKSPACE" \
@@ -238,10 +241,10 @@ workflows:
             -configuration Release \
             -archivePath "$CM_BUILD_DIR/signal.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
-            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.signal \
             | xcpretty
       - name: Export .ipa
         script: |
+          set -o pipefail
           cat > /tmp/ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -297,6 +300,7 @@ workflows:
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
         script: |
+          set -o pipefail
           cd $APP_DIR
           xcodebuild archive \
             -workspace "$XCODE_WORKSPACE" \
@@ -304,10 +308,10 @@ workflows:
             -configuration Release \
             -archivePath "$CM_BUILD_DIR/signal-pro.xcarchive" \
             DEVELOPMENT_TEAM=GV32459XCX \
-            PRODUCT_BUNDLE_IDENTIFIER=ai.astorix.signalpro \
             | xcpretty
       - name: Export .ipa
         script: |
+          set -o pipefail
           cat > /tmp/ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
