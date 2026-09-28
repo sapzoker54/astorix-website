@@ -630,7 +630,7 @@
 // =============================================================
 
 // API ENDPOINTS
-const API_311 = 'https://data.lacity.org/resource/rqbj-xla4.json';
+const API_311 = 'https://data.lacity.org/resource/2cy6-i7zn.json';
 const API_USGS = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=1.0&latitude=34.0522&longitude=-118.2437&maxradiuskm=100&limit=15&orderby=time';
 const API_NWS  = 'https://api.weather.gov/alerts/active?area=CA&status=actual&urgency=Immediate,Expected&severity=Extreme,Severe,Moderate';
 
@@ -744,7 +744,8 @@ function filterIssues(cat, el) {
 async function fetchAll() {
   document.getElementById('data-status').textContent = 'SYNCING';
 
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 19);
+  const la = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date(Date.now() - 24 * 60 * 60 * 1000)).map(x=>[x.type,x.value])); // City timestamps are LA local time
+  const since = `${la.year}-${la.month}-${la.day}T${la.hour}:${la.minute}:${la.second}`;
 
   // Filter for infrastructure-type 311 requests
   const infraTypes = [
@@ -754,8 +755,8 @@ async function fetchAll() {
   // Use simpler query — get last 24h street-related requests
   const url311 = API_311 +
     `?$where=createddate>='${since}'` +
-    `&$select=requesttype,status,createddate,address,zipcode,cd,councildistrict` +
-    `&$limit=2000&$order=createddate DESC`;
+    `&$select=type as requesttype,case(status in('Closed','Cancelled','Closed Ext-Referred'),'Closed',true,'Open') as status,createddate,locator_gis_returned_address as address,zipcode__c as zipcode,locator_council_district as cd` +
+    `&$limit=10000&$order=createddate DESC`;
 
   const [r311, rUsgs, rNws] = await Promise.allSettled([
     fetch(url311).then(r => { if(!r.ok) throw new Error(r.status); return r.json(); }),

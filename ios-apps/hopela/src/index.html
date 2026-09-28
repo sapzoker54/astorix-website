@@ -600,7 +600,7 @@ if (window.Capacitor) {
 }
 
 // --- API ENDPOINTS ---
-const API_311  = 'https://data.lacity.org/resource/rqbj-xla4.json';
+const API_311  = 'https://data.lacity.org/resource/2cy6-i7zn.json';
 const API_NWS  = 'https://api.weather.gov/alerts/active?area=CA&status=actual&urgency=Immediate,Expected&severity=Extreme,Severe,Moderate';
 
 // --- DISTRICT NAMES (LA City Council Districts 1-15) ---
@@ -650,11 +650,12 @@ async function fetchAll() {
 
   // Build 24-hour window
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const sinceISO = since.toISOString().slice(0, 19);
+  const la = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(since).map(x=>[x.type,x.value])); // City timestamps are LA local time
+  const sinceISO = `${la.year}-${la.month}-${la.day}T${la.hour}:${la.minute}:${la.second}`;
 
   const url311 = `${API_311}?$where=createddate>='${sinceISO}'` +
-    `&$select=requesttype,cd,councildistrict,status,createddate,address,zipcode` +
-    `&$limit=2000&$order=createddate DESC`;
+    `&$select=type as requesttype,case(status in('Closed','Cancelled','Closed Ext-Referred'),'Closed',true,'Open') as status,createddate,locator_gis_returned_address as address,zipcode__c as zipcode,locator_council_district as cd` +
+    `&$limit=10000&$order=createddate DESC`;
 
   const [result311, resultNWS] = await Promise.allSettled([
     fetch(url311).then(r => { if(!r.ok) throw new Error(`311: ${r.status}`); return r.json(); }),
