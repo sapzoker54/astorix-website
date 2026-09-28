@@ -17,7 +17,6 @@
       "splashFullScreen": true
     },
     "StatusBar": { "style": "Dark", "backgroundColor": "#07090F" },
-    "PushNotifications": { "presentationOptions": ["badge", "sound", "alert"] },
-    "Geolocation": { "permissions": ["location"] }
+    "PushNotifications": { "presentationOptions": ["badge", "sound", "alert"] }
   }
 }

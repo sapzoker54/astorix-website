@@ -83,6 +83,8 @@ workflows:
             "info": {"author":"xcode","version":1}
           }
           EOF
+      - name: Set build number
+        script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app (Archive)
@@ -162,6 +164,8 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set build number
+        script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
@@ -229,6 +233,8 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set build number
+        script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
@@ -296,6 +302,8 @@ workflows:
           cat > "$ICON_DST/Contents.json" <<'EOF'
           {"images":[{"idiom":"universal","platform":"ios","size":"1024x1024","filename":"Icon-1024.png","scale":"1x"}],"info":{"author":"xcode","version":1}}
           EOF
+      - name: Set build number
+        script: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP_DIR/ios/App/App/Info.plist"
       - name: Set up code signing
         script: xcode-project use-profiles --project "$APP_DIR/ios/App/App.xcodeproj"
       - name: Build iOS app
